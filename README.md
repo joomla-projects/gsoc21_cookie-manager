@@ -34,7 +34,7 @@ You will need:
 - PHP - basically the same as you need for running a Joomla Site, but you need the cli (command line interface) Version (see https://docs.joomla.org/Configuring_a_LAMPP_server_for_PHP_development)
 - Composer - for managing Joomla's PHP Dependencies. For help installing composer please read the documentation at https://getcomposer.org/doc/00-intro.md
 - Node.js - for compiling Joomla's Javascript and SASS files. For help installing Node.js please follow the instructions available on https://nodejs.org/en/
-- Git - for version management. Download from here https://git-scm.com/downloads (MacOS users can also use Brew and Linux users can use the built-in package manager, eg apt, yum, etc). 
+- Git - for version management. Download from here https://git-scm.com/downloads (MacOS users can also use Brew and Linux users can use the built-in package manager, eg apt, yum, etc).
 
 **Steps to setup the local environment:**
 - Clone the repository:
@@ -45,9 +45,9 @@ git clone git@github.com:joomla/joomla-cms.git
 ```bash
 cd joomla-cms
 ```
-- Go to the 4.0-dev branch:
+- Go to the 4.1-dev branch:
 ```bash
-git checkout 4.0-dev
+git checkout 4.1-dev
 ```
 - Install all the needed composer packages:
 ```bash
