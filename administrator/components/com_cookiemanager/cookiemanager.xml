@@ -9,7 +9,7 @@
 	<authorUrl>www.joomla.org</authorUrl>
 	<version>4.0.0</version>
 	<description>COM_COOKIEMANAGER_XML_DESCRIPTION</description>
-	<namespace path="src">Joomla\Component\Cookiemanager</namespace>	
+	<namespace path="src">Joomla\Component\Cookiemanager</namespace>
 	<administration>
 		<files folder="admin">
 			<filename>access.xml</filename>
@@ -24,6 +24,6 @@
 			<language tag="en-GB">language/en-GB/com_cookiemanager.ini</language>
 			<language tag="en-GB">language/en-GB/com_cookiemanager.sys.ini</language>
 		</languages>
-		<menu link="option=com_cookiemanagers">com_cookiemanager</menu>
+		<menu link="option=com_cookiemanager">com_cookiemanager</menu>
 	</administration>
 </extension>
