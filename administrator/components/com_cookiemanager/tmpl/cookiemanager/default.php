@@ -36,10 +36,10 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
 						</caption>
 						<thead>
 							<tr>
-								<th scope="col" style="width:85%">
+								<th scope="col">
 									<?php  echo HTMLHelper::_('searchtools.sort', 'JGLOBAL_TITLE', 'a.title', $listDirn, $listOrder); ?>
 								</th>
-								<th scope="col" style="width:15%" class="d-none d-md-table-cell">
+								<th scope="col">
 									<?php echo HTMLHelper::_('searchtools.sort', 'JGRID_HEADING_ID', 'a.id', $listDirn, $listOrder); ?>
 								</th>
 							</tr>
@@ -50,19 +50,19 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
 						foreach ($this->items as $i => $item) :
 							?>
 							<tr>
-								<th scope="row" class="has-context">
+								<th scope="row">
 									<a href="<?php echo Route::_('index.php?option=com_cookiemanager&task=edit&id=' . $item->id); ?>">
 									<?php echo $this->escape($item->title); ?>
 									</a>
 								</th>
-								<td class="d-none d-md-table-cell">
+								<td>
 									<?php echo $item->id; ?>
 								</td>
 							</tr>
 							<?php endforeach; ?>
 						</tbody>
 					</table>
-					
+
 				<?php endif; ?>
 
 				<input type="hidden" name="task" value="">
