@@ -272,6 +272,7 @@ class ExtensionHelper
 		array('plugin', 'accessibility', 'system', 0),
 		array('plugin', 'actionlogs', 'system', 0),
 		array('plugin', 'cache', 'system', 0),
+		array('plugin', 'cookiemanager', 'system', 0),
 		array('plugin', 'debug', 'system', 0),
 		array('plugin', 'fields', 'system', 0),
 		array('plugin', 'highlight', 'system', 0),
