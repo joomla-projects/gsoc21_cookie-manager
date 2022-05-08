@@ -8,9 +8,9 @@
 			name="policylink"
 			type="menuitem"
 			label="COM_COOKIEMANAGER_POLICY_LINK_LABEL"
-			default="100"
+			default=""
 			>
-			<option value="100">COM_COOKIEMANAGER_POLICY_LINK_NONE</option>
+			<option value="">COM_COOKIEMANAGER_POLICY_LINK_NONE</option>
 		</field>
 
 		<field
