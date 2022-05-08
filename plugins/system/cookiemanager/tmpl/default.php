@@ -13,7 +13,7 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 
 $sitemenu = $this->app->getMenu();
-$menuitem = $sitemenu->getItem($params->get('policylink', '100'));
+$menuitem = $sitemenu->getItem($params->get('policylink', ''));
 
 $consentBannerBody = '<p>' . Text::_('COM_COOKIEMANAGER_COOKIE_BANNER_DESCRIPTION') . '</p>';
 
