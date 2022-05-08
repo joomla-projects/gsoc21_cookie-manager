@@ -8,7 +8,10 @@
 			name="policylink"
 			type="menuitem"
 			label="COM_COOKIEMANAGER_POLICY_LINK_LABEL"
-		/>
+			default="100"
+			>
+			<option value="100">COM_COOKIEMANAGER_POLICY_LINK_NONE</option>
+		</field>
 
 		<field
 			name="modal_position"
