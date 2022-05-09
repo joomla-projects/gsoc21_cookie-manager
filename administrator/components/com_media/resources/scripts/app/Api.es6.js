@@ -23,6 +23,13 @@ class Api {
     this._csrfToken = Joomla.getOptions('csrf.token');
 
     this.imagesExtensions = options.imagesExtensions;
+    this.audioExtensions = options.audioExtensions;
+    this.videoExtensions = options.videoExtensions;
+    this.documentExtensions = options.documentExtensions;
+    this.mediaVersion = (new Date().getTime()).toString();
+    this.canCreate = options.canCreate || false;
+    this.canEdit = options.canEdit || false;
+    this.canDelete = options.canDelete || false;
   }
 
   /**

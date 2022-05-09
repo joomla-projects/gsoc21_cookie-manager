@@ -13,15 +13,14 @@ use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\Version;
 
-/** @var JDocumentHtml $this */
-
+/** @var \Joomla\CMS\Document\HtmlDocument $this */
 // Add required assets
 $this->getWebAssetManager()
-	->registerAndUseStyle('template.installation', 'template' . ($this->direction === 'rtl' ? '-rtl' : '') . '.css')
+	->registerAndUseStyle('template.installation', 'installation/template/css/template' . ($this->direction === 'rtl' ? '-rtl' : '') . '.css', ['version' => 'auto'], [], [])
 	->useScript('core')
 	->useScript('keepalive')
 	->useScript('form.validate')
-	->registerAndUseScript('template.installation', 'installation/template/js/template.js', [], [], ['core', 'form.validate']);
+	->registerAndUseScript('template.installation', 'installation/template/js/template.js', ['version' => 'auto'], ['defer' => true], ['core', 'form.validate']);
 
 $this->getWebAssetManager()
 	->useStyle('webcomponent.joomla-alert')
@@ -29,11 +28,11 @@ $this->getWebAssetManager()
 	->useScript('webcomponent.core-loader')
 	->addInlineStyle(':root {
 		--hue: 214;
-		--atum-bg-light: #f0f4fb;
-		--atum-text-dark: #495057;
-		--atum-text-light: #ffffff;
-		--atum-link-color: #2a69b8;
-		--atum-special-color: #001b4c;
+		--template-bg-light: #f0f4fb;
+		--template-text-dark: #495057;
+		--template-text-light: #ffffff;
+		--template-link-color: #2a69b8;
+		--template-special-color: #001b4c;
 	}');
 
 // Add script options

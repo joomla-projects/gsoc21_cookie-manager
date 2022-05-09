@@ -18,7 +18,10 @@ use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Session\Session;
 
-HTMLHelper::_('behavior.multiselect');
+/** @var \Joomla\CMS\WebAsset\WebAssetManager $wa */
+$wa = $this->document->getWebAssetManager();
+$wa->useScript('table.columns')
+	->useScript('multiselect');
 
 $user      = Factory::getUser();
 $userId    = $user->get('id');
@@ -61,7 +64,7 @@ if ($saveOrder && !empty($this->items))
 								<th scope="col" class="w-1 text-center">
 									<?php echo HTMLHelper::_('searchtools.sort', 'JFEATURED', 'a.featured', $listDirn, $listOrder); ?>
 								</th>
-								<th scope="col" style="min-width:85px" class="w-1 text-center">
+								<th scope="col" class="w-1 text-center">
 									<?php echo HTMLHelper::_('searchtools.sort', 'JSTATUS', 'a.published', $listDirn, $listOrder); ?>
 								</th>
 								<th scope="col">
@@ -142,9 +145,9 @@ if ($saveOrder && !empty($this->items))
 										<?php else : ?>
 											<?php echo $this->escape($item->name); ?>
 										<?php endif; ?>
-										<span class="small">
+										<div class="small">
 											<?php echo Text::sprintf('JGLOBAL_LIST_ALIAS', $this->escape($item->alias)); ?>
-										</span>
+										</div>
 										<div class="small">
 											<?php echo Text::_('JCATEGORY') . ': ' . $this->escape($item->category_title); ?>
 										</div>
