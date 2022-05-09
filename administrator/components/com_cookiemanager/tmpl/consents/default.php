@@ -51,9 +51,6 @@ $saveOrder = ($listOrder == 'a.id' && strtolower($listDirn) == 'desc');
 									<?php echo Text::_('COM_COOKIEMANAGER_FIELD_CCUUID_LABEL'); ?>
 								</th>
 								<th scope="col" class="text-center d-none d-md-table-cell">
-									<?php echo Text::_('COM_COOKIEMANAGER_FIELD_UUID_LABEL'); ?>
-								</th>
-								<th scope="col" class="text-center d-none d-md-table-cell">
 									<?php echo Text::_('COM_COOKIEMANAGER_FIELD_CONSENT_DATE_LABEL'); ?>
 								</th>
 								<th scope="col" class="w-5 text-center">
@@ -85,10 +82,8 @@ $saveOrder = ($listOrder == 'a.id' && strtolower($listDirn) == 'desc');
 											<?php echo $item->ccuuid; ?>
 										<?php endif; ?>
 									</div>
+									<?php echo Text::_('COM_COOKIEMANAGER_FIELD_UUID_LABEL') . ': ' . $item->uuid; ?>
 								</th>
-								<td class="text-center d-none d-md-table-cell">
-									<?php echo $item->uuid; ?>
-								</td>
 								<td class="text-center d-none d-md-table-cell">
 									<?php echo $item->consent_date; ?>
 								</td>
