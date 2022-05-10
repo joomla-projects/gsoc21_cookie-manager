@@ -10,6 +10,7 @@
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Plugin\CMSPlugin;
@@ -277,6 +278,7 @@ class PlgSystemCookiemanager extends CMSPlugin
 		$cookieConsentsData = json_decode($cookieConsentsData);
 		$ccuuid = bin2hex(random_bytes(32));
 		$cookieConsentsData->ccuuid = $ccuuid;
+		$cookieConsentsData->consent_date=Factory::getDate()->toSql();
 		$cookieConsentsData->user_agent = $_SERVER['HTTP_USER_AGENT'];
 
 		$this->db->insertObject('#__cookiemanager_consents', $cookieConsentsData);

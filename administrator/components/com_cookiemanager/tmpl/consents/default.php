@@ -90,7 +90,7 @@ $saveOrder = ($listOrder == 'a.id' && strtolower($listDirn) == 'desc');
 									<?php echo $item->uuid; ?>
 								</td>
 								<td class="text-center d-none d-md-table-cell">
-									<?php echo $item->consent_date; ?>
+									<?php echo HTMLHelper::_('date', $item->consent_date, Text::_('DATE_FORMAT_LC4')); ?>
 								</td>
 								<td class="text-center w-5">
 									<?php echo $item->id; ?>

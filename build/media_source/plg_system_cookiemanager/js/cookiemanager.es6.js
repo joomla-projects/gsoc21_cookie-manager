@@ -107,7 +107,6 @@
     document.cookie = `consent_date=${date}; path=/;`;
     const consentDetails = {
       uuid,
-      consent_date: date,
       url: window.location.href,
       consent_opt_in: consentsIn,
       consent_opt_out: consentsOut,
@@ -123,7 +122,7 @@
 
         document.cookie = `ccuuid=${ccuuid}; path=/;`;
         document.getElementById('ccuuid').innerHTML = ccuuid;
-        document.getElementById('consent-date').innerHTML = consentDetails.consent_date;
+        document.getElementById('consent-date').innerHTML = date;
         document.getElementById('consent-opt-in').innerHTML = consentDetails.consent_opt_in;
       },
       onError(xhr) {
