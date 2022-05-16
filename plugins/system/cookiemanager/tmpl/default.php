@@ -13,11 +13,15 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 
 $sitemenu = $this->app->getMenu();
-$menuitem = $sitemenu->getItem($params->get('policylink', '101'));
+$menuitem = $sitemenu->getItem($params->get('policylink', ''));
 
-$consentBannerBody = '<p>' . Text::_('COM_COOKIEMANAGER_COOKIE_BANNER_DESCRIPTION') . '</p><p><a '
-	. ' href="' . $menuitem->link . '">' . Text::_('COM_COOKIEMANAGER_VIEW_COOKIE_POLICY') . '</a></p>'
-	. '<h5>' . Text::_('COM_COOKIEMANAGER_MANAGE_CONSENT_PREFERENCES') . '</h5><ul>';
+$consentBannerBody = '<p>' . Text::_('COM_COOKIEMANAGER_COOKIE_BANNER_DESCRIPTION') . '</p>';
+
+if ($menuitem) {
+	$consentBannerBody .= '<p>' . HTMLHelper::_('link', $menuitem->link, Text::_('COM_COOKIEMANAGER_VIEW_COOKIE_POLICY')) . '</p>';
+}
+
+$consentBannerBody .= '<h5>' . Text::_('COM_COOKIEMANAGER_MANAGE_CONSENT_PREFERENCES') . '</h5><ul>';
 
 foreach ($this->cookieCategories as $key => $value)
 {
@@ -43,11 +47,16 @@ echo HTMLHelper::_(
 	$consentBannerBody
 );
 
-$settingsBannerBody = '<p>' . Text::_('COM_COOKIEMANAGER_PREFERENCES_DESCRIPTION') . '</p>'
- . '<p><a  href="' . $menuitem->link . '">' . Text::_('COM_COOKIEMANAGER_VIEW_COOKIE_POLICY') . '</a></p>'
- . '<p>' . Text::_('COM_COOKIEMANAGER_FIELD_CONSENT_OPT_IN_LABEL') . ': <span id="consent-opt-in"></span></p>'
- . '<p> ' . Text::_('COM_COOKIEMANAGER_CONSENT_ID') . ': <span id="ccuuid"></span></p>'
- . '<p>' . Text::_('COM_COOKIEMANAGER_FIELD_CONSENT_DATE_LABEL') . ': <span id="consent-date"></span></p>';
+$settingsBannerBody = '<p>' . Text::_('COM_COOKIEMANAGER_PREFERENCES_DESCRIPTION') . '</p>';
+
+if ($menuitem) {
+	$settingsBannerBody .= '<p>' . HTMLHelper::_('link', $menuitem->link, Text::_('COM_COOKIEMANAGER_VIEW_COOKIE_POLICY')) . '</p>';
+}
+
+$settingsBannerBody .= '<p>' . Text::_('COM_COOKIEMANAGER_FIELD_CONSENT_OPT_IN_LABEL') . ': <span id="consent-opt-in"></span></p>'
+	. '<p> ' . Text::_('COM_COOKIEMANAGER_CONSENT_ID') . ': <span id="ccuuid"></span></p>'
+	. '<p>' . Text::_('COM_COOKIEMANAGER_FIELD_CONSENT_DATE_LABEL') . ': <span id="consent-date"></span></p>';
+
 
 foreach ($this->cookieCategories as $catKey => $catValue)
 {
