@@ -57,7 +57,6 @@ $settingsBannerBody .= '<p>' . Text::_('COM_COOKIEMANAGER_FIELD_CONSENT_OPT_IN_L
 	. '<p> ' . Text::_('COM_COOKIEMANAGER_CONSENT_ID') . ': <span id="ccuuid"></span></p>'
 	. '<p>' . Text::_('COM_COOKIEMANAGER_FIELD_CONSENT_DATE_LABEL') . ': <span id="consent-date"></span></p>';
 
-
 foreach ($this->cookieCategories as $catKey => $catValue)
 {
 	$settingsBannerBody .= '<h4>' . $catValue->title . '<span class="form-check-inline form-switch float-end">' .
