@@ -85,7 +85,7 @@ $saveOrder = ($listOrder == 'a.id' && strtolower($listDirn) == 'desc');
 									<?php echo Text::_('COM_COOKIEMANAGER_FIELD_UUID_LABEL') . ': ' . $item->uuid; ?>
 								</th>
 								<td class="text-center d-none d-md-table-cell">
-									<?php echo $item->consent_date; ?>
+									<?php echo HTMLHelper::_('date', $item->consent_date, Text::_('DATE_FORMAT_LC4')); ?>
 								</td>
 								<td class="text-center w-5">
 									<?php echo $item->id; ?>

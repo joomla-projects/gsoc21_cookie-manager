@@ -945,7 +945,7 @@ CREATE TABLE IF NOT EXISTS `#__cookiemanager_consents` (
   `ccuuid` varchar(64) NOT NULL,
   `consent_opt_in` varchar(255) NOT NULL,
   `consent_opt_out` varchar(255) NOT NULL,
-  `consent_date` varchar(100) NOT NULL,
+  `consent_date` datetime NOT NULL,
   `user_agent` varchar(150) NOT NULL,
   `url` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE utf8mb4_unicode_ci;
