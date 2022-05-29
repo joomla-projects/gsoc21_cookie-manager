@@ -11,6 +11,7 @@ defined('_JEXEC') or die;
 
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
 
 $sitemenu = $this->app->getMenu();
 $menuitem = $sitemenu->getItem($params->get('policylink', ''));
@@ -18,7 +19,7 @@ $menuitem = $sitemenu->getItem($params->get('policylink', ''));
 $consentBannerBody = '<p>' . Text::_('COM_COOKIEMANAGER_COOKIE_BANNER_DESCRIPTION') . '</p>';
 
 if ($menuitem) {
-	$consentBannerBody .= '<p>' . HTMLHelper::_('link', $menuitem->link, Text::_('COM_COOKIEMANAGER_VIEW_COOKIE_POLICY')) . '</p>';
+	$consentBannerBody .= '<p>' . HTMLHelper::_('link', Route::_($menuitem->link), Text::_('COM_COOKIEMANAGER_VIEW_COOKIE_POLICY')) . '</p>';
 }
 
 $consentBannerBody .= '<h5>' . Text::_('COM_COOKIEMANAGER_MANAGE_CONSENT_PREFERENCES') . '</h5><ul>';
@@ -50,7 +51,7 @@ echo HTMLHelper::_(
 $settingsBannerBody = '<p>' . Text::_('COM_COOKIEMANAGER_PREFERENCES_DESCRIPTION') . '</p>';
 
 if ($menuitem) {
-	$settingsBannerBody .= '<p>' . HTMLHelper::_('link', $menuitem->link, Text::_('COM_COOKIEMANAGER_VIEW_COOKIE_POLICY')) . '</p>';
+	$settingsBannerBody .= '<p>' . HTMLHelper::_('link', Route::_($menuitem->link), Text::_('COM_COOKIEMANAGER_VIEW_COOKIE_POLICY')) . '</p>';
 }
 
 $settingsBannerBody .= '<p>' . Text::_('COM_COOKIEMANAGER_FIELD_CONSENT_OPT_IN_LABEL') . ': <span id="consent-opt-in"></span></p>'
