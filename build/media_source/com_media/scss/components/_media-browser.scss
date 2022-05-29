@@ -2,7 +2,7 @@
 .media-browser {
   position: relative;
   min-height: 70vh;
-  border-left: 1px solid $border-color;
+  border-inline-start: 1px solid $border-color;
   transition: width .3s cubic-bezier(.4, 0, .2, 1);
 }
 
@@ -204,11 +204,21 @@
 }
 
 .image-cropped {
-  padding-bottom: 100%;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: contain;
+  aspect-ratio: 1/1;
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
   border-radius: $grid-item-border-radius;
+}
+
+.image-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1/1;
+  max-width: 100%;
+  height: auto;
+  color: #9d9d9d;
 }
 
 .file-background, .folder-background {
@@ -377,7 +387,8 @@
   &[data-type="jpeg" i],
   &[data-type="tiff" i],
   &[data-type="bmp" i],
-  &[data-type="svg" i] {
+  &[data-type="svg" i],
+  &[data-type="webp" i] {
     &::before {
       content: $icon-type-images;
     }

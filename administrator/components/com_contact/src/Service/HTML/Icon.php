@@ -18,6 +18,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\User\UserFactoryInterface;
 use Joomla\Component\Contact\Site\Helper\RouteHelper;
 use Joomla\Registry\Registry;
 
@@ -29,24 +30,24 @@ use Joomla\Registry\Registry;
 class Icon
 {
 	/**
-	 * The application
+	 * The user factory
 	 *
-	 * @var    CMSApplication
+	 * @var    UserFactoryInterface
 	 *
-	 * @since  4.0.0
+	 * @since  4.2.0
 	 */
-	private $application;
+	private $userFactory;
 
 	/**
 	 * Service constructor
 	 *
-	 * @param   CMSApplication  $application  The application
+	 * @param   UserFactoryInterface  $userFactory  The userFactory
 	 *
 	 * @since   4.0.0
 	 */
-	public function __construct(CMSApplication $application)
+	public function __construct(UserFactoryInterface $userFactory)
 	{
-		$this->application = $application;
+		$this->userFactory = $userFactory;
 	}
 
 	/**
@@ -60,13 +61,20 @@ class Icon
 	 *
 	 * @since  4.0.0
 	 */
-	public static function create($category, $params, $attribs = array())
+	public function create($category, $params, $attribs = array())
 	{
 		$uri = Uri::getInstance();
 
 		$url = 'index.php?option=com_contact&task=contact.add&return=' . base64_encode($uri) . '&id=0&catid=' . $category->id;
 
-		$text = LayoutHelper::render('joomla.content.icons.create', array('params' => $params, 'legacy' => false));
+		$text = '';
+
+		if ($params->get('show_icons'))
+		{
+			$text .= '<span class="icon-plus icon-fw" aria-hidden="true"></span>';
+		}
+
+		$text .= Text::_('COM_CONTACT_NEW_CONTACT');
 
 		// Add the button classes to the attribs array
 		if (isset($attribs['class']))
@@ -80,9 +88,7 @@ class Icon
 
 		$button = HTMLHelper::_('link', Route::_($url), $text, $attribs);
 
-		$output = '<span class="hasTooltip" title="' . HTMLHelper::_('tooltipText', 'COM_CONTACT_CREATE_CONTACT') . '">' . $button . '</span>';
-
-		return $output;
+		return $button;
 	}
 
 	/**
@@ -100,7 +106,7 @@ class Icon
 	 *
 	 * @since   4.0.0
 	 */
-	public static function edit($contact, $params, $attribs = array(), $legacy = false)
+	public function edit($contact, $params, $attribs = array(), $legacy = false)
 	{
 		$user = Factory::getUser();
 		$uri  = Uri::getInstance();
@@ -123,7 +129,7 @@ class Icon
 			&& !is_null($contact->checked_out)
 			&& $contact->checked_out !== $user->get('id'))
 		{
-			$checkoutUser = Factory::getUser($contact->checked_out);
+			$checkoutUser = $this->userFactory->loadUserById($contact->checked_out);
 			$date         = HTMLHelper::_('date', $contact->checked_out_time);
 			$tooltip      = Text::sprintf('COM_CONTACT_CHECKED_OUT_BY', $checkoutUser->name)
 				. ' <br> ' . $date;
@@ -152,8 +158,7 @@ class Icon
 		$icon    = $contact->published ? 'edit' : 'eye-slash';
 
 		if (($contact->publish_up !== null && strtotime($contact->publish_up) > $nowDate)
-			|| ($contact->publish_down !== null && strtotime($contact->publish_down) < $nowDate
-			&& $contact->publish_down !== Factory::getDbo()->getNullDate()))
+			|| ($contact->publish_down !== null && strtotime($contact->publish_down) < $nowDate))
 		{
 			$icon = 'eye-slash';
 		}

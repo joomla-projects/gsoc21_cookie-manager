@@ -77,6 +77,7 @@ class BannersModel extends ListModel
 				$db->quoteName('a.type'),
 				$db->quoteName('a.name'),
 				$db->quoteName('a.clickurl'),
+				$db->quoteName('a.sticky'),
 				$db->quoteName('a.cid'),
 				$db->quoteName('a.description'),
 				$db->quoteName('a.params'),
@@ -254,7 +255,7 @@ class BannersModel extends ListModel
 		// Filter by language
 		if ($this->getState('filter.language'))
 		{
-			$query->whereIn($db->quoteName('a.language'), [Factory::getLanguage()->getTag(), '*']);
+			$query->whereIn($db->quoteName('a.language'), [Factory::getLanguage()->getTag(), '*'], ParameterType::STRING);
 		}
 
 		$query->order($db->quoteName('a.sticky') . ' DESC, ' . ($randomise ? $query->rand() : $db->quoteName('a.ordering')));
@@ -311,7 +312,8 @@ class BannersModel extends ListModel
 	 */
 	public function impress()
 	{
-		$trackDate = Factory::getDate()->toSql();
+		$trackDate = Factory::getDate()->format('Y-m-d H:00:00');
+		$trackDate = Factory::getDate($trackDate)->toSql();
 		$items     = $this->getItems();
 		$db        = $this->getDbo();
 		$bid       = [];

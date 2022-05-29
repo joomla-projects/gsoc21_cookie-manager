@@ -28,7 +28,7 @@ class HtmlView extends BaseHtmlView
 	/**
 	 * The model state
 	 *
-	 * @var  \JObject
+	 * @var  \Joomla\CMS\Object\CMSObject
 	 */
 	protected $state = null;
 
@@ -42,7 +42,7 @@ class HtmlView extends BaseHtmlView
 	/**
 	 * The pagination object.
 	 *
-	 * @var  \JPagination
+	 * @var  \Joomla\CMS\Pagination\Pagination
 	 */
 	protected $pagination = null;
 
@@ -68,17 +68,18 @@ class HtmlView extends BaseHtmlView
 	protected $link_items = array();
 
 	/**
-	 * An instance of JDatabaseDriver.
+	 * @var    \Joomla\Database\DatabaseDriver
 	 *
-	 * @var    \JDatabaseDriver
 	 * @since  3.6.3
+	 *
+	 * @deprecated 5.0 Will be removed without replacement
 	 */
 	protected $db;
 
 	/**
 	 * The user object
 	 *
-	 * @var  \JUser|null
+	 * @var \Joomla\CMS\User\User|null
 	 */
 	protected $user = null;
 
@@ -86,6 +87,7 @@ class HtmlView extends BaseHtmlView
 	 * The page class suffix
 	 *
 	 * @var    string
+	 *
 	 * @since  4.0.0
 	 */
 	protected $pageclass_sfx = '';
@@ -94,6 +96,7 @@ class HtmlView extends BaseHtmlView
 	 * The page parameters
 	 *
 	 * @var    \Joomla\Registry\Registry|null
+	 *
 	 * @since  4.0.0
 	 */
 	protected $params = null;
@@ -103,7 +106,7 @@ class HtmlView extends BaseHtmlView
 	 *
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
-	 * @return  mixed  A string if successful, otherwise an Error object.
+	 * @return  void
 	 */
 	public function display($tpl = null)
 	{
@@ -195,7 +198,7 @@ class HtmlView extends BaseHtmlView
 		}
 
 		// Escape strings for HTML output
-		$this->pageclass_sfx = htmlspecialchars($params->get('pageclass_sfx'));
+		$this->pageclass_sfx = htmlspecialchars($params->get('pageclass_sfx', ''));
 
 		$this->params     = &$params;
 		$this->items      = &$items;

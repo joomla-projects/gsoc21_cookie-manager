@@ -30,7 +30,7 @@ class HtmlView extends BaseHtmlView
 	 *
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
-	 * @return  mixed  A string if successful, otherwise an Error object.
+	 * @return  void
 	 *
 	 * @since   4.0.0
 	 */
@@ -49,12 +49,12 @@ class HtmlView extends BaseHtmlView
 		if (empty($this->file->content))
 		{
 			// @todo error handling controller redirect files
-			throw new \Exception('No content available!');
+			throw new \Exception(Text::_('COM_MEDIA_ERROR_NO_CONTENT_AVAILABLE'));
 		}
 
 		$this->addToolbar();
 
-		return parent::display($tpl);
+		parent::display($tpl);
 	}
 
 	/**
