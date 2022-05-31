@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package     Joomla.Plugin
  * @subpackage  System.cookiemanager
@@ -46,23 +47,23 @@ class PlgSystemCookiemanager extends CMSPlugin
 	 * @var    \Joomla\Database\DatabaseDriver
 	 * @since  __DEPLOY_VERSION__
 	 */
-	 protected $db;
+	protected $db;
 
-	 /**
-	  * Cookie settings scripts
-	  *
-	  * @var    object
-	  * @since  __DEPLOY_VERSION__
-	  */
-	 protected $cookieScripts;
+	/**
+	 * Cookie settings scripts
+	 *
+	 * @var    object
+	 * @since  __DEPLOY_VERSION__
+	 */
+	protected $cookieScripts;
 
-	 /**
-	  * Cookie categories
-	  *
-	  * @var    object
-	  * @since  __DEPLOY_VERSION__
-	  */
-	  protected $cookieCategories;
+	/**
+	 * Cookie categories
+	 *
+	 * @var    object
+	 * @since  __DEPLOY_VERSION__
+	 */
+	protected $cookieCategories;
 
 	/**
 	 * Add assets for the cookie banners.
@@ -98,7 +99,7 @@ class PlgSystemCookiemanager extends CMSPlugin
 
 		$db    = $this->db;
 		$query = $db->getQuery(true)
-			->select($db->quoteName(['c.id','c.alias','a.cookie_name','a.cookie_desc','a.exp_period','a.exp_value']))
+			->select($db->quoteName(['c.id', 'c.alias', 'a.cookie_name', 'a.cookie_desc', 'a.exp_period', 'a.exp_value']))
 			->from($db->quoteName('#__categories', 'c'))
 			->join(
 				'RIGHT',
@@ -108,7 +109,7 @@ class PlgSystemCookiemanager extends CMSPlugin
 
 		$this->cookies = $db->setQuery($query)->loadObjectList();
 
-		if(!empty($this->cookies))
+		if (!empty($this->cookies))
 		{
 			// Load required assets
 			$assets = $this->app->getDocument()->getWebAssetManager();
@@ -126,11 +127,12 @@ class PlgSystemCookiemanager extends CMSPlugin
 		}
 
 		$query = $db->getQuery(true)
-			->select($db->quoteName(['id','title','alias','description']))
+			->select($db->quoteName(['id', 'title', 'alias', 'description']))
 			->from($db->quoteName('#__categories'))
-			->where([
-				$db->quoteName('extension') . ' = ' . $db->quote('com_cookiemanager'),
-				$db->quoteName('published') . ' =  1',
+			->where(
+				[
+					$db->quoteName('extension') . ' = ' . $db->quote('com_cookiemanager'),
+					$db->quoteName('published') . ' =  1',
 				]
 			)
 			->order($db->quoteName('lft'));
@@ -138,7 +140,7 @@ class PlgSystemCookiemanager extends CMSPlugin
 		$this->cookieCategories = $db->setQuery($query)->loadObjectList();
 
 		$query = $db->getQuery(true)
-			->select($db->quoteName(['a.type','a.position','a.code','a.catid']))
+			->select($db->quoteName(['a.type', 'a.position', 'a.code', 'a.catid']))
 			->from($db->quoteName('#__cookiemanager_scripts', 'a'))
 			->where($db->quoteName('a.published') . ' =  1')
 			->join(
@@ -178,7 +180,6 @@ class PlgSystemCookiemanager extends CMSPlugin
 		ob_start();
 		include PluginHelper::getLayoutPath('system', 'cookiemanager');
 		$this->bannerContent = ob_get_clean();
-
 	}
 
 	/**
@@ -203,7 +204,7 @@ class PlgSystemCookiemanager extends CMSPlugin
 			return;
 		}
 
-		if(!empty($this->cookies))
+		if (!empty($this->cookies))
 		{
 			echo '<button class="preview btn btn-info" data-bs-toggle="modal" data-bs-target="#consentBanner">' . Text::_('COM_COOKIEMANAGER_PREVIEW_BUTTON_TEXT') . '</button>';
 
@@ -250,7 +251,6 @@ class PlgSystemCookiemanager extends CMSPlugin
 
 									echo preg_replace('/<body[^>]+>\K/i', $value->code, $html);
 								}
-
 								else
 								{
 									$html = ob_get_contents();
