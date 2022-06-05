@@ -194,6 +194,7 @@ class CookieModel extends AdminModel
 	public function save($data)
 	{
 		$input = Factory::getApplication()->input;
+
 		return parent::save($data);
 	}
 }
