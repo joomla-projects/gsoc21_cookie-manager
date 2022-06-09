@@ -9,6 +9,7 @@
 			type="menuitem"
 			label="COM_COOKIEMANAGER_POLICY_LINK_LABEL"
 			default=""
+			filter="integer"
 			>
 			<option value="">COM_COOKIEMANAGER_POLICY_LINK_NONE</option>
 		</field>
@@ -18,6 +19,7 @@
 			type="list"
 			label="COM_COOKIEMANAGER_POSITION_FIELD_LABEL"
 			default=""
+			validate="options"
 			>
 			<option value="">COM_COOKIEMANAGER_POSITION_FIELD_TOP</option>
 			<option value="modal-dialog-left">COM_COOKIEMANAGER_POSITION_FIELD_LEFT</option>
