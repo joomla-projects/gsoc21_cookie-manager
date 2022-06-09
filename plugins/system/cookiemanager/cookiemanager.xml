@@ -14,7 +14,7 @@
         <folder>tmpl</folder>
     </files>
     <languages>
-        <language tag="en-GB">en-GB.plg_system_cookiemanager.ini</language>
-        <language tag="en-GB">en-GB.plg_system_cookiemanager.sys.ini</language>
+        <language tag="en-GB">language/en-GB/plg_system_cookiemanager.ini</language>
+        <language tag="en-GB">language/en-GB/plg_system_cookiemanager.sys.ini</language>
     </languages>
 </extension>
