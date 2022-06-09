@@ -186,16 +186,4 @@ class CookiesModel extends ListModel
 
 		return $query;
 	}
-
-	/**
-	 * Method to get a list of cookies.
-	 *
-	 * @return  mixed  An array of data items on success, false on failure.
-	 *
-	 * @since   __DEPLOY_VERSION__
-	 */
-	public function getItems()
-	{
-		return parent::getItems();
-	}
 }
