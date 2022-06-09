@@ -14,7 +14,6 @@
 			name="title"
 			type="text"
 			label="COM_COOKIEMANAGER_FIELD_TITLE_LABEL"
-			size="40"
 			required="true"
 		/>
 
@@ -22,7 +21,6 @@
 			name="alias"
 			type="text"
 			label="JFIELD_ALIAS_LABEL"
-			size="45"
 			hint="JFIELD_ALIAS_PLACEHOLDER"
 		/>
 
@@ -99,7 +97,7 @@
 			showon="exp_period!:-1,0"
 			default="0"
 		/>
-		
+
 		<field
 			name="created_by"
 			type="user"

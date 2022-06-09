@@ -14,7 +14,6 @@
 			name="title"
 			type="text"
 			label="COM_COOKIEMANAGER_FIELD_TITLE_LABEL"
-			size="40"
 			required="true"
 		/>
 
@@ -22,7 +21,6 @@
 			name="alias"
 			type="text"
 			label="JFIELD_ALIAS_LABEL"
-			size="45"
 			hint="JFIELD_ALIAS_PLACEHOLDER"
 		/>
 
@@ -32,6 +30,7 @@
 			label="COM_COOKIEMANAGER_FIELD_POSITION_LABEL"
 			required="true"
 			default="4"
+			validate="options"
 			>
 			<option value="1">COM_COOKIEMANAGER_SCRIPT_POSITION_AFTER_BEGIN_HEAD</option>
 			<option value="2">COM_COOKIEMANAGER_SCRIPT_POSITION_BEFORE_END_HEAD</option>
@@ -45,6 +44,7 @@
 			label="COM_COOKIEMANAGER_FIELD_TYPE_LABEL"
 			required="true"
 			default="1"
+			validate="options"
 			>
 			<option value="1">COM_COOKIEMANAGER_SCRIPT_TYPE_SCRIPT</option>
 			<option value="2">COM_COOKIEMANAGER_SCRIPT_TYPE_EXTERNAL_SCRIPT</option>

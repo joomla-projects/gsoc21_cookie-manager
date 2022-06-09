@@ -14,7 +14,6 @@
 			name="uuid"
 			type="text"
 			label="COM_COOKIEMANAGER_FIELD_UUID_LABEL"
-			size="80"
 			readonly="true"
 		/>
 
@@ -22,7 +21,6 @@
 			name="ccuuid"
 			type="text"
 			label="COM_COOKIEMANAGER_FIELD_CCUUID_LABEL"
-			size="80"
 			readonly="true"
 		/>
 
@@ -30,7 +28,6 @@
 			name="consent_opt_in"
 			type="text"
 			label="COM_COOKIEMANAGER_FIELD_CONSENT_OPT_IN_LABEL"
-			size="80"
 			readonly="true"
 		/>
 
@@ -38,7 +35,6 @@
 			name="consent_opt_out"
 			type="text"
 			label="COM_COOKIEMANAGER_FIELD_CONSENT_OPT_OUT_LABEL"
-			size="80"
 			readonly="true"
 		/>
 
@@ -46,7 +42,6 @@
 			name="consent_date"
 			type="text"
 			label="COM_COOKIEMANAGER_FIELD_CONSENT_DATE_LABEL"
-			size="80"
 			readonly="true"
         />
 
@@ -54,7 +49,6 @@
 			name="url"
 			type="text"
 			label="COM_COOKIEMANAGER_FIELD_URL_LABEL"
-			size="80"
 			readonly="true"
 		/>
 
