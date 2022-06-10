@@ -61,6 +61,7 @@
 			name="cookie_name"
 			type="text"
 			label="COM_COOKIEMANAGER_COOKIE_NAME_LABEL"
+			descrioption="COM_COOKIEMANAGER_COOKIE_NAME_DESCRIPTION"
 			required="true"
 			hint="COM_COOKIEMANAGER_COOKIE_NAME_HINT"
 		/>
@@ -69,6 +70,7 @@
 			name="cookie_desc"
 			type="textarea"
 			label="COM_COOKIEMANAGER_COOKIE_DESC_LABEL"
+			descrioption="COM_COOKIEMANAGER_COOKIE_DESC_DESCRIPTION"
 			required="true"
 			hint="COM_COOKIEMANAGER_COOKIE_DESC_HINT"
 		/>
@@ -77,6 +79,7 @@
 			name="exp_period"
 			type="list"
 			label="COM_COOKIEMANAGER_COOKIE_EXP_PERIOD_LABEL"
+			descrioption="COM_COOKIEMANAGER_COOKIE_EXP_PERIOD_DESCRIPTION"
 			required="true"
 			>
 			<option value="-1">COM_COOKIEMANAGER_COOKIE_EXP_PERIOD_FOREVER</option>
@@ -99,7 +102,7 @@
 			showon="exp_period!:-1,0"
 			default="0"
 		/>
-		
+
 		<field
 			name="created_by"
 			type="user"
