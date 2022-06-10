@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <config>
+	<help key="Cookie_Manager:_Options"/>
 	<fieldset
 		name="banner"
 		label="COM_COOKIEMANAGER_FIELDSET_CONFIG_BANNER_OPTIONS_LABEL"
