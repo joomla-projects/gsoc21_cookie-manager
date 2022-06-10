@@ -26,8 +26,8 @@ $consentBannerBody .= '<h5>' . Text::_('COM_COOKIEMANAGER_MANAGE_CONSENT_PREFERE
 
 foreach ($this->cookieCategories as $key => $value)
 {
-	$consentBannerBody .= '<li class="cookie-cat form-check form-check-inline"><label>' . $value->title . '<span class="ms-4 form-check-inline form-switch"><input class="form-check-input" data-cookiecategory="'
-	. $value->alias . '" type=checkbox></span></label></li>';
+	$consentBannerBody .= '<li class="cookie-cat form-check form-check-inline"><label for="' . $value->alias . '">' . $value->title . '<span class="ms-4 form-check-inline form-switch"><input class="form-check-input" data-cookiecategory="'
+	. $value->alias . '" type=checkbox id="' . $value->alias . '"></span></label></li>';
 }
 
 $consentBannerBody .= '</ul>';
@@ -60,8 +60,8 @@ $settingsBannerBody .= '<p>' . Text::_('COM_COOKIEMANAGER_FIELD_CONSENT_OPT_IN_L
 
 foreach ($this->cookieCategories as $catKey => $catValue)
 {
-	$settingsBannerBody .= '<h4>' . $catValue->title . '<span class="form-check-inline form-switch float-end">' .
-	'<input class="form-check-input " type="checkbox" data-cookie-category="' . $catValue->alias . '"></span></h4>' . $catValue->description;
+	$settingsBannerBody .= '<h4 id="label-' . $catValue->alias . '">' . $catValue->title . '<span class="form-check-inline form-switch float-end">' .
+	'<input class="form-check-input" type="checkbox" data-cookie-category="' . $catValue->alias . '" aria-labelledby="label-' . $catValue->alias . '"></span></h4>' . $catValue->description;
 
 	$settingsBannerBody .= '<a class="text-decoration-none" data-bs-toggle="collapse" href="#' . $catValue->alias . '" role="button" aria-expanded="false" '
 	. 'aria-controls="' . $catValue->alias . '">' . Text::_('COM_COOKIEMANAGER_PREFERENCES_MORE_BUTTON_TEXT') . '</a><div class="collapse" id="' . $catValue->alias . '">';
@@ -109,3 +109,4 @@ echo HTMLHelper::_(
 	],
 	$settingsBannerBody
 );
+
