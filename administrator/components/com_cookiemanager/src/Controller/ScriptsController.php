@@ -21,6 +21,12 @@ use Joomla\CMS\MVC\Controller\AdminController;
 class ScriptsController extends AdminController
 {
 	/**
+	 * @var     string  The prefix to use with controller messages.
+	 * @since    __DEPLOY_VERSION__
+	 */
+	protected $text_prefix = 'COM_COOKIEMANAGER_SCRIPTS';
+
+	/**
 	 * Proxy for getModel.
 	 *
 	 * @param   string  $name    The name of the model.
