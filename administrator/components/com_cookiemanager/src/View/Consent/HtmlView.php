@@ -102,6 +102,6 @@ class HtmlView extends BaseHtmlView
 
 		$toolbar->cancel('consent.cancel');
 
-		ToolbarHelper::help('JHELP_COMPONENTS_COOKIEMANAGER_CONSENTS_EDIT');
+		ToolbarHelper::help('Cookie_Manager:_Review_Consent');
 	}
 }

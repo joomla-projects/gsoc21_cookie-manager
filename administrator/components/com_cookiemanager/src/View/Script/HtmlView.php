@@ -111,6 +111,6 @@ class HtmlView extends BaseHtmlView
 
 		$toolbar->cancel('script.cancel');
 
-		ToolbarHelper::help('JHELP_COMPONENTS_COOKIEMANAGER_SCRIPTS_EDIT');
+		ToolbarHelper::help('Cookie_Manager:_Scripts_Edit');
 	}
 }

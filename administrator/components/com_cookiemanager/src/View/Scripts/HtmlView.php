@@ -166,6 +166,6 @@ class HtmlView extends BaseHtmlView
 			$toolbar->preferences('com_cookiemanager');
 		}
 
-		$toolbar->help('JHELP_COMPONENTS_COOKIEMANAGER_SCRIPTS');
+		ToolbarHelper::help('Cookie_Manager:_Scripts');
 	}
 }
