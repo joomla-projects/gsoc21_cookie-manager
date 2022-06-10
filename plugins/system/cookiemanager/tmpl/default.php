@@ -22,7 +22,7 @@ if ($menuitem) {
 	$consentBannerBody .= '<p>' . HTMLHelper::_('link', Route::_($menuitem->link), Text::_('COM_COOKIEMANAGER_VIEW_COOKIE_POLICY')) . '</p>';
 }
 
-$consentBannerBody .= '<h5>' . Text::_('COM_COOKIEMANAGER_MANAGE_CONSENT_PREFERENCES') . '</h5><ul>';
+$consentBannerBody .= '<h4>' . Text::_('COM_COOKIEMANAGER_MANAGE_CONSENT_PREFERENCES') . '</h4><ul>';
 
 foreach ($this->cookieCategories as $key => $value)
 {
