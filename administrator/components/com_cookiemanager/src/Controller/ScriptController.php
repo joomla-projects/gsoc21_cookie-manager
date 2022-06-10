@@ -20,4 +20,9 @@ use Joomla\CMS\MVC\Controller\FormController;
  */
 class ScriptController extends FormController
 {
+	/**
+	 * @var     string  The prefix to use with controller messages.
+	 * @since    __DEPLOY_VERSION__
+	 */
+	protected $text_prefix = 'COM_COOKIEMANAGER_SCRIPT';
 }
