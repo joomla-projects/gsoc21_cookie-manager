@@ -19,6 +19,35 @@
   		</field>
 
 		<field
+			name="position"
+			type="list"
+			label="COM_COOKIEMANAGER_FIELD_POSITION_LABEL"
+  			onchange="this.form.submit();"
+			>
+			<option value="">COM_COOKIEMANAGER_SCRIPT_POSITION_SELECT</option>
+			<option value="1">COM_COOKIEMANAGER_SCRIPT_POSITION_AFTER_BEGIN_HEAD</option>
+			<option value="2">COM_COOKIEMANAGER_SCRIPT_POSITION_BEFORE_END_HEAD</option>
+			<option value="3">COM_COOKIEMANAGER_SCRIPT_POSITION_AFTER_BEGIN_BODY</option>
+			<option value="4">COM_COOKIEMANAGER_SCRIPT_POSITION_BEFORE_END_BODY</option>
+		</field>
+
+		<field
+			name="type"
+			type="list"
+			label="COM_COOKIEMANAGER_FIELD_TYPE_LABEL"
+  			onchange="this.form.submit();"
+			>
+			<option value="">COM_COOKIEMANAGER_SCRIPT_TYPE_SELECT</option>
+			<option value="1">COM_COOKIEMANAGER_SCRIPT_TYPE_SCRIPT</option>
+			<option value="2">COM_COOKIEMANAGER_SCRIPT_TYPE_EXTERNAL_SCRIPT</option>
+			<option value="3">COM_COOKIEMANAGER_SCRIPT_TYPE_IFRAME</option>
+			<option value="4">COM_COOKIEMANAGER_SCRIPT_TYPE_EMBED</option>
+			<option value="5">COM_COOKIEMANAGER_SCRIPT_TYPE_OBJECT</option>
+			<option value="6">COM_COOKIEMANAGER_SCRIPT_TYPE_IMG</option>
+			<option value="7">COM_COOKIEMANAGER_SCRIPT_TYPE_LINK</option>
+		</field>
+
+		<field
 			name="category_id"
 			type="category"
 			label="JCATEGORY"

@@ -110,24 +110,24 @@ class ScriptsModel extends ListModel
 		$db    = $this->getDbo();
 		$query = $db->getQuery(true);
 
-			$query->select(
-				$this->getState(
-					'list.select',
-					'a.id, a.title, a.alias, a.position, a.type, a.code, ' .
-					'a.catid, a.published, a.ordering'
-				)
+		$query->select(
+			$this->getState(
+				'list.select',
+				'a.id, a.title, a.alias, a.position, a.type, a.code, ' .
+				'a.catid, a.published, a.ordering'
+			)
+		);
+		$query->from($db->quoteName('#__cookiemanager_scripts', 'a'));
+
+		// Join over the categories.
+		$query->select($db->quoteName('c.title', 'category_title'))
+			->join(
+				'LEFT',
+				$db->quoteName('#__categories', 'c') . ' ON ' . $db->quoteName('c.id') . ' = ' . $db->quoteName('a.catid')
 			);
-			$query->from($db->quoteName('#__cookiemanager_scripts', 'a'));
 
-			// Join over the categories.
-			$query->select($db->quoteName('c.title', 'category_title'))
-				->join(
-					'LEFT',
-					$db->quoteName('#__categories', 'c') . ' ON ' . $db->quoteName('c.id') . ' = ' . $db->quoteName('a.catid')
-				);
-
-			// Filter by categories
-			$categoryId = $this->getState('filter.category_id', array());
+		// Filter by categories
+		$categoryId = $this->getState('filter.category_id', array());
 
 		if (!is_array($categoryId))
 		{
@@ -151,8 +151,8 @@ class ScriptsModel extends ListModel
 			$query->where('(' . implode(' OR ', $subCatItemsWhere) . ')');
 		}
 
-			// Filter by published state
-			$published = (string) $this->getState('filter.published');
+		// Filter by published state
+		$published = (string) $this->getState('filter.published');
 
 		if (is_numeric($published))
 		{
@@ -171,6 +171,20 @@ class ScriptsModel extends ListModel
 		{
 			$search = $db->quote('%' . str_replace(' ', '%', $db->escape(trim($search), true) . '%'));
 			$query->where('(a.title LIKE ' . $search . ')');
+		}
+
+		// Filter on the position.
+		if ($position = (int) $this->getState('filter.position'))
+		{
+			$query->where($db->quoteName('a.position') . ' = :position');
+			$query->bind(':position', $position, ParameterType::INTEGER);
+		}
+
+		// Filter on the type.
+		if ($type = (int) $this->getState('filter.type'))
+		{
+			$query->where($db->quoteName('a.type') . ' = :type');
+			$query->bind(':type', $type, ParameterType::INTEGER);
 		}
 
 		// Add the list ordering clause.
