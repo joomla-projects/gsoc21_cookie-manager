@@ -189,6 +189,41 @@
 				link="index.php?option=com_messages&amp;view=messages"
 			/>
 		</menuitem>
+
+		<menuitem
+			type="separator"
+		/>
+
+		<menuitem
+			title="MOD_MENU_COOKIEMANAGER"
+			type="heading"
+			class="class:cookie"
+			>
+			<menuitem
+				title="MOD_MENU_COOOKIEMANAGER_COOKIES"
+				type="component"
+				element="com_cookiemanager"
+				link="index.php?option=com_cookiemanager&amp;view=cookies"
+			/>
+			<menuitem
+				title="MOD_MENU_COOOKIEMANAGER_CATEGORIES"
+				type="component"
+				element="com_categories"
+				link="index.php?option=com_categories&amp;view=categories&amp;extension=com_cookiemanager"
+			/>
+			<menuitem
+				title="MOD_MENU_COOOKIEMANAGER_SCRIPTS"
+				type="component"
+				element="com_cookiemanager"
+				link="index.php?option=com_cookiemanager&amp;view=scripts"
+			/>
+			<menuitem
+				title="MOD_MENU_COOOKIEMANAGER_CONSENTS"
+				type="component"
+				element="com_cookiemanager"
+				link="index.php?option=com_cookiemanager&amp;view=consents"
+			/>
+		</menuitem>
 	</menuitem>
 
 	<menuitem
