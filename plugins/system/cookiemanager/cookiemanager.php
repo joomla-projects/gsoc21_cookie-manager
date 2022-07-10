@@ -198,6 +198,12 @@ class PlgSystemCookiemanager extends CMSPlugin
 			return;
 		}
 
+		// Are we in a modal?
+		if ($this->app->input->get('tmpl', '', 'cmd') === 'component')
+		{
+			return;
+		}
+
 		echo $this->bannerContent;
 
 		// Return early in case of AJAX request
