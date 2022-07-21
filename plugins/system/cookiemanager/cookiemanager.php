@@ -176,7 +176,6 @@ class PlgSystemCookiemanager extends CMSPlugin
 		include PluginHelper::getLayoutPath('system', 'cookiemanager');
 		$this->bannerContent = ob_get_clean();
 		echo $this->bannerContent;
-
 	}
 
 	/**
@@ -192,8 +191,6 @@ class PlgSystemCookiemanager extends CMSPlugin
 		{
 			return;
 		}
-
-		
 
 		// Return early in case of AJAX request
 		if ($this->app->input->get('format') === 'json')
