@@ -138,14 +138,6 @@ class CookieModel extends AdminModel
 	 */
 	protected function preprocessForm(Form $form, $data, $group = 'content')
 	{
-		if ($this->canCreateCategory())
-		{
-			$form->setFieldAttribute('catid', 'allowAdd', 'true');
-
-			// Add a prefix for categories created on the fly.
-			$form->setFieldAttribute('catid', 'customPrefix', '#new#');
-		}
-
 		parent::preprocessForm($form, $data, $group);
 	}
 
@@ -203,55 +195,6 @@ class CookieModel extends AdminModel
 	{
 		$input = Factory::getApplication()->input;
 
-		// Create new category, if needed.
-		$createCategory = true;
-
-		// If category ID is provided, check if it's valid.
-		if (is_numeric($data['catid']) && $data['catid'])
-		{
-			$createCategory = !CategoriesHelper::validateCategoryId($data['catid'], 'com_cookiemanger');
-		}
-
-		// Save New Category
-		if ($createCategory && $this->canCreateCategory())
-		{
-			$category = [
-				// Remove #new# prefix, if exists.
-				'title'     => strpos($data['catid'], '#new#') === 0 ? substr($data['catid'], 5) : $data['catid'],
-				'parent_id' => 1,
-				'extension' => 'com_cookiemanager',
-				'language'  => $data['language'],
-				'published' => 1,
-			];
-
-			/** @var \Joomla\Component\Categories\Administrator\Model\CategoryModel $categoryModel */
-			$categoryModel = Factory::getApplication()->bootComponent('com_categories')
-				->getMVCFactory()->createModel('Category', 'Administrator', ['ignore_request' => true]);
-
-			// Create new category.
-			if (!$categoryModel->save($category))
-			{
-				$this->setError($categoryModel->getError());
-
-				return false;
-			}
-
-			// Get the new category ID.
-			$data['catid'] = $categoryModel->getState('category.id');
-		}
-
 		return parent::save($data);
-	}
-
-	/**
-	 * Is the user allowed to create an on the fly category?
-	 *
-	 * @return  boolean
-	 *
-	 * @since   __DEPLOY_VERSION__
-	 */
-	private function canCreateCategory()
-	{
-		return Factory::getUser()->authorise('core.create', 'com_cookiemanager');
 	}
 }
