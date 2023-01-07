@@ -107,7 +107,9 @@ INSERT INTO `#__assets` (`id`, `parent_id`, `lft`, `rgt`, `level`, `name`, `titl
 (87, 18, 124, 125, 2, 'com_modules.module.97', 'Recently Added Articles', '{}'),
 (88, 18, 126, 127, 2, 'com_modules.module.98', 'Logged-in Users', '{}'),
 (89, 18, 128, 129, 2, 'com_modules.module.90', 'Login Support', '{}'),
-(90, 1, 163, 164, 1, 'com_scheduler', 'com_scheduler', '{}');
+(90, 1, 163, 164, 1, 'com_scheduler', 'com_scheduler', '{}'),
+(91, 1, 165, 166, 1, 'com_cookiemanager', 'com_cookiemanager', '{}'),
+(92, 91, 167, 168, 2, 'com_cookiemanager.category.8', 'Uncategorised', '{}');
 
 -- --------------------------------------------------------
 
