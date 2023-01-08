@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package     Joomla.Plugin
  * @subpackage  System.cookiemanager
@@ -46,23 +47,23 @@ class PlgSystemCookiemanager extends CMSPlugin
 	 * @var    \Joomla\Database\DatabaseDriver
 	 * @since  __DEPLOY_VERSION__
 	 */
-	 protected $db;
+	protected $db;
 
-	 /**
-	  * Cookie settings scripts
-	  *
-	  * @var    object
-	  * @since  __DEPLOY_VERSION__
-	  */
-	 protected $cookieScripts;
+	/**
+	 * Cookie settings scripts
+	 *
+	 * @var    object
+	 * @since  __DEPLOY_VERSION__
+	 */
+	protected $cookieScripts;
 
-	 /**
-	  * Cookie categories
-	  *
-	  * @var    object
-	  * @since  __DEPLOY_VERSION__
-	  */
-	  protected $cookieCategories;
+	/**
+	 * Cookie categories
+	 *
+	 * @var    object
+	 * @since  __DEPLOY_VERSION__
+	 */
+	protected $cookieCategories;
 
 	/**
 	 * Add assets for the cookie banners.
@@ -83,20 +84,6 @@ class PlgSystemCookiemanager extends CMSPlugin
 		ob_start();
 		ob_implicit_flush(false);
 
-		// Load required assets
-		$assets = $this->app->getDocument()->getWebAssetManager();
-		$assets->registerAndUseScript(
-			'plg_system_cookiemanager.script',
-			'plg_system_cookiemanager/cookiemanager.min.js',
-			[],
-			['defer' => true],
-			['core']
-		);
-		$assets->registerAndUseStyle(
-			'plg_system_cookiemanager.style',
-			'plg_system_cookiemanager/cookiemanager.min.css'
-		);
-
 		// Load cookiemanager component language file
 		$this->app->getLanguage()->load('com_cookiemanager', JPATH_ADMINISTRATOR);
 
@@ -112,22 +99,40 @@ class PlgSystemCookiemanager extends CMSPlugin
 
 		$db    = $this->db;
 		$query = $db->getQuery(true)
-			->select($db->quoteName(['c.id','c.alias','a.cookie_name','a.cookie_desc','a.exp_period','a.exp_value']))
+			->select($db->quoteName(['c.id', 'c.alias', 'a.cookie_name', 'a.cookie_desc', 'a.exp_period', 'a.exp_value']))
 			->from($db->quoteName('#__categories', 'c'))
 			->join(
 				'RIGHT',
-				$db->quoteName('#__cookiemanager_cookies', 'a') . ' ON ' . $db->quoteName('c.id') . ' = ' . $db->quoteName('a.catid') . 'AND' . $db->quoteName('a.published') . ' =  1'
+				$db->quoteName('#__cookiemanager_cookies', 'a') . ' ON ' . $db->quoteName('c.id') . ' = ' . $db->quoteName('a.catid') . 'WHERE' . $db->quoteName('a.published') . ' =  1'
 			)
 			->order($db->quoteName('lft'));
 
-		$cookies = $db->setQuery($query)->loadObjectList();
+		$this->cookies = $db->setQuery($query)->loadObjectList();
+
+		if (!empty($this->cookies))
+		{
+			// Load required assets
+			$assets = $this->app->getDocument()->getWebAssetManager();
+			$assets->registerAndUseScript(
+				'plg_system_cookiemanager.script',
+				'plg_system_cookiemanager/cookiemanager.min.js',
+				[],
+				['defer' => true],
+				['core']
+			);
+			$assets->registerAndUseStyle(
+				'plg_system_cookiemanager.style',
+				'plg_system_cookiemanager/cookiemanager.min.css'
+			);
+		}
 
 		$query = $db->getQuery(true)
-			->select($db->quoteName(['id','title','alias','description']))
+			->select($db->quoteName(['id', 'title', 'alias', 'description']))
 			->from($db->quoteName('#__categories'))
-			->where([
-				$db->quoteName('extension') . ' = ' . $db->quote('com_cookiemanager'),
-				$db->quoteName('published') . ' =  1',
+			->where(
+				[
+					$db->quoteName('extension') . ' = ' . $db->quote('com_cookiemanager'),
+					$db->quoteName('published') . ' =  1',
 				]
 			)
 			->order($db->quoteName('lft'));
@@ -135,7 +140,7 @@ class PlgSystemCookiemanager extends CMSPlugin
 		$this->cookieCategories = $db->setQuery($query)->loadObjectList();
 
 		$query = $db->getQuery(true)
-			->select($db->quoteName(['a.type','a.position','a.code','a.catid']))
+			->select($db->quoteName(['a.type', 'a.position', 'a.code', 'a.catid']))
 			->from($db->quoteName('#__cookiemanager_scripts', 'a'))
 			->where($db->quoteName('a.published') . ' =  1')
 			->join(
@@ -198,62 +203,64 @@ class PlgSystemCookiemanager extends CMSPlugin
 			return;
 		}
 
-		echo '<button class="preview btn btn-info" data-bs-toggle="modal" data-bs-target="#consentBanner">' . Text::_('COM_COOKIEMANAGER_PREVIEW_BUTTON_TEXT') . '</button>';
-
-		foreach ($this->cookieCategories as $catKey => $catValue)
+		if (!empty($this->cookies))
 		{
-			if (isset($_COOKIE['cookie_category_' . $catValue->alias]) && $_COOKIE['cookie_category_' . $catValue->alias] === 'true')
+			echo '<button class="preview btn btn-info" data-bs-toggle="modal" data-bs-target="#consentBanner">' . Text::_('COM_COOKIEMANAGER_PREVIEW_BUTTON_TEXT') . '</button>';
+
+			foreach ($this->cookieCategories as $catKey => $catValue)
 			{
-				foreach ($this->cookieScripts as $key => $value)
+				if (isset($_COOKIE['cookie_category_' . $catValue->alias]) && $_COOKIE['cookie_category_' . $catValue->alias] === 'true')
 				{
-					if ($catValue->id == $value->catid)
+					foreach ($this->cookieScripts as $key => $value)
 					{
-						if ($value->type == 1 || $value->type == 2)
+						if ($catValue->id == $value->catid)
 						{
-							if ($value->position == 1)
+							if ($value->type == 1 || $value->type == 2)
 							{
-								$html = ob_get_contents();
-
-								if ($html)
+								if ($value->position == 1)
 								{
-									ob_end_clean();
+									$html = ob_get_contents();
+
+									if ($html)
+									{
+										ob_end_clean();
+									}
+
+									echo str_replace('<head>', '<head>' . $value->code, $html);
 								}
-
-								echo str_replace('<head>', '<head>' . $value->code, $html);
-							}
-							elseif ($value->position == 2)
-							{
-								$html = ob_get_contents();
-
-								if ($html)
+								elseif ($value->position == 2)
 								{
-									ob_end_clean();
+									$html = ob_get_contents();
+
+									if ($html)
+									{
+										ob_end_clean();
+									}
+
+									echo str_replace('</head>', $value->code . '</head>', $html);
 								}
-
-								echo str_replace('</head>', $value->code . '</head>', $html);
-							}
-							elseif ($value->position == 3)
-							{
-								$html = ob_get_contents();
-
-								if ($html)
+								elseif ($value->position == 3)
 								{
-									ob_end_clean();
+									$html = ob_get_contents();
+
+									if ($html)
+									{
+										ob_end_clean();
+									}
+
+									echo preg_replace('/<body[^>]+>\K/i', $value->code, $html);
 								}
-
-								echo preg_replace('/<body[^>]+>\K/i', $value->code, $html);
-							}
-
-							else
-							{
-								$html = ob_get_contents();
-
-								if ($html)
+								else
 								{
-									ob_end_clean();
-								}
+									$html = ob_get_contents();
 
-								echo str_replace('</body>', $value->code . '</body>', $html);
+									if ($html)
+									{
+										ob_end_clean();
+									}
+
+									echo str_replace('</body>', $value->code . '</body>', $html);
+								}
 							}
 						}
 					}

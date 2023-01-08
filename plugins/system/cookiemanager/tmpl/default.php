@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package     Joomla.Plugin
  * @subpackage  System.cookiemanager
@@ -18,7 +19,8 @@ $menuitem = $sitemenu->getItem($params->get('policylink', ''));
 
 $consentBannerBody = '<p>' . Text::_('COM_COOKIEMANAGER_COOKIE_BANNER_DESCRIPTION') . '</p>';
 
-if ($menuitem) {
+if ($menuitem)
+{
 	$consentBannerBody .= '<p>' . HTMLHelper::_('link', Route::_($menuitem->link), Text::_('COM_COOKIEMANAGER_VIEW_COOKIE_POLICY')) . '</p>';
 }
 
@@ -26,8 +28,18 @@ $consentBannerBody .= '<h5>' . Text::_('COM_COOKIEMANAGER_MANAGE_CONSENT_PREFERE
 
 foreach ($this->cookieCategories as $key => $value)
 {
-	$consentBannerBody .= '<li class="cookie-cat form-check form-check-inline"><label>' . $value->title . '<span class="ms-4 form-check-inline form-switch"><input class="form-check-input" data-cookiecategory="'
-	. $value->alias . '" type=checkbox></span></label></li>';
+	foreach ($this->cookies as $key => $cookieValue)
+	{
+		if (!empty($value))
+		{
+			if ($value->id == $cookieValue->id)
+			{
+				$consentBannerBody .= '<li class="cookie-cat form-check form-check-inline"><label>' . $value->title . '<span class="ms-4 form-check-inline form-switch"><input class="form-check-input" data-cookiecategory="'
+				. $value->alias . '" type=checkbox></span></label></li>';
+				break;
+			}
+		}
+	}
 }
 
 $consentBannerBody .= '</ul>';
@@ -36,21 +48,22 @@ echo HTMLHelper::_(
 	'bootstrap.renderModal',
 	'consentBanner',
 	[
-			'title' => Text::_('COM_COOKIEMANAGER_COOKIE_BANNER_TITLE'),
-			'footer' => '<button type="button" id="consentConfirmChoice" class="btn btn-info" data-bs-dismiss="modal">'
+		'title' => Text::_('COM_COOKIEMANAGER_COOKIE_BANNER_TITLE'),
+		'footer' => '<button type="button" id="consentConfirmChoice" class="btn btn-info" data-bs-dismiss="modal">'
 			. Text::_('COM_COOKIEMANAGER_CONFIRM_MY_CHOICES_BUTTON_TEXT') . '</button>'
 			. '<button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-dismiss="modal" data-bs-target="#settingsBanner">'
 			. Text::_('COM_COOKIEMANAGER_MORE_DETAILS') . '</button>'
 			. '<button type="button" data-button="acceptAllCookies" class="btn btn-info" data-bs-dismiss="modal" onClick="window.location.reload(true)">'
 			. Text::_('COM_COOKIEMANAGER_ACCEPT_ALL_COOKIES_BUTTON_TEXT') . '</button>',
 
-		],
+	],
 	$consentBannerBody
 );
 
 $settingsBannerBody = '<p>' . Text::_('COM_COOKIEMANAGER_PREFERENCES_DESCRIPTION') . '</p>';
 
-if ($menuitem) {
+if ($menuitem)
+{
 	$settingsBannerBody .= '<p>' . HTMLHelper::_('link', Route::_($menuitem->link), Text::_('COM_COOKIEMANAGER_VIEW_COOKIE_POLICY')) . '</p>';
 }
 
@@ -60,19 +73,24 @@ $settingsBannerBody .= '<p>' . Text::_('COM_COOKIEMANAGER_FIELD_CONSENT_OPT_IN_L
 
 foreach ($this->cookieCategories as $catKey => $catValue)
 {
-	$settingsBannerBody .= '<h4>' . $catValue->title . '<span class="form-check-inline form-switch float-end">' .
-	'<input class="form-check-input " type="checkbox" data-cookie-category="' . $catValue->alias . '"></span></h4>' . $catValue->description;
-
-	$settingsBannerBody .= '<a class="text-decoration-none" data-bs-toggle="collapse" href="#' . $catValue->alias . '" role="button" aria-expanded="false" '
-	. 'aria-controls="' . $catValue->alias . '">' . Text::_('COM_COOKIEMANAGER_PREFERENCES_MORE_BUTTON_TEXT') . '</a><div class="collapse" id="' . $catValue->alias . '">';
-	$table = '<table class="table"><thead><tr><th scope="col">' . Text::_('COM_COOKIEMANAGER_TABLE_HEAD_COOKIENAME') . '</th><th scope="col">' . Text::_('COM_COOKIEMANAGER_TABLE_HEAD_DESCRIPTION') . '</th><th scope="col">' . Text::_('COM_COOKIEMANAGER_TABLE_HEAD_EXPIRATION') . '</th></tr></thead><tbody>';
-
-	foreach ($cookies as $key => $value)
+	$hasCookies = true;
+	foreach ($this->cookies as $key => $value)
 	{
 		if (!empty($value))
 		{
 			if ($catValue->id == $value->id)
 			{
+				if ($hasCookies)
+				{
+					$settingsBannerBody .= '<h4>' . $catValue->title . '<span class="form-check-inline form-switch float-end">' .
+						'<input class="form-check-input " type="checkbox" data-cookie-category="' . $catValue->alias . '"></span></h4>' . $catValue->description;
+
+					$settingsBannerBody .= '<a class="text-decoration-none" data-bs-toggle="collapse" href="#' . $catValue->alias . '" role="button" aria-expanded="false" '
+						. 'aria-controls="' . $catValue->alias . '">' . Text::_('COM_COOKIEMANAGER_PREFERENCES_MORE_BUTTON_TEXT') . '</a><div class="collapse" id="' . $catValue->alias . '">';
+					$table = '<table class="table"><thead><tr><th scope="col">' . Text::_('COM_COOKIEMANAGER_TABLE_HEAD_COOKIENAME') . '</th><th scope="col">' . Text::_('COM_COOKIEMANAGER_TABLE_HEAD_DESCRIPTION') . '</th><th scope="col">' . Text::_('COM_COOKIEMANAGER_TABLE_HEAD_EXPIRATION') . '</th></tr></thead><tbody>';
+					$hasCookies = false;
+				}
+
 				if ($value->exp_period == -1)
 				{
 					$value->exp_period = "Forever";
@@ -85,16 +103,19 @@ foreach ($this->cookieCategories as $catKey => $catValue)
 				}
 
 				$table .= '<tr>'
-				. '<td>' . $value->cookie_name . '</td>'
-				. '<td>' . $value->cookie_desc . '</td>'
-				. '<td>' . $value->exp_value . ' ' . $value->exp_period . '</td>'
-				. '</tr>';
+					. '<td>' . $value->cookie_name . '</td>'
+					. '<td>' . $value->cookie_desc . '</td>'
+					. '<td>' . $value->exp_value . ' ' . $value->exp_period . '</td>'
+					. '</tr>';
 			}
 		}
 	}
 
-	$table .= '</tbody></table>';
-	$settingsBannerBody .= $table . '</div>';
+	if (!$hasCookies)
+	{
+		$table .= '</tbody></table>';
+		$settingsBannerBody .= $table . '</div>';
+	}
 }
 
 echo HTMLHelper::_(
