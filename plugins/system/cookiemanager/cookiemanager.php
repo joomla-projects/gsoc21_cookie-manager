@@ -15,7 +15,6 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Plugin\CMSPlugin;
-use Joomla\CMS\WebAsset\WebAssetManager;
 use Joomla\CMS\Plugin\PluginHelper;
 
 /**
@@ -48,6 +47,14 @@ class PlgSystemCookiemanager extends CMSPlugin
 	 * @since  __DEPLOY_VERSION__
 	 */
 	protected $db;
+
+	/**
+	 * Cookies
+	 *
+	 * @var    object
+	 * @since  __DEPLOY_VERSION__
+	 */
+	protected $cookies;
 
 	/**
 	 * Cookie settings scripts
@@ -152,17 +159,19 @@ class PlgSystemCookiemanager extends CMSPlugin
 
 		$cookieCodes = [];
 
-		foreach ($this->cookieCategories as $catKey => $catValue)
+		foreach ($this->cookieCategories as $category)
 		{
-			if (!isset($_COOKIE['cookie_category_' . $catValue->alias]) || $_COOKIE['cookie_category_' . $catValue->alias] === 'false')
-			{
-				$cookieCodes[$catValue->alias] = [];
+			$cookie = $this->app->input->cookie->get('cookie_category_' . $category->alias);
 
-				foreach ($this->cookieScripts as $key => $value)
+			if (!isset($cookie) || $cookie === 'false')
+			{
+				$cookieCodes[$category->alias] = [];
+
+				foreach ($this->cookieScripts as $script)
 				{
-					if ($catValue->id == $value->catid)
+					if ($category->id == $script->catid)
 					{
-						array_push($cookieCodes[$catValue->alias], $value);
+						array_push($cookieCodes[$category->alias], $script);
 					}
 				}
 			}
@@ -203,64 +212,69 @@ class PlgSystemCookiemanager extends CMSPlugin
 			return;
 		}
 
-		if (!empty($this->cookies))
+		// No need to load scripts when there are none
+		if (empty($this->cookieScripts))
 		{
-			echo '<button class="preview btn btn-info" data-bs-toggle="modal" data-bs-target="#consentBanner">' . Text::_('COM_COOKIEMANAGER_PREVIEW_BUTTON_TEXT') . '</button>';
+			return;
+		}
 
-			foreach ($this->cookieCategories as $catKey => $catValue)
+		echo '<button class="preview btn btn-info" data-bs-toggle="modal" data-bs-target="#consentBanner">' . Text::_('COM_COOKIEMANAGER_PREVIEW_BUTTON_TEXT') . '</button>';
+
+		foreach ($this->cookieCategories as $category)
+		{
+			$cookie = $this->app->input->cookie->get('cookie_category_' . $category->alias);
+
+			if (isset($cookie) && $cookie === 'true')
 			{
-				if (isset($_COOKIE['cookie_category_' . $catValue->alias]) && $_COOKIE['cookie_category_' . $catValue->alias] === 'true')
+				foreach ($this->cookieScripts as $script)
 				{
-					foreach ($this->cookieScripts as $key => $value)
+					if ($category->id == $script->catid)
 					{
-						if ($catValue->id == $value->catid)
+						if ($script->type == 1 || $script->type == 2)
 						{
-							if ($value->type == 1 || $value->type == 2)
+							if ($script->position == 1)
 							{
-								if ($value->position == 1)
+								$html = ob_get_contents();
+
+								if ($html)
 								{
-									$html = ob_get_contents();
-
-									if ($html)
-									{
-										ob_end_clean();
-									}
-
-									echo str_replace('<head>', '<head>' . $value->code, $html);
+									ob_end_clean();
 								}
-								elseif ($value->position == 2)
+
+								echo str_replace('<head>', '<head>' . $script->code, $html);
+							}
+							elseif ($script->position == 2)
+							{
+								$html = ob_get_contents();
+
+								if ($html)
 								{
-									$html = ob_get_contents();
-
-									if ($html)
-									{
-										ob_end_clean();
-									}
-
-									echo str_replace('</head>', $value->code . '</head>', $html);
+									ob_end_clean();
 								}
-								elseif ($value->position == 3)
+
+								echo str_replace('</head>', $script->code . '</head>', $html);
+							}
+							elseif ($script->position == 3)
+							{
+								$html = ob_get_contents();
+
+								if ($html)
 								{
-									$html = ob_get_contents();
-
-									if ($html)
-									{
-										ob_end_clean();
-									}
-
-									echo preg_replace('/<body[^>]+>\K/i', $value->code, $html);
+									ob_end_clean();
 								}
-								else
+
+								echo preg_replace('/<body[^>]+>\K/i', $script->code, $html);
+							}
+							else
+							{
+								$html = ob_get_contents();
+
+								if ($html)
 								{
-									$html = ob_get_contents();
-
-									if ($html)
-									{
-										ob_end_clean();
-									}
-
-									echo str_replace('</body>', $value->code . '</body>', $html);
+									ob_end_clean();
 								}
+
+								echo str_replace('</body>', $script->code . '</body>', $html);
 							}
 						}
 					}

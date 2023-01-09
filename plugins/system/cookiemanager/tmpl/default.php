@@ -26,16 +26,18 @@ if ($menuitem)
 
 $consentBannerBody .= '<h5>' . Text::_('COM_COOKIEMANAGER_MANAGE_CONSENT_PREFERENCES') . '</h5><ul>';
 
-foreach ($this->cookieCategories as $key => $value)
+foreach ($this->cookieCategories as $category)
 {
-	foreach ($this->cookies as $key => $cookieValue)
+	foreach ($this->cookies as $cookieValue)
 	{
-		if (!empty($value))
+		if (!empty($category))
 		{
-			if ($value->id == $cookieValue->id)
+			if ($category->id == $cookieValue->id)
 			{
-				$consentBannerBody .= '<li class="cookie-cat form-check form-check-inline"><label>' . $value->title . '<span class="ms-4 form-check-inline form-switch"><input class="form-check-input" data-cookiecategory="'
-				. $value->alias . '" type=checkbox></span></label></li>';
+				$consentBannerBody .= '<li class="cookie-cat form-check form-check-inline">'
+					. '<label>' . $category->title . '<span class="ms-4 form-check-inline form-switch">'
+					. '<input class="form-check-input" data-cookiecategory="' . $category->alias . '" type="checkbox">'
+					. '</span></label></li>';
 				break;
 			}
 		}
@@ -74,38 +76,42 @@ $settingsBannerBody .= '<p>' . Text::_('COM_COOKIEMANAGER_FIELD_CONSENT_OPT_IN_L
 foreach ($this->cookieCategories as $catKey => $catValue)
 {
 	$hasCookies = true;
-	foreach ($this->cookies as $key => $value)
+	foreach ($this->cookies as $cookie)
 	{
-		if (!empty($value))
+		if (!empty($cookie))
 		{
-			if ($catValue->id == $value->id)
+			if ($catValue->id == $cookie->id)
 			{
 				if ($hasCookies)
 				{
 					$settingsBannerBody .= '<h4>' . $catValue->title . '<span class="form-check-inline form-switch float-end">' .
-						'<input class="form-check-input " type="checkbox" data-cookie-category="' . $catValue->alias . '"></span></h4>' . $catValue->description;
-
+						'<input class="form-check-input" type="checkbox" data-cookie-category="' . $catValue->alias . '"></span></h4>' . $catValue->description;
 					$settingsBannerBody .= '<a class="text-decoration-none" data-bs-toggle="collapse" href="#' . $catValue->alias . '" role="button" aria-expanded="false" '
-						. 'aria-controls="' . $catValue->alias . '">' . Text::_('COM_COOKIEMANAGER_PREFERENCES_MORE_BUTTON_TEXT') . '</a><div class="collapse" id="' . $catValue->alias . '">';
-					$table = '<table class="table"><thead><tr><th scope="col">' . Text::_('COM_COOKIEMANAGER_TABLE_HEAD_COOKIENAME') . '</th><th scope="col">' . Text::_('COM_COOKIEMANAGER_TABLE_HEAD_DESCRIPTION') . '</th><th scope="col">' . Text::_('COM_COOKIEMANAGER_TABLE_HEAD_EXPIRATION') . '</th></tr></thead><tbody>';
+						. 'aria-controls="' . $catValue->alias . '">' . Text::_('COM_COOKIEMANAGER_PREFERENCES_MORE_BUTTON_TEXT') . '</a>'
+						. '<div class="collapse" id="' . $catValue->alias . '">';
+					$table = '<table class="table"><thead><tr>'
+						. '<th scope="col">' . Text::_('COM_COOKIEMANAGER_TABLE_HEAD_COOKIENAME') . '</th>'
+						. '<th scope="col">' . Text::_('COM_COOKIEMANAGER_TABLE_HEAD_DESCRIPTION') . '</th>'
+						. '<th scope="col">' . Text::_('COM_COOKIEMANAGER_TABLE_HEAD_EXPIRATION') . '</th>'
+						. '</tr></thead><tbody>';
 					$hasCookies = false;
 				}
 
-				if ($value->exp_period == -1)
+				if ($cookie->exp_period == -1)
 				{
-					$value->exp_period = "Forever";
-					$value->exp_value = "";
+					$cookie->exp_period = "Forever";
+					$cookie->exp_value = "";
 				}
-				elseif ($value->exp_period == 0)
+				elseif ($cookie->exp_period == 0)
 				{
-					$value->exp_period = "Session";
-					$value->exp_value = "";
+					$cookie->exp_period = "Session";
+					$cookie->exp_value = "";
 				}
 
 				$table .= '<tr>'
-					. '<td>' . $value->cookie_name . '</td>'
-					. '<td>' . $value->cookie_desc . '</td>'
-					. '<td>' . $value->exp_value . ' ' . $value->exp_period . '</td>'
+					. '<td>' . $cookie->cookie_name . '</td>'
+					. '<td>' . $cookie->cookie_desc . '</td>'
+					. '<td>' . $cookie->exp_value . ' ' . $cookie->exp_period . '</td>'
 					. '</tr>';
 			}
 		}
