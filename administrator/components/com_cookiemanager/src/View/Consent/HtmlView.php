@@ -12,7 +12,6 @@ namespace Joomla\Component\Cookiemanager\Administrator\View\Consent;
 \defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
-use Joomla\CMS\Helper\ContentHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\GenericDataException;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
@@ -65,7 +64,7 @@ class HtmlView extends BaseHtmlView
 	 *
 	 * @return  void
 	 *
-	 * @throws \Exception
+	 * @throws \GenericDataException
 	 * @since   __DEPLOY_VERSION__
 	 */
 	public function display($tpl = null)

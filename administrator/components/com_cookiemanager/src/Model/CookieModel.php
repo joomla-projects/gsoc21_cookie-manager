@@ -16,14 +16,12 @@ use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Table\Table;
-use Joomla\Component\Categories\Administrator\Helper\CategoriesHelper;
 
 /**
  * Cookie Model for a cookie to edit.
  *
  * @since   __DEPLOY_VERSION__
  */
-
 class CookieModel extends AdminModel
 {
 	/**
@@ -72,7 +70,6 @@ class CookieModel extends AdminModel
 	 */
 	public function getForm($data = [], $loadData = true)
 	{
-		// Get the form.
 		$form = $this->loadForm('com_cookiemanager.cookie', 'cookie', array('control' => 'jform', 'load_data' => $loadData));
 
 		if (empty($form))
@@ -144,7 +141,7 @@ class CookieModel extends AdminModel
 	/**
 	 * Prepare and sanitise the table prior to saving.
 	 *
-	 * @param   Table  $table  The Table object
+	 * @param   CookieTable  $table  The Table object
 	 *
 	 * @return  void
 	 *
@@ -164,7 +161,7 @@ class CookieModel extends AdminModel
 			// Set ordering to the last item if not set
 			if (empty($table->ordering))
 			{
-				$db = $this->getDbo();
+				$db = $this->getDatabase();
 				$query = $db->getQuery(true)
 					->select('MAX(ordering)')
 					->from($db->quoteName('#__cookiemanager_cookies'));
@@ -180,21 +177,5 @@ class CookieModel extends AdminModel
 			$table->modified = $date;
 			$table->modified_by = Factory::getApplication()->getIdentity()->id;
 		}
-	}
-
-	/**
-	 * Method to save the form data.
-	 *
-	 * @param   array  $data  The form data.
-	 *
-	 * @return  boolean  True on success.
-	 *
-	 * @since   __DEPLOY_VERSION__
-	 */
-	public function save($data)
-	{
-		$input = Factory::getApplication()->input;
-
-		return parent::save($data);
 	}
 }

@@ -11,8 +11,6 @@ namespace Joomla\Component\Cookiemanager\Administrator\Model;
 
 \defined('_JEXEC') or die;
 
-use Joomla\CMS\Factory;
-use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\CMS\Table\Table;
 use Joomla\Database\ParameterType;
@@ -111,8 +109,7 @@ class CookiesModel extends ListModel
 	 */
 	protected function getListQuery()
 	{
-		// Create a new query object.
-		$db    = $this->getDbo();
+		$db    = $this->getDatabase();
 		$query = $db->getQuery(true);
 
 			$query->select(
@@ -156,8 +153,8 @@ class CookiesModel extends ListModel
 			$query->where('(' . implode(' OR ', $subCatItemsWhere) . ')');
 		}
 
-			// Filter by published state
-			$published = (string) $this->getState('filter.published');
+		// Filter by published state
+		$published = (string) $this->getState('filter.published');
 
 		if (is_numeric($published))
 		{

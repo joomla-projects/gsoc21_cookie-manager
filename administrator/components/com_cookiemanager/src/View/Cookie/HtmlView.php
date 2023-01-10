@@ -65,7 +65,7 @@ class HtmlView extends BaseHtmlView
 	 *
 	 * @return  void
 	 *
-	 * @throws \Exception
+	 * @throws \GenericDataException
 	 * @since   __DEPLOY_VERSION__
 	 */
 	public function display($tpl = null)
@@ -96,7 +96,7 @@ class HtmlView extends BaseHtmlView
 		Factory::getApplication()->input->set('hidemainmenu', true);
 
 		$canDo = ContentHelper::getActions('com_cookiemanager');
-		$isNew      = ($this->item->id == 0);
+		$isNew = ($this->item->id == 0);
 
 		// Get the toolbar object instance
 		$toolbar = Toolbar::getInstance();

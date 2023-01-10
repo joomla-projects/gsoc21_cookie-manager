@@ -48,7 +48,8 @@ $types = array (
 				<?php echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this)); ?>
 				<?php if (empty($this->items)) : ?>
 					<div class="alert alert-info">
-						<span class="icon-info-circle" aria-hidden="true"></span><span class="visually-hidden"><?php echo Text::_('INFO'); ?></span>
+						<span class="icon-info-circle" aria-hidden="true"></span>
+						<span class="visually-hidden"><?php echo Text::_('INFO'); ?></span>
 						<?php echo Text::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
 					</div>
 				<?php else : ?>
@@ -86,7 +87,7 @@ $types = array (
 								</th>
 							</tr>
 						</thead>
-						<tbody class="js-draggable" data-direction="<?php echo strtolower($listDirn); ?>" data-nested="true"><?php endif; ?>
+						<tbody class="js-draggable" data-direction="<?php echo strtolower($listDirn); ?>" data-nested="true">
 						<?php
 						$n = count($this->items);
 						foreach ($this->items as $i => $item) :
@@ -94,8 +95,7 @@ $types = array (
 							$canEdit    = $user->authorise('core.edit',       'com_cookiemanager.category.' . $item->catid);
 							$canEditOwn = $user->authorise('core.edit.own',   'com_cookiemanager.category.' . $item->catid);
 							$canChange  = $user->authorise('core.edit.state', 'com_cookiemanager.category.' . $item->catid);
-
-							?>
+						?>
 							<tr class="row<?php echo $i % 2; ?>">
 								<td class="text-center">
 									<?php echo HTMLHelper::_('grid.id', $i, $item->id, false, 'cid', 'cb', $item->title); ?>
@@ -122,8 +122,10 @@ $types = array (
 								<th scope="row" class="has-context">
 									<div>
 										<?php if ($canEdit || $canEditOwn) : ?>
-											<a href="<?php echo Route::_('index.php?option=com_cookiemanager&task=script.edit&id=' . (int) $item->id); ?>" title="<?php echo Text::_('JACTION_EDIT'); ?> <?php echo $this->escape($item->title); ?>">
-												<?php echo $this->escape($item->title); ?></a>
+											<a href="<?php echo Route::_('index.php?option=com_cookiemanager&task=script.edit&id=' . (int) $item->id); ?>"
+												title="<?php echo Text::_('JACTION_EDIT'); ?> <?php echo $this->escape($item->title); ?>">
+												<?php echo $this->escape($item->title); ?>
+											</a>
 										<?php else : ?>
 											<?php echo $this->escape($item->title); ?>
 										<?php endif; ?>
@@ -145,12 +147,13 @@ $types = array (
 									<?php echo $item->id; ?>
 								</td>
 							</tr>
-							<?php endforeach; ?>
+						<?php endforeach; ?>
 						</tbody>
 					</table>
+				<?php endif; ?>
 
-					<?php // load the pagination. ?>
-					<?php echo $this->pagination->getListFooter(); ?>
+				<?php // load the pagination. ?>
+				<?php echo $this->pagination->getListFooter(); ?>
 
 				<input type="hidden" name="task" value="">
 				<input type="hidden" name="boxchecked" value="0">

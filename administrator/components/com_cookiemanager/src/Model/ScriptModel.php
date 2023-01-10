@@ -146,7 +146,7 @@ class ScriptModel extends AdminModel
 	/**
 	 * Prepare and sanitise the table prior to saving.
 	 *
-	 * @param   Table  $table  The Table object
+	 * @param   ScriptTable  $table  The Table object
 	 *
 	 * @return  void
 	 *
@@ -158,7 +158,7 @@ class ScriptModel extends AdminModel
 
 		if (empty($table->ordering))
 		{
-			$db = $this->getDbo();
+			$db = $this->getDatabase();
 			$query = $db->getQuery(true)
 				->select('MAX(ordering)')
 				->from($db->quoteName('#__cookiemanager_scripts'));
@@ -180,8 +180,6 @@ class ScriptModel extends AdminModel
 	 */
 	public function save($data)
 	{
-		$input = Factory::getApplication()->input;
-
 		// Create new category, if needed.
 		$createCategory = true;
 

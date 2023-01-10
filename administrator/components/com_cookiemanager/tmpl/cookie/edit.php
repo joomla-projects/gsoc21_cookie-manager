@@ -19,7 +19,8 @@ HTMLHelper::_('behavior.keepalive');
 
 ?>
 
-<form action="<?php echo Route::_('index.php?option=com_cookiemanager&layout=edit&id=' . (int) $this->item->id); ?>" method="post" name="adminForm" id="cookie-form" aria-label="<?php echo Text::_('COM_COOKIEMANAGER_FORM_TITLE_' . ((int) $this->item->id === 0 ? 'NEW_COOKIE' : 'EDIT_COOKIE'), true); ?>" class="form-validate">
+<form action="<?php echo Route::_('index.php?option=com_cookiemanager&layout=edit&id=' . (int) $this->item->id); ?>" method="post"  class="form-validate"
+	name="adminForm" id="cookie-form" aria-label="<?php echo Text::_('COM_COOKIEMANAGER_FORM_TITLE_' . ((int) $this->item->id === 0 ? 'NEW_COOKIE' : 'EDIT_COOKIE'), true); ?>">
 
 	<?php echo LayoutHelper::render('joomla.edit.title_alias', $this); ?>
 
@@ -52,7 +53,7 @@ HTMLHelper::_('behavior.keepalive');
 				<fieldset id="fieldset-publishingdata" class="options-form">
 					<legend><?php echo Text::_('JGLOBAL_FIELDSET_PUBLISHING'); ?></legend>
 					<div>
-					<?php echo LayoutHelper::render('joomla.edit.publishingdata', $this); ?>
+						<?php echo LayoutHelper::render('joomla.edit.publishingdata', $this); ?>
 					</div>
 				</fieldset>
 			</div>
