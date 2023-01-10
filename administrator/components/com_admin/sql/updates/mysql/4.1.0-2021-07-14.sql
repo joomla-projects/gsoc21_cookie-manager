@@ -58,3 +58,6 @@ CREATE TABLE IF NOT EXISTS `#__cookiemanager_consents` (
 INSERT INTO `#__extensions` (`package_id`, `name`, `type`, `element`, `folder`, `client_id`, `enabled`, `access`, `protected`, `locked`, `manifest_cache`, `params`, `custom_data`) VALUES
 (0, 'com_cookiemanager', 'component', 'com_cookiemanager', '', 1, 1, 1, 0, 1, '', '{"policylink":"","modal_position":"","consent_expiration":"30"}', ''),
 (0, 'plg_system_cookiemanager', 'plugin', 'cookiemanager', 'system', 0, 1, 1, 0, 1, '', '', '');
+
+UPDATE `#__menu` SET `link`='index.php?option=com_cookiemanager&view=cookies' WHERE `menutype`='main' AND `path`='Cookiemanager/Cookies';
+UPDATE `#__menu` SET `link`='index.php?option=com_categories&view=categories&extension=com_cookiemanager' WHERE `menutype`='main' AND `path`='Cookiemanager/Categories';

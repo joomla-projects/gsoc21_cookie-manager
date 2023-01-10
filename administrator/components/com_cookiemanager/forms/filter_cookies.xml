@@ -22,13 +22,11 @@
 			name="category_id"
 			type="category"
 			label="JCATEGORY"
-			multiple="true"
 			extension="com_cookiemanager"
-			layout="joomla.form.field.list-fancy-select"
-			hint="JOPTION_SELECT_CATEGORY"
 			onchange="this.form.submit();"
-			published="0,1,2"
-		/>
+			>
+			<option value="">JOPTION_SELECT_CATEGORY</option>
+		</field>
 	</fields>
 
 	<fields name="list">
