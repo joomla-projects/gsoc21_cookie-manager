@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package     Joomla.Administrator
  * @subpackage  Templates.Atum
@@ -20,15 +21,15 @@ preg_match('#^hsla?\(([0-9]+)[\D]+([0-9]+)[\D]+([0-9]+)[\D]+([0-9](?:.\d+)?)?\)$
 
 // Enable assets
 $wa->usePreset('template.atum.' . ($this->direction === 'rtl' ? 'rtl' : 'ltr'))
-	->useStyle('template.active.language')
-	->useStyle('template.user')
-	->addInlineStyle(':root {
+    ->useStyle('template.active.language')
+    ->useStyle('template.user')
+    ->addInlineStyle(':root {
 		--hue: ' . $matches[1] . ';
-		--atum-bg-light: ' . $this->params->get('bg-light', '--atum-bg-light') . ';
-		--atum-text-dark: ' . $this->params->get('text-dark', '--atum-text-dark') . ';
-		--atum-text-light: ' . $this->params->get('text-light', '--atum-text-light') . ';
-		--atum-link-color: ' . $this->params->get('link-color', '--atum-link-color') . ';
-		--atum-special-color: ' . $this->params->get('special-color', '--atum-special-color') . ';
+		--template-bg-light: ' . $this->params->get('bg-light', '--template-bg-light') . ';
+		--template-text-dark: ' . $this->params->get('text-dark', '--template-text-dark') . ';
+		--template-text-light: ' . $this->params->get('text-light', '--template-text-light') . ';
+		--template-link-color: ' . $this->params->get('link-color', '--template-link-color') . ';
+		--template-special-color: ' . $this->params->get('special-color', '--template-special-color') . ';
 	}');
 
 // No template.js for modals
@@ -47,12 +48,12 @@ $this->addHeadLink(HTMLHelper::_('image', 'joomla-favicon-pinned.svg', '', [], t
 <!DOCTYPE html>
 <html lang="<?php echo $this->language; ?>" dir="<?php echo $this->direction; ?>">
 <head>
-	<jdoc:include type="metas" />
-	<jdoc:include type="styles" />
-	<jdoc:include type="scripts" />
+    <jdoc:include type="metas" />
+    <jdoc:include type="styles" />
+    <jdoc:include type="scripts" />
 </head>
 <body class="contentpane component">
-	<jdoc:include type="message" />
-	<jdoc:include type="component" />
+    <jdoc:include type="message" />
+    <jdoc:include type="component" />
 </body>
 </html>

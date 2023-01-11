@@ -1,4 +1,4 @@
-import Tab from '../../../../../node_modules/bootstrap/js/src/tab';
+import Tab from 'bootstrap/js/src/tab';
 
 window.Joomla = window.Joomla || {};
 window.bootstrap = window.bootstrap || {};
@@ -7,7 +7,7 @@ window.bootstrap.Tab = Tab;
 /**
  * Initialise the Tabs interactivity
  *
- * @param {HTMLElement} el The element that will become an collapse
+ * @param {HTMLElement} el The element that will become a collapse
  * @param {object} options The options for this collapse
  */
 Joomla.initialiseTabs = (el, options) => {

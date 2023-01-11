@@ -1,16 +1,21 @@
 <?php
+
 /**
- * @package    Joomla.Libraries
+ * Joomla! Content Management System
  *
  * @copyright  (C) 2017 Open Source Matters, Inc. <https://www.joomla.org>
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
+
+ * @phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
  */
 
-defined('_JEXEC') or die;
-
-use Joomla\CMS\Filesystem\File;
-use Joomla\CMS\Filesystem\Folder;
 use Joomla\CMS\Log\Log;
+use Joomla\Filesystem\File;
+use Joomla\Filesystem\Folder;
+
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
 
 /**
  * Class JNamespacePsr4Map
@@ -19,283 +24,282 @@ use Joomla\CMS\Log\Log;
  */
 class JNamespacePsr4Map
 {
-	/**
-	 * Path to the autoloader
-	 *
-	 * @var    string
-	 * @since  4.0.0
-	 */
-	protected $file = JPATH_CACHE . '/autoload_psr4.php';
+    /**
+     * Path to the autoloader
+     *
+     * @var    string
+     * @since  4.0.0
+     */
+    protected $file = JPATH_CACHE . '/autoload_psr4.php';
 
-	/**
-	 * @var array|null
-	 * @since 4.0.0
-	 */
-	private $cachedMap = null;
+    /**
+     * @var array|null
+     * @since 4.0.0
+     */
+    private $cachedMap = null;
 
-	/**
-	 * Check if the file exists
-	 *
-	 * @return  boolean
-	 *
-	 * @since   4.0.0
-	 */
-	public function exists()
-	{
-		return is_file($this->file);
-	}
+    /**
+     * Check if the file exists
+     *
+     * @return  boolean
+     *
+     * @since   4.0.0
+     */
+    public function exists()
+    {
+        return is_file($this->file);
+    }
 
-	/**
-	 * Check if the namespace mapping file exists, if not create it
-	 *
-	 * @return  void
-	 *
-	 * @since   4.0.0
-	 */
-	public function ensureMapFileExists()
-	{
-		if (!$this->exists())
-		{
-			$this->create();
-		}
-	}
+    /**
+     * Check if the namespace mapping file exists, if not create it
+     *
+     * @return  void
+     *
+     * @since   4.0.0
+     */
+    public function ensureMapFileExists()
+    {
+        if (!$this->exists()) {
+            $this->create();
+        }
+    }
 
-	/**
-	 * Create the namespace file
-	 *
-	 * @return  boolean
-	 *
-	 * @since   4.0.0
-	 */
-	public function create()
-	{
-		$extensions = array_merge(
-			$this->getNamespaces('component'),
-			$this->getNamespaces('module'),
-			$this->getNamespaces('plugin'),
-			$this->getNamespaces('library')
-		);
+    /**
+     * Create the namespace file
+     *
+     * @return  boolean
+     *
+     * @since   4.0.0
+     */
+    public function create()
+    {
+        $extensions = array_merge(
+            $this->getNamespaces('component'),
+            $this->getNamespaces('module'),
+            $this->getNamespaces('template'),
+            $this->getNamespaces('plugin'),
+            $this->getNamespaces('library')
+        );
 
-		ksort($extensions);
+        ksort($extensions);
 
-		$this->writeNamespaceFile($extensions);
+        $this->writeNamespaceFile($extensions);
 
-		return true;
-	}
+        return true;
+    }
 
-	/**
-	 * Load the PSR4 file
-	 *
-	 * @return  boolean
-	 *
-	 * @since   4.0.0
-	 */
-	public function load()
-	{
-		if (!$this->exists())
-		{
-			$this->create();
-		}
+    /**
+     * Load the PSR4 file
+     *
+     * @return  boolean
+     *
+     * @since   4.0.0
+     */
+    public function load()
+    {
+        if (!$this->exists()) {
+            $this->create();
+        }
 
-		$map = $this->cachedMap ?: require $this->file;
+        $map = $this->cachedMap ?: require $this->file;
 
-		$loader = include JPATH_LIBRARIES . '/vendor/autoload.php';
+        $loader = include JPATH_LIBRARIES . '/vendor/autoload.php';
 
-		foreach ($map as $namespace => $path)
-		{
-			$loader->setPsr4($namespace, $path);
-		}
+        foreach ($map as $namespace => $path) {
+            $loader->setPsr4($namespace, $path);
+        }
 
-		return true;
-	}
+        return true;
+    }
 
-	/**
-	 * Write the Namespace mapping file
-	 *
-	 * @param   array  $elements  Array of elements
-	 *
-	 * @return  void
-	 *
-	 * @since   4.0.0
-	 */
-	protected function writeNamespaceFile($elements)
-	{
-		$content   = array();
-		$content[] = "<?php";
-		$content[] = 'defined(\'_JEXEC\') or die;';
-		$content[] = 'return [';
+    /**
+     * Write the Namespace mapping file
+     *
+     * @param   array  $elements  Array of elements
+     *
+     * @return  void
+     *
+     * @since   4.0.0
+     */
+    protected function writeNamespaceFile($elements)
+    {
+        $content   = array();
+        $content[] = "<?php";
+        $content[] = 'defined(\'_JEXEC\') or die;';
+        $content[] = 'return [';
 
-		foreach ($elements as $namespace => $path)
-		{
-			$content[] = "\t'" . $namespace . "'" . ' => [' . $path . '],';
-		}
+        foreach ($elements as $namespace => $path) {
+            $content[] = "\t'" . $namespace . "'" . ' => [' . $path . '],';
+        }
 
-		$content[] = '];';
+        $content[] = '];';
 
-		/**
-		 * Backup the current error_reporting level and set a new level
-		 *
-		 * We do this because file_put_contents can raise a Warning if it cannot write the autoload_psr4.php file
-		 * and this will output to the response BEFORE the session has started, causing the session start to fail
-		 * and ultimately leading us to a 500 Internal Server Error page just because of the output warning, which
-		 * we can safely ignore as we can use an in-memory autoload_psr4 map temporarily, and display real errors later.
-		 */
-		$error_reporting = error_reporting(0);
+        /**
+         * Backup the current error_reporting level and set a new level
+         *
+         * We do this because file_put_contents can raise a Warning if it cannot write the autoload_psr4.php file
+         * and this will output to the response BEFORE the session has started, causing the session start to fail
+         * and ultimately leading us to a 500 Internal Server Error page just because of the output warning, which
+         * we can safely ignore as we can use an in-memory autoload_psr4 map temporarily, and display real errors later.
+         */
+        $error_reporting = error_reporting(0);
 
-		if (!File::write($this->file, implode("\n", $content)))
-		{
-			Log::add('Could not save ' . $this->file, Log::WARNING);
+        try {
+            File::write($this->file, implode("\n", $content));
+        } catch (Exception $e) {
+            Log::add('Could not save ' . $this->file, Log::WARNING);
 
-			$map = [];
-			$constants = ['JPATH_ADMINISTRATOR', 'JPATH_API', 'JPATH_SITE', 'JPATH_PLUGINS'];
+            $map = [];
+            $constants = ['JPATH_ADMINISTRATOR', 'JPATH_API', 'JPATH_SITE', 'JPATH_PLUGINS'];
 
-			foreach ($elements as $namespace => $path)
-			{
-				foreach ($constants as $constant)
-				{
-					$path = str_replace($constant, constant($constant), $path);
-				}
+            foreach ($elements as $namespace => $path) {
+                foreach ($constants as $constant) {
+                    $path = preg_replace(['/^(' . $constant . ")\s\.\s\'/", '/\'$/'], [constant($constant), ''], $path);
+                }
 
-				$path = str_replace(["'", " ", "."], "", $path);
-				$namespace = str_replace('\\\\', '\\', $namespace);
+                $namespace = str_replace('\\\\', '\\', $namespace);
+                $map[$namespace] = [ $path ];
+            }
 
-				$map[$namespace] = [ $path ];
-			}
+            $this->cachedMap = $map;
+        }
 
-			$this->cachedMap = $map;
-		}
+        // Restore previous value of error_reporting
+        error_reporting($error_reporting);
+    }
 
-		// Restore previous value of error_reporting
-		error_reporting($error_reporting);
-	}
+    /**
+     * Get an array of namespaces with their respective path for the given extension type.
+     *
+     * @param   string  $type  The extension type
+     *
+     * @return  array
+     *
+     * @since   4.0.0
+     */
+    private function getNamespaces(string $type): array
+    {
+        if (!in_array($type, ['component', 'module', 'template', 'plugin', 'library'], true)) {
+            return [];
+        }
 
-	/**
-	 * Get an array of namespaces with their respective path for the given extension type.
-	 *
-	 * @param   string  $type  The extension type
-	 *
-	 * @return  array
-	 *
-	 * @since   4.0.0
-	 */
-	private function getNamespaces(string $type): array
-	{
-		if (!in_array($type, ['component', 'module', 'plugin', 'library'], true))
-		{
-			return [];
-		}
+        // Select directories containing extension manifest files.
+        if ($type === 'component') {
+            $directories = [JPATH_ADMINISTRATOR . '/components'];
+        } elseif ($type === 'module') {
+            $directories = [JPATH_SITE . '/modules', JPATH_ADMINISTRATOR . '/modules'];
+        } elseif ($type === 'template') {
+            $directories = [JPATH_SITE . '/templates', JPATH_ADMINISTRATOR . '/templates'];
+        } elseif ($type === 'plugin') {
+            try {
+                $directories = Folder::folders(JPATH_PLUGINS, '.', false, true);
+            } catch (Exception $e) {
+                $directories = [];
+            }
+        } else {
+            $directories = [JPATH_LIBRARIES];
+        }
 
-		// Select directories containing extension manifest files.
-		if ($type === 'component')
-		{
-			$directories = [JPATH_ADMINISTRATOR . '/components'];
-		}
-		elseif ($type === 'module')
-		{
-			$directories = [JPATH_SITE . '/modules', JPATH_ADMINISTRATOR . '/modules'];
-		}
-		elseif ($type === 'plugin')
-		{
-			$directories = Folder::folders(JPATH_PLUGINS, '.', false, true);
-		}
-		else
-		{
-			$directories = [JPATH_LIBRARIES];
-		}
+        $extensions = [];
 
-		$extensions = [];
+        foreach ($directories as $directory) {
+            try {
+                $extensionFolders = Folder::folders($directory);
+            } catch (Exception $e) {
+                continue;
+            }
 
-		foreach ($directories as $directory)
-		{
-			foreach (Folder::folders($directory) as $extension)
-			{
-				// Compile the extension path
-				$extensionPath = $directory . '/' . $extension . '/';
+            foreach ($extensionFolders as $extension) {
+                // Compile the extension path
+                $extensionPath = $directory . '/' . $extension . '/';
 
-				// Strip the com_ from the extension name for components
-				$name = str_replace('com_', '', $extension, $count);
-				$file = $extensionPath . $name . '.xml';
+                // Strip the com_ from the extension name for components
+                $name = str_replace('com_', '', $extension, $count);
 
-				// If there is no manifest file, ignore. If it was a component check if the xml was named with the com_ prefix.
-				if (!is_file($file))
-				{
-					if (!$count)
-					{
-						continue;
-					}
+                // Template manifestfiles have a fix filename
+                if ($type === 'template') {
+                    $name = 'templateDetails';
+                }
 
-					$file = $extensionPath . $extension . '.xml';
+                $file = $extensionPath . $name . '.xml';
 
-					if (!is_file($file))
-					{
-						continue;
-					}
-				}
+                // If there is no manifest file, ignore. If it was a component check if the xml was named with the com_ prefix.
+                if (!is_file($file)) {
+                    if (!$count) {
+                        continue;
+                    }
 
-				// Load the manifest file
-				$xml = simplexml_load_file($file);
+                    $file = $extensionPath . $extension . '.xml';
 
-				// When invalid, ignore
-				if (!$xml)
-				{
-					continue;
-				}
+                    if (!is_file($file)) {
+                        continue;
+                    }
+                }
 
-				// The namespace node
-				$namespaceNode = $xml->namespace;
+                // Load the manifest file
+                $xml = simplexml_load_file($file, 'SimpleXMLElement', LIBXML_NOERROR);
 
-				// The namespace string
-				$namespace = (string) $namespaceNode;
+                // When invalid, ignore
+                if (!$xml) {
+                    continue;
+                }
 
-				// Ignore when the string is empty
-				if (!$namespace)
-				{
-					continue;
-				}
+                // The namespace node
+                $namespaceNode = $xml->namespace;
 
-				// Normalize the namespace string
-				$namespace     = str_replace('\\', '\\\\', $namespace) . '\\\\';
-				$namespacePath = rtrim($extensionPath . $namespaceNode->attributes()->path, '/');
+                // The namespace string
+                $namespace = (string) $namespaceNode;
 
-				if ($type === 'plugin' || $type === 'library')
-				{
-					$baseDir = $type === 'plugin' ? 'JPATH_PLUGINS . \'' : 'JPATH_LIBRARIES . \'';
-					$path    = str_replace($type === 'plugin' ? JPATH_PLUGINS : JPATH_LIBRARIES, '', $namespacePath);
+                // Ignore when the string is empty
+                if (!$namespace) {
+                    continue;
+                }
 
-					// Set the namespace
-					$extensions[$namespace] = $baseDir . $path . '\'';
+                // Normalize the namespace string
+                $namespace     = str_replace('\\', '\\\\', $namespace) . '\\\\';
+                $namespacePath = rtrim($extensionPath . $namespaceNode->attributes()->path, '/');
 
-					continue;
-				}
+                if ($type === 'plugin' || $type === 'library') {
+                    $baseDir = $type === 'plugin' ? 'JPATH_PLUGINS . \'' : 'JPATH_LIBRARIES . \'';
+                    $path    = str_replace($type === 'plugin' ? JPATH_PLUGINS : JPATH_LIBRARIES, '', $namespacePath);
 
-				// Check if we need to use administrator path
-				$isAdministrator = strpos($namespacePath, JPATH_ADMINISTRATOR) === 0;
-				$path            = str_replace($isAdministrator ? JPATH_ADMINISTRATOR : JPATH_SITE, '', $namespacePath);
+                    // Set the namespace
+                    $extensions[$namespace] = $baseDir . $path . '\'';
 
-				// Add the site path when a component
-				if ($type === 'component')
-				{
-					if (is_dir(JPATH_SITE . $path))
-					{
-						$extensions[$namespace . 'Site\\\\'] = 'JPATH_SITE . \'' . $path . '\'';
-					}
+                    continue;
+                }
 
-					if (is_dir(JPATH_API . $path))
-					{
-						$extensions[$namespace . 'Api\\\\'] = 'JPATH_API . \'' . $path . '\'';
-					}
-				}
+                // Check if we need to use administrator path
+                $isAdministrator = strpos($namespacePath, JPATH_ADMINISTRATOR) === 0;
+                $path            = str_replace($isAdministrator ? JPATH_ADMINISTRATOR : JPATH_SITE, '', $namespacePath);
 
-				// Add the application specific segment when a component or module
-				$baseDir    = $isAdministrator ? 'JPATH_ADMINISTRATOR . \'' : 'JPATH_SITE . \'';
-				$namespace .= $isAdministrator ? 'Administrator\\\\' : 'Site\\\\';
+                // Add the site path when a component
+                if ($type === 'component') {
+                    if (is_dir(JPATH_SITE . $path)) {
+                        $extensions[$namespace . 'Site\\\\'] = 'JPATH_SITE . \'' . $path . '\'';
+                    }
 
-				// Set the namespace
-				$extensions[$namespace] = $baseDir . $path . '\'';
-			}
-		}
+                    if (is_dir(JPATH_API . $path)) {
+                        $extensions[$namespace . 'Api\\\\'] = 'JPATH_API . \'' . $path . '\'';
+                    }
+                }
 
-		// Return the namespaces
-		return $extensions;
-	}
+                // Add the application specific segment when a component or module
+                $baseDir    = $isAdministrator ? 'JPATH_ADMINISTRATOR . \'' : 'JPATH_SITE . \'';
+                $realPath   = ($isAdministrator ? JPATH_ADMINISTRATOR : JPATH_SITE) . $path;
+                $namespace .= $isAdministrator ? 'Administrator\\\\' : 'Site\\\\';
+
+                // Validate if the directory exists
+                if (!is_dir($realPath)) {
+                    continue;
+                }
+
+                // Set the namespace
+                $extensions[$namespace] = $baseDir . $path . '\'';
+            }
+        }
+
+        // Return the namespaces
+        return $extensions;
+    }
 }

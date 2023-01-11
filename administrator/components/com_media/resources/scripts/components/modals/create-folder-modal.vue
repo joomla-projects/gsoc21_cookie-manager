@@ -24,6 +24,7 @@
             <label for="folder">{{ translate('COM_MEDIA_FOLDER_NAME') }}</label>
             <input
               id="folder"
+              ref="input"
               v-model.trim="folder"
               class="form-control"
               type="text"
@@ -65,6 +66,16 @@ export default {
       folder: '',
     };
   },
+  watch: {
+    // eslint-disable-next-line
+    "$store.state.showCreateFolderModal"(show) {
+      this.$nextTick(() => {
+        if (show && this.$refs.input) {
+          this.$refs.input.focus();
+        }
+      });
+    },
+  },
   methods: {
     /* Check if the the form is valid */
     isValid() {
@@ -79,8 +90,8 @@ export default {
     save() {
       // Check if the form is valid
       if (!this.isValid()) {
-        // TODO show an error message to user for insert a folder name
-        // TODO mark the field as invalid
+        // @todo show an error message to user for insert a folder name
+        // @todo mark the field as invalid
         return;
       }
 

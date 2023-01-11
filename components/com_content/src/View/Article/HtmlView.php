@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package     Joomla.Site
  * @subpackage  com_content
@@ -8,8 +9,6 @@
  */
 
 namespace Joomla\Component\Content\Site\View\Article;
-
-\defined('_JEXEC') or die;
 
 use Joomla\CMS\Categories\Categories;
 use Joomla\CMS\Factory;
@@ -24,6 +23,11 @@ use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Component\Content\Site\Helper\AssociationHelper;
 use Joomla\Component\Content\Site\Helper\RouteHelper;
+use Joomla\Event\Event;
+
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
 
 /**
  * HTML Article View class for the Content component
@@ -32,339 +36,312 @@ use Joomla\Component\Content\Site\Helper\RouteHelper;
  */
 class HtmlView extends BaseHtmlView
 {
-	/**
-	 * The article object
-	 *
-	 * @var  \stdClass
-	 */
-	protected $item;
+    /**
+     * The article object
+     *
+     * @var  \stdClass
+     */
+    protected $item;
 
-	/**
-	 * The page parameters
-	 *
-	 * @var    \Joomla\Registry\Registry|null
-	 * @since  4.0.0
-	 */
-	protected $params = null;
+    /**
+     * The page parameters
+     *
+     * @var    \Joomla\Registry\Registry|null
+     *
+     * @since  4.0.0
+     */
+    protected $params = null;
 
-	/**
-	 * Should the print button be displayed or not?
-	 *
-	 * @var  boolean
-	 */
-	protected $print = false;
+    /**
+     * Should the print button be displayed or not?
+     *
+     * @var   boolean
+     */
+    protected $print = false;
 
-	/**
-	 * The model state
-	 *
-	 * @var  \JObject
-	 */
-	protected $state;
+    /**
+     * The model state
+     *
+     * @var   \Joomla\CMS\Object\CMSObject
+     */
+    protected $state;
 
-	/**
-	 * The user object
-	 *
-	 * @var  \JUser|null
-	 */
-	protected $user = null;
+    /**
+     * The user object
+     *
+     * @var   \Joomla\CMS\User\User|null
+     */
+    protected $user = null;
 
-	/**
-	 * The page class suffix
-	 *
-	 * @var    string
-	 * @since  4.0.0
-	 */
-	protected $pageclass_sfx = '';
+    /**
+     * The page class suffix
+     *
+     * @var    string
+     *
+     * @since  4.0.0
+     */
+    protected $pageclass_sfx = '';
 
-	/**
-	 * The flag to mark if the active menu item is linked to the being displayed article
-	 *
-	 * @var boolean
-	 */
-	protected $menuItemMatchArticle = false;
+    /**
+     * The flag to mark if the active menu item is linked to the being displayed article
+     *
+     * @var boolean
+     */
+    protected $menuItemMatchArticle = false;
 
-	/**
-	 * Execute and display a template script.
-	 *
-	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
-	 *
-	 * @return  mixed  A string if successful, otherwise an Error object.
-	 */
-	public function display($tpl = null)
-	{
-		if ($this->getLayout() == 'pagebreak')
-		{
-			return parent::display($tpl);
-		}
+    /**
+     * Execute and display a template script.
+     *
+     * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+     *
+     * @return  void
+     */
+    public function display($tpl = null)
+    {
+        if ($this->getLayout() == 'pagebreak') {
+            parent::display($tpl);
 
-		$app        = Factory::getApplication();
-		$user       = Factory::getUser();
+            return;
+        }
 
-		$this->item  = $this->get('Item');
-		$this->print = $app->input->getBool('print', false);
-		$this->state = $this->get('State');
-		$this->user  = $user;
+        $app  = Factory::getApplication();
+        $user = $this->getCurrentUser();
 
-		// Check for errors.
-		if (count($errors = $this->get('Errors')))
-		{
-			throw new GenericDataException(implode("\n", $errors), 500);
-		}
+        $this->item  = $this->get('Item');
+        $this->print = $app->getInput()->getBool('print', false);
+        $this->state = $this->get('State');
+        $this->user  = $user;
 
-		// Create a shortcut for $item.
-		$item            = $this->item;
-		$item->tagLayout = new FileLayout('joomla.content.tags');
+        // Check for errors.
+        if (count($errors = $this->get('Errors'))) {
+            throw new GenericDataException(implode("\n", $errors), 500);
+        }
 
-		// Add router helpers.
-		$item->slug = $item->alias ? ($item->id . ':' . $item->alias) : $item->id;
+        // Create a shortcut for $item.
+        $item            = $this->item;
+        $item->tagLayout = new FileLayout('joomla.content.tags');
 
-		// No link for ROOT category
-		if ($item->parent_alias === 'root')
-		{
-			$item->parent_id = null;
-		}
+        // Add router helpers.
+        $item->slug = $item->alias ? ($item->id . ':' . $item->alias) : $item->id;
 
-		// TODO: Change based on shownoauth
-		$item->readmore_link = Route::_(RouteHelper::getArticleRoute($item->slug, $item->catid, $item->language));
+        // No link for ROOT category
+        if ($item->parent_alias === 'root') {
+            $item->parent_id = null;
+        }
 
-		// Merge article params. If this is single-article view, menu params override article params
-		// Otherwise, article params override menu item params
-		$this->params = $this->state->get('params');
-		$active       = $app->getMenu()->getActive();
-		$temp         = clone $this->params;
+        // @todo Change based on shownoauth
+        $item->readmore_link = Route::_(RouteHelper::getArticleRoute($item->slug, $item->catid, $item->language));
 
-		// Check to see which parameters should take priority. If the active menu item link to the current article, then
-		// the menu item params take priority
-		if ($active
-			&& $active->component == 'com_content'
-			&& isset($active->query['view'], $active->query['id'])
-			&& $active->query['view'] == 'article'
-			&& $active->query['id'] == $item->id)
-		{
-			$this->menuItemMatchArticle = true;
+        // Merge article params. If this is single-article view, menu params override article params
+        // Otherwise, article params override menu item params
+        $this->params = $this->state->get('params');
+        $active       = $app->getMenu()->getActive();
+        $temp         = clone $this->params;
 
-			// Load layout from active query (in case it is an alternative menu item)
-			if (isset($active->query['layout']))
-			{
-				$this->setLayout($active->query['layout']);
-			}
-			// Check for alternative layout of article
-			elseif ($layout = $item->params->get('article_layout'))
-			{
-				$this->setLayout($layout);
-			}
+        // Check to see which parameters should take priority. If the active menu item link to the current article, then
+        // the menu item params take priority
+        if (
+            $active
+            && $active->component == 'com_content'
+            && isset($active->query['view'], $active->query['id'])
+            && $active->query['view'] == 'article'
+            && $active->query['id'] == $item->id
+        ) {
+            $this->menuItemMatchArticle = true;
 
-			// $item->params are the article params, $temp are the menu item params
-			// Merge so that the menu item params take priority
-			$item->params->merge($temp);
-		}
-		else
-		{
-			// The active menu item is not linked to this article, so the article params take priority here
-			// Merge the menu item params with the article params so that the article params take priority
-			$temp->merge($item->params);
-			$item->params = $temp;
+            // Load layout from active query (in case it is an alternative menu item)
+            if (isset($active->query['layout'])) {
+                $this->setLayout($active->query['layout']);
+            } elseif ($layout = $item->params->get('article_layout')) {
+                // Check for alternative layout of article
+                $this->setLayout($layout);
+            }
 
-			// Check for alternative layouts (since we are not in a single-article menu item)
-			// Single-article menu item layout takes priority over alt layout for an article
-			if ($layout = $item->params->get('article_layout'))
-			{
-				$this->setLayout($layout);
-			}
-		}
+            // $item->params are the article params, $temp are the menu item params
+            // Merge so that the menu item params take priority
+            $item->params->merge($temp);
+        } else {
+            // The active menu item is not linked to this article, so the article params take priority here
+            // Merge the menu item params with the article params so that the article params take priority
+            $temp->merge($item->params);
+            $item->params = $temp;
 
-		$offset = $this->state->get('list.offset');
+            // Check for alternative layouts (since we are not in a single-article menu item)
+            // Single-article menu item layout takes priority over alt layout for an article
+            if ($layout = $item->params->get('article_layout')) {
+                $this->setLayout($layout);
+            }
+        }
 
-		// Check the view access to the article (the model has already computed the values).
-		if ($item->params->get('access-view') == false && ($item->params->get('show_noauth', '0') == '0'))
-		{
-			$app->enqueueMessage(Text::_('JERROR_ALERTNOAUTHOR'), 'error');
-			$app->setHeader('status', 403, true);
+        $offset = $this->state->get('list.offset');
 
-			return;
-		}
+        // Check the view access to the article (the model has already computed the values).
+        if ($item->params->get('access-view') == false && ($item->params->get('show_noauth', '0') == '0')) {
+            $app->enqueueMessage(Text::_('JERROR_ALERTNOAUTHOR'), 'error');
+            $app->setHeader('status', 403, true);
 
-		/**
-		 * Check for no 'access-view' and empty fulltext,
-		 * - Redirect guest users to login
-		 * - Deny access to logged users with 403 code
-		 * NOTE: we do not recheck for no access-view + show_noauth disabled ... since it was checked above
-		 */
-		if ($item->params->get('access-view') == false && !strlen($item->fulltext))
-		{
-			if ($this->user->get('guest'))
-			{
-				$return = base64_encode(Uri::getInstance());
-				$login_url_with_return = Route::_('index.php?option=com_users&view=login&return=' . $return);
-				$app->enqueueMessage(Text::_('JERROR_ALERTNOAUTHOR'), 'notice');
-				$app->redirect($login_url_with_return, 403);
-			}
-			else
-			{
-				$app->enqueueMessage(Text::_('JERROR_ALERTNOAUTHOR'), 'error');
-				$app->setHeader('status', 403, true);
+            return;
+        }
 
-				return;
-			}
-		}
+        /**
+         * Check for no 'access-view' and empty fulltext,
+         * - Redirect guest users to login
+         * - Deny access to logged users with 403 code
+         * NOTE: we do not recheck for no access-view + show_noauth disabled ... since it was checked above
+         */
+        if ($item->params->get('access-view') == false && !strlen($item->fulltext)) {
+            if ($this->user->get('guest')) {
+                $return = base64_encode(Uri::getInstance());
+                $login_url_with_return = Route::_('index.php?option=com_users&view=login&return=' . $return);
+                $app->enqueueMessage(Text::_('JERROR_ALERTNOAUTHOR'), 'notice');
+                $app->redirect($login_url_with_return, 403);
+            } else {
+                $app->enqueueMessage(Text::_('JERROR_ALERTNOAUTHOR'), 'error');
+                $app->setHeader('status', 403, true);
 
-		/**
-		 * NOTE: The following code (usually) sets the text to contain the fulltext, but it is the
-		 * responsibility of the layout to check 'access-view' and only use "introtext" for guests
-		 */
-		if ($item->params->get('show_intro', '1') == '1')
-		{
-			$item->text = $item->introtext . ' ' . $item->fulltext;
-		}
-		elseif ($item->fulltext)
-		{
-			$item->text = $item->fulltext;
-		}
-		else
-		{
-			$item->text = $item->introtext;
-		}
+                return;
+            }
+        }
 
-		$item->tags = new TagsHelper;
-		$item->tags->getItemTags('com_content.article', $this->item->id);
+        /**
+         * NOTE: The following code (usually) sets the text to contain the fulltext, but it is the
+         * responsibility of the layout to check 'access-view' and only use "introtext" for guests
+         */
+        if ($item->params->get('show_intro', '1') == '1') {
+            $item->text = $item->introtext . ' ' . $item->fulltext;
+        } elseif ($item->fulltext) {
+            $item->text = $item->fulltext;
+        } else {
+            $item->text = $item->introtext;
+        }
 
-		if (Associations::isEnabled() && $item->params->get('show_associations'))
-		{
-			$item->associations = AssociationHelper::displayAssociations($item->id);
-		}
+        $item->tags = new TagsHelper();
+        $item->tags->getItemTags('com_content.article', $this->item->id);
 
-		// Process the content plugins.
-		PluginHelper::importPlugin('content');
-		Factory::getApplication()->triggerEvent('onContentPrepare', array('com_content.article', &$item, &$item->params, $offset));
+        if (Associations::isEnabled() && $item->params->get('show_associations')) {
+            $item->associations = AssociationHelper::displayAssociations($item->id);
+        }
 
-		$item->event = new \stdClass;
-		$results = Factory::getApplication()->triggerEvent('onContentAfterTitle', array('com_content.article', &$item, &$item->params, $offset));
-		$item->event->afterDisplayTitle = trim(implode("\n", $results));
+        // Process the content plugins.
+        PluginHelper::importPlugin('content');
+        $this->dispatchEvent(new Event('onContentPrepare', array('com_content.article', &$item, &$item->params, $offset)));
 
-		$results = Factory::getApplication()->triggerEvent('onContentBeforeDisplay', array('com_content.article', &$item, &$item->params, $offset));
-		$item->event->beforeDisplayContent = trim(implode("\n", $results));
+        $item->event = new \stdClass();
+        $results = Factory::getApplication()->triggerEvent('onContentAfterTitle', array('com_content.article', &$item, &$item->params, $offset));
+        $item->event->afterDisplayTitle = trim(implode("\n", $results));
 
-		$results = Factory::getApplication()->triggerEvent('onContentAfterDisplay', array('com_content.article', &$item, &$item->params, $offset));
-		$item->event->afterDisplayContent = trim(implode("\n", $results));
+        $results = Factory::getApplication()->triggerEvent('onContentBeforeDisplay', array('com_content.article', &$item, &$item->params, $offset));
+        $item->event->beforeDisplayContent = trim(implode("\n", $results));
 
-		// Escape strings for HTML output
-		$this->pageclass_sfx = htmlspecialchars($this->item->params->get('pageclass_sfx'));
+        $results = Factory::getApplication()->triggerEvent('onContentAfterDisplay', array('com_content.article', &$item, &$item->params, $offset));
+        $item->event->afterDisplayContent = trim(implode("\n", $results));
 
-		$this->_prepareDocument();
+        // Escape strings for HTML output
+        $this->pageclass_sfx = htmlspecialchars($this->item->params->get('pageclass_sfx', ''));
 
-		parent::display($tpl);
-	}
+        $this->_prepareDocument();
 
-	/**
-	 * Prepares the document.
-	 *
-	 * @return  void
-	 */
-	protected function _prepareDocument()
-	{
-		$app     = Factory::getApplication();
-		$pathway = $app->getPathway();
+        parent::display($tpl);
+    }
 
-		/**
-		 * Because the application sets a default page title,
-		 * we need to get it from the menu item itself
-		 */
-		$menu = $app->getMenu()->getActive();
+    /**
+     * Prepares the document.
+     *
+     * @return  void
+     */
+    protected function _prepareDocument()
+    {
+        $app     = Factory::getApplication();
+        $pathway = $app->getPathway();
 
-		if ($menu)
-		{
-			$this->params->def('page_heading', $this->params->get('page_title', $menu->title));
-		}
-		else
-		{
-			$this->params->def('page_heading', Text::_('JGLOBAL_ARTICLES'));
-		}
+        /**
+         * Because the application sets a default page title,
+         * we need to get it from the menu item itself
+         */
+        $menu = $app->getMenu()->getActive();
 
-		$title = $this->params->get('page_title', '');
+        if ($menu) {
+            $this->params->def('page_heading', $this->params->get('page_title', $menu->title));
+        } else {
+            $this->params->def('page_heading', Text::_('JGLOBAL_ARTICLES'));
+        }
 
-		// If the menu item is not linked to this article
-		if (!$this->menuItemMatchArticle)
-		{
-			// If a browser page title is defined, use that, then fall back to the article title if set, then fall back to the page_title option
-			$title = $this->item->params->get('article_page_title', $this->item->title ?: $title);
+        $title = $this->params->get('page_title', '');
 
-			// Get ID of the category from active menu item
-			if ($menu && $menu->component == 'com_content' && isset($menu->query['view'])
-				&& in_array($menu->query['view'], ['categories', 'category']))
-			{
-				$id = $menu->query['id'];
-			}
-			else
-			{
-				$id = 0;
-			}
+        // If the menu item is not linked to this article
+        if (!$this->menuItemMatchArticle) {
+            // If a browser page title is defined, use that, then fall back to the article title if set, then fall back to the page_title option
+            $title = $this->item->params->get('article_page_title', $this->item->title ?: $title);
 
-			$path     = array(array('title' => $this->item->title, 'link' => ''));
-			$category = Categories::getInstance('Content')->get($this->item->catid);
+            // Get ID of the category from active menu item
+            if (
+                $menu && $menu->component == 'com_content' && isset($menu->query['view'])
+                && in_array($menu->query['view'], ['categories', 'category'])
+            ) {
+                $id = $menu->query['id'];
+            } else {
+                $id = 0;
+            }
 
-			while ($category !== null && $category->id != $id && $category->id !== 'root')
-			{
-				$path[]   = array('title' => $category->title, 'link' => RouteHelper::getCategoryRoute($category->id, $category->language));
-				$category = $category->getParent();
-			}
+            $path     = array(array('title' => $this->item->title, 'link' => ''));
+            $category = Categories::getInstance('Content')->get($this->item->catid);
 
-			$path = array_reverse($path);
+            while ($category !== null && $category->id != $id && $category->id !== 'root') {
+                $path[]   = array('title' => $category->title, 'link' => RouteHelper::getCategoryRoute($category->id, $category->language));
+                $category = $category->getParent();
+            }
 
-			foreach ($path as $item)
-			{
-				$pathway->addItem($item['title'], $item['link']);
-			}
-		}
+            $path = array_reverse($path);
 
-		if (empty($title))
-		{
-			$title = $this->item->title;
-		}
+            foreach ($path as $item) {
+                $pathway->addItem($item['title'], $item['link']);
+            }
+        }
 
-		$this->setDocumentTitle($title);
+        if (empty($title)) {
+            /**
+             * This happens when the current active menu item is linked to the article without browser
+             * page title set, so we use Browser Page Title in article and fallback to article title
+             * if that is not set
+             */
+            $title = $this->item->params->get('article_page_title', $this->item->title);
+        }
 
-		if ($this->item->metadesc)
-		{
-			$this->document->setDescription($this->item->metadesc);
-		}
-		elseif ($this->params->get('menu-meta_description'))
-		{
-			$this->document->setDescription($this->params->get('menu-meta_description'));
-		}
+        $this->setDocumentTitle($title);
 
-		if ($this->params->get('robots'))
-		{
-			$this->document->setMetaData('robots', $this->params->get('robots'));
-		}
+        if ($this->item->metadesc) {
+            $this->document->setDescription($this->item->metadesc);
+        } elseif ($this->params->get('menu-meta_description')) {
+            $this->document->setDescription($this->params->get('menu-meta_description'));
+        }
 
-		if ($app->get('MetaAuthor') == '1')
-		{
-			$author = $this->item->created_by_alias ?: $this->item->author;
-			$this->document->setMetaData('author', $author);
-		}
+        if ($this->params->get('robots')) {
+            $this->document->setMetaData('robots', $this->params->get('robots'));
+        }
 
-		$mdata = $this->item->metadata->toArray();
+        if ($app->get('MetaAuthor') == '1') {
+            $author = $this->item->created_by_alias ?: $this->item->author;
+            $this->document->setMetaData('author', $author);
+        }
 
-		foreach ($mdata as $k => $v)
-		{
-			if ($v)
-			{
-				$this->document->setMetaData($k, $v);
-			}
-		}
+        $mdata = $this->item->metadata->toArray();
 
-		// If there is a pagebreak heading or title, add it to the page title
-		if (!empty($this->item->page_title))
-		{
-			$this->item->title = $this->item->title . ' - ' . $this->item->page_title;
-			$this->setDocumentTitle(
-				$this->item->page_title . ' - ' . Text::sprintf('PLG_CONTENT_PAGEBREAK_PAGE_NUM', $this->state->get('list.offset') + 1)
-			);
-		}
+        foreach ($mdata as $k => $v) {
+            if ($v) {
+                $this->document->setMetaData($k, $v);
+            }
+        }
 
-		if ($this->print)
-		{
-			$this->document->setMetaData('robots', 'noindex, nofollow');
-		}
-	}
+        // If there is a pagebreak heading or title, add it to the page title
+        if (!empty($this->item->page_title)) {
+            $this->item->title = $this->item->title . ' - ' . $this->item->page_title;
+            $this->setDocumentTitle(
+                $this->item->page_title . ' - ' . Text::sprintf('PLG_CONTENT_PAGEBREAK_PAGE_NUM', $this->state->get('list.offset') + 1)
+            );
+        }
+
+        if ($this->print) {
+            $this->document->setMetaData('robots', 'noindex, nofollow');
+        }
+    }
 }
