@@ -51,11 +51,11 @@ echo HTMLHelper::_(
 	'consentBanner',
 	[
 		'title' => Text::_('COM_COOKIEMANAGER_COOKIE_BANNER_TITLE'),
-		'footer' => '<button type="button" id="consentConfirmChoice" class="btn btn-info" data-bs-dismiss="modal">'
+		'footer' => '<button type="button" id="confirmChoice" data-bs-dismiss="modal" class="btn btn-info">'
 			. Text::_('COM_COOKIEMANAGER_CONFIRM_MY_CHOICES_BUTTON_TEXT') . '</button>'
-			. '<button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-dismiss="modal" data-bs-target="#settingsBanner">'
+			. '<button type="button" data-bs-toggle="modal" data-bs-dismiss="modal" data-bs-target="#settingsBanner" class="btn btn-info" >'
 			. Text::_('COM_COOKIEMANAGER_MORE_DETAILS') . '</button>'
-			. '<button type="button" data-button="acceptAllCookies" class="btn btn-info" data-bs-dismiss="modal" onClick="window.location.reload(true)">'
+			. '<button type="button" data-button="acceptAllCookies" data-bs-dismiss="modal" class="btn btn-info">'
 			. Text::_('COM_COOKIEMANAGER_ACCEPT_ALL_COOKIES_BUTTON_TEXT') . '</button>',
 
 	],
@@ -129,9 +129,9 @@ echo HTMLHelper::_(
 	'settingsBanner',
 	[
 		'title' => Text::_('COM_COOKIEMANAGER_PREFERENCES_TITLE'),
-		'footer' => '<button type="button" id="settingsConfirmChoice" class="btn btn-info" data-bs-dismiss="modal">'
+		'footer' => '<button type="button" id="confirmSettingsChoice" class="btn btn-info" data-bs-dismiss="modal">'
 			. Text::_('COM_COOKIEMANAGER_CONFIRM_MY_CHOICES_BUTTON_TEXT') . '</button>'
-			. '<button type="button" data-button="acceptAllCookies" class="btn btn-info" data-bs-dismiss="modal" onClick="window.location.reload(true)">'
+			. '<button type="button" data-button="acceptAllCookies" class="btn btn-info" data-bs-dismiss="modal">'
 			. Text::_('COM_COOKIEMANAGER_ACCEPT_ALL_COOKIES_BUTTON_TEXT') . '</button>'
 	],
 	$settingsBannerBody

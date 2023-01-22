@@ -218,7 +218,9 @@ class PlgSystemCookiemanager extends CMSPlugin
 			return;
 		}
 
-		echo '<button class="preview btn btn-info" data-bs-toggle="modal" data-bs-target="#consentBanner">' . Text::_('COM_COOKIEMANAGER_PREVIEW_BUTTON_TEXT') . '</button>';
+		echo '<button class="preview btn btn-info" data-bs-toggle="modal" data-bs-target="#consentBanner">'
+			. Text::_('COM_COOKIEMANAGER_PREVIEW_BUTTON_TEXT')
+			. '</button>';
 
 		foreach ($this->cookieCategories as $category)
 		{

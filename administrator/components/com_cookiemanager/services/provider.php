@@ -46,7 +46,7 @@ return new class implements ServiceProviderInterface
 		$container->set(
 			ComponentInterface::class,
 			function (Container $container)
-			 {
+			{
 				$component = new MVCComponent($container->get(ComponentDispatcherFactoryInterface::class));
 
 				$component->setMVCFactory($container->get(MVCFactoryInterface::class));

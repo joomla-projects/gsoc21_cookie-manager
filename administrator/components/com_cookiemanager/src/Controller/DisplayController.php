@@ -40,6 +40,6 @@ class DisplayController extends BaseController
 	 */
 	public function display($cachable = false, $urlparams = array())
 	{
-			return parent::display();
+		return parent::display();
 	}
 }
