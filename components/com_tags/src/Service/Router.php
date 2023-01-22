@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package     Joomla.Site
  * @subpackage  com_tags
@@ -9,14 +10,18 @@
 
 namespace Joomla\Component\Tags\Site\Service;
 
-\defined('_JEXEC') or die;
-
 use Joomla\CMS\Application\SiteApplication;
 use Joomla\CMS\Categories\CategoryFactoryInterface;
+use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Component\Router\RouterBase;
+use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\Menu\AbstractMenu;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Utilities\ArrayHelper;
+
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
 
 /**
  * Routing class from com_tags
@@ -25,198 +30,282 @@ use Joomla\Utilities\ArrayHelper;
  */
 class Router extends RouterBase
 {
-	/**
-	 * The db
-	 *
-	 * @var DatabaseInterface
-	 *
-	 * @since  4.0.0
-	 */
-	private $db;
+    /**
+     * The db
+     *
+     * @var DatabaseInterface
+     *
+     * @since  4.0.0
+     */
+    private $db;
 
-	/**
-	 * Tags Component router constructor
-	 *
-	 * @param   SiteApplication           $app              The application object
-	 * @param   AbstractMenu              $menu             The menu object to work with
-	 * @param   CategoryFactoryInterface  $categoryFactory  The category object
-	 * @param   DatabaseInterface         $db               The database object
-	 *
-	 * @since  4.0.0
-	 */
-	public function __construct(SiteApplication $app, AbstractMenu $menu, ?CategoryFactoryInterface $categoryFactory, DatabaseInterface $db)
-	{
-		$this->db = $db;
+    /**
+     * Lookup array of the menu items
+     *
+     * @var   array
+     * @since 4.3.0
+     */
+    protected $lookup = [];
 
-		parent::__construct($app, $menu);
-	}
+    /**
+     * Tags Component router constructor
+     *
+     * @param   SiteApplication           $app              The application object
+     * @param   AbstractMenu              $menu             The menu object to work with
+     * @param   CategoryFactoryInterface  $categoryFactory  The category object
+     * @param   DatabaseInterface         $db               The database object
+     *
+     * @since  4.0.0
+     */
+    public function __construct(SiteApplication $app, AbstractMenu $menu, ?CategoryFactoryInterface $categoryFactory, DatabaseInterface $db)
+    {
+        $this->db = $db;
 
-	/**
-	 * Build the route for the com_tags component
-	 *
-	 * @param   array  &$query  An array of URL arguments
-	 *
-	 * @return  array  The URL arguments to use to assemble the subsequent URL.
-	 *
-	 * @since   3.3
-	 */
-	public function build(&$query)
-	{
-		$segments = array();
+        parent::__construct($app, $menu);
 
-		// Get a menu item based on Itemid or currently active
+        $this->buildLookup();
+    }
 
-		// We need a menu item.  Either the one specified in the query, or the current active one if none specified
-		if (empty($query['Itemid']))
-		{
-			$menuItem = $this->menu->getActive();
-		}
-		else
-		{
-			$menuItem = $this->menu->getItem($query['Itemid']);
-		}
 
-		$mView = empty($menuItem->query['view']) ? null : $menuItem->query['view'];
-		$mId   = empty($menuItem->query['id']) ? null : $menuItem->query['id'];
+    /**
+     * Preprocess com_tags URLs
+     *
+     * @param   array  $query  An associative array of URL arguments
+     *
+     * @return  array  The URL arguments to use to assemble the subsequent URL.
+     *
+     * @since   4.3.0
+     */
+    public function preprocess($query)
+    {
+        $active = $this->menu->getActive();
 
-		if (is_array($mId))
-		{
-			$mId = ArrayHelper::toInteger($mId);
-		}
+        /**
+         * If the active item id is not the same as the supplied item id or we have a supplied item id and no active
+         * menu item then we just use the supplied menu item and continue
+         */
+        if (isset($query['Itemid']) && ($active === null || $query['Itemid'] != $active->id)) {
+            return $query;
+        }
 
-		$view = '';
+        // Get query language
+        $language = isset($query['lang']) ? $query['lang'] : '*';
 
-		if (isset($query['view']))
-		{
-			$view = $query['view'];
+        // Set the language to the current one when multilang is enabled and item is tagged to ALL
+        if (Multilanguage::isEnabled() && $language === '*') {
+            $language = $this->app->get('language');
+        }
 
-			if (empty($query['Itemid']))
-			{
-				$segments[] = $view;
-			}
+        if (isset($query['view']) && $query['view'] == 'tags') {
+            if (isset($query['parent_id']) && isset($this->lookup[$language]['tags'][$query['parent_id']])) {
+                $query['Itemid'] = $this->lookup[$language]['tags'][$query['parent_id']];
+            } elseif (isset($this->lookup[$language]['tags'][0])) {
+                $query['Itemid'] = $this->lookup[$language]['tags'][0];
+            }
+        } elseif (isset($query['view']) && $query['view'] == 'tag') {
+            if (isset($query['id'])) {
+                if (!is_array($query['id'])) {
+                    $query['id'] = [$query['id']];
+                }
 
-			unset($query['view']);
-		}
+                $id = ArrayHelper::toInteger($query['id']);
+                sort($id);
 
-		// Are we dealing with a tag that is attached to a menu item?
-		if ($mView == $view && isset($query['id']) && $mId == $query['id'])
-		{
-			unset($query['id']);
+                if (isset($this->lookup[$language]['tag'][implode(',', $id)])) {
+                    $query['Itemid'] = $this->lookup[$language]['tag'][implode(',', $id)];
+                } elseif (isset($this->lookup[$language]['tags'][0])) {
+                    $query['Itemid'] = $this->lookup[$language]['tags'][0];
+                }
+            }
+        }
 
-			return $segments;
-		}
+        // Check if the active menuitem matches the requested language
+        if (
+            !isset($query['Itemid']) && ($active && $active->component === 'com_tags'
+            && ($language === '*' || \in_array($active->language, array('*', $language)) || !Multilanguage::isEnabled()))
+        ) {
+            $query['Itemid'] = $active->id;
+        }
 
-		if ($view === 'tag')
-		{
-			$notActiveTag = is_array($mId) ? (count($mId) > 1 || $mId[0] != (int) $query['id']) : ($mId != (int) $query['id']);
+        // If not found, return language specific home link
+        if (!isset($query['Itemid'])) {
+            $default = $this->menu->getDefault($language);
 
-			if ($notActiveTag || $mView != $view)
-			{
-				// ID in com_tags can be either an integer, a string or an array of IDs
-				$id = is_array($query['id']) ? implode(',', $query['id']) : $query['id'];
-				$segments[] = $id;
-			}
+            if (!empty($default->id)) {
+                $query['Itemid'] = $default->id;
+            }
+        }
 
-			unset($query['id']);
-		}
+        return $query;
+    }
 
-		if (isset($query['layout']))
-		{
-			if ((!empty($query['Itemid']) && isset($menuItem->query['layout'])
-				&& $query['layout'] == $menuItem->query['layout'])
-				|| $query['layout'] === 'default')
-			{
-				unset($query['layout']);
-			}
-		}
+    /**
+     * Build the route for the com_tags component
+     *
+     * @param   array  &$query  An array of URL arguments
+     *
+     * @return  array  The URL arguments to use to assemble the subsequent URL.
+     *
+     * @since   3.3
+     */
+    public function build(&$query)
+    {
+        $segments = array();
 
-		$total = count($segments);
+        $menuItem = $this->menu->getItem($query['Itemid']);
 
-		for ($i = 0; $i < $total; $i++)
-		{
-			$segments[$i] = str_replace(':', '-', $segments[$i]);
-			$position     = strpos($segments[$i], '-');
+        if ($menuItem->query['option'] == 'com_tags') {
+            if ($menuItem->query['view'] == 'tags' && isset($query['id'])) {
+                $ids = $query['id'];
 
-			if ($position)
-			{
-				// Remove id from segment
-				$segments[$i] = substr($segments[$i], $position + 1);
-			}
-		}
+                if (!is_array($ids)) {
+                    $ids = [$ids];
+                }
 
-		return $segments;
-	}
+                foreach ($ids as $id) {
+                    $segments[] = $id;
+                }
 
-	/**
-	 * Parse the segments of a URL.
-	 *
-	 * @param   array  &$segments  The segments of the URL to parse.
-	 *
-	 * @return  array  The URL attributes to be used by the application.
-	 *
-	 * @since   3.3
-	 */
-	public function parse(&$segments)
-	{
-		$total = count($segments);
-		$vars = array();
+                unset($query['id']);
+            } elseif ($menuItem->query['view'] == 'tag') {
+                $ids = $query['id'];
+                $ids = ArrayHelper::toInteger($ids);
+                $ids = array_diff($ids, $menuItem->query['id']);
 
-		for ($i = 0; $i < $total; $i++)
-		{
-			$segments[$i] = preg_replace('/-/', ':', $segments[$i], 1);
-		}
+                foreach ($ids as $id) {
+                    $segments[] = $id;
+                }
 
-		// Get the active menu item.
-		$item = $this->menu->getActive();
+                unset($query['id']);
+            }
 
-		// Count route segments
-		$count = count($segments);
+            unset($query['view']);
+        } else {
+            $segments[] = $query['view'];
+            unset($query['view']);
 
-		// Standard routing for tags.
-		if (!isset($item))
-		{
-			$vars['view'] = $segments[0];
-			$vars['id']   = $this->fixSegment($segments[$count - 1]);
-			unset($segments[0]);
-			unset($segments[$count - 1]);
+            if (isset($query['id']) && is_array($query['id'])) {
+                foreach ($query['id'] as $id) {
+                    $segments[] = $id;
+                }
 
-			return $vars;
-		}
+                unset($query['id']);
+            }
+        }
 
-		$vars['id'] = $this->fixSegment($segments[0]);
-		$vars['view'] = 'tag';
-		unset($segments[0]);
+        unset($query['layout']);
 
-		return $vars;
-	}
+        foreach ($segments as &$segment) {
+            if (strpos($segment, ':')) {
+                [$void, $segment] = explode(':', $segment, 2);
+            }
+        }
 
-	/**
-	 * Try to add missing id to segment
-	 *
-	 * @param   string  $segment  One piece of segment of the URL to parse
-	 *
-	 * @return  string  The segment with founded id
-	 *
-	 * @since   3.7
-	 */
-	protected function fixSegment($segment)
-	{
-		// Try to find tag id
-		$alias = str_replace(':', '-', $segment);
+        return $segments;
+    }
 
-		$query = $this->db->getQuery(true)
-			->select($this->db->quoteName('id'))
-			->from($this->db->quoteName('#__tags'))
-			->where($this->db->quoteName('alias') . ' = :alias')
-			->bind(':alias', $alias);
+    /**
+     * Parse the segments of a URL.
+     *
+     * @param   array  &$segments  The segments of the URL to parse.
+     *
+     * @return  array  The URL attributes to be used by the application.
+     *
+     * @since   3.3
+     */
+    public function parse(&$segments)
+    {
+        $vars = [];
 
-		$id = $this->db->setQuery($query)->loadResult();
+        // Get the active menu item.
+        $item = $this->menu->getActive();
 
-		if ($id)
-		{
-			$segment = "$id:$alias";
-		}
+        // We don't have a menu item
+        if (!$item || $item->query['option'] != 'com_tags') {
+            if (!isset($segments[0])) {
+                return $vars;
+            }
 
-		return $segment;
-	}
+            $vars['view'] = array_shift($segments);
+        }
+
+        $ids = [];
+
+        if ($item && $item->query['view'] == 'tag') {
+            $ids = $item->query['id'];
+        }
+
+        while (count($segments)) {
+            $id = array_shift($segments);
+            $ids[] = $this->fixSegment($id);
+        }
+
+        if (count($ids)) {
+            $vars['id'] = $ids;
+            $vars['view'] = 'tag';
+        }
+
+        return $vars;
+    }
+
+    /**
+     * Method to build the lookup array
+     *
+     * @param   string  $language  The language that the lookup should be built up for
+     *
+     * @return  void
+     *
+     * @since   4.3.0
+     */
+    protected function buildLookup()
+    {
+        $component = ComponentHelper::getComponent('com_tags');
+        $items = $this->app->getMenu()->getItems(['component_id'], [$component->id]);
+
+        foreach ($items as $item) {
+            if (!isset($this->lookup[$item->language])) {
+                $this->lookup[$item->language] = ['tags' => [], 'tag' => []];
+            }
+
+            if ($item->query['view'] == 'tag') {
+                $id = $item->query['id'];
+                sort($id);
+                $this->lookup[$item->language]['tag'][implode(',', $id)] = $item->id;
+            }
+
+            if ($item->query['view'] == 'tags') {
+                $id = (int) (isset($item->query['parent_id']) ? $item->query['parent_id'] : 0);
+                $this->lookup[$item->language]['tags'][$id] = $item->id;
+            }
+        }
+    }
+
+    /**
+     * Try to add missing id to segment
+     *
+     * @param   string  $segment  One piece of segment of the URL to parse
+     *
+     * @return  string  The segment with founded id
+     *
+     * @since   3.7
+     */
+    protected function fixSegment($segment)
+    {
+        // Try to find tag id
+        $alias = str_replace(':', '-', $segment);
+
+        $query = $this->db->getQuery(true)
+            ->select($this->db->quoteName('id'))
+            ->from($this->db->quoteName('#__tags'))
+            ->where($this->db->quoteName('alias') . ' = :alias')
+            ->bind(':alias', $alias);
+
+        $id = $this->db->setQuery($query)->loadResult();
+
+        if ($id) {
+            $segment = $id . ':' . $alias;
+        }
+
+        return $segment;
+    }
 }

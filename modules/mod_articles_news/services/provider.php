@@ -1,6 +1,7 @@
 <?php
+
 /**
- * @package     Joomla.Administrator
+ * @package     Joomla.Site
  * @subpackage  mod_articles_news
  *
  * @copyright   (C) 2022 Open Source Matters, Inc. <https://www.joomla.org>
@@ -18,24 +19,24 @@ use Joomla\DI\ServiceProviderInterface;
 /**
  * The article news module service provider.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  4.2.0
  */
 return new class implements ServiceProviderInterface
 {
-	/**
-	 * Registers the service provider with a DI container.
-	 *
-	 * @param   Container  $container  The DI container.
-	 *
-	 * @return  void
-	 *
-	 * @since   __DEPLOY_VERSION__
-	 */
-	public function register(Container $container)
-	{
-		$container->registerServiceProvider(new ModuleDispatcherFactory('\\Joomla\\Module\\ArticlesNews'));
-		$container->registerServiceProvider(new HelperFactory('\\Joomla\\Module\\ArticlesNews\\Site\\Helper'));
+    /**
+     * Registers the service provider with a DI container.
+     *
+     * @param   Container  $container  The DI container.
+     *
+     * @return  void
+     *
+     * @since   4.2.0
+     */
+    public function register(Container $container)
+    {
+        $container->registerServiceProvider(new ModuleDispatcherFactory('\\Joomla\\Module\\ArticlesNews'));
+        $container->registerServiceProvider(new HelperFactory('\\Joomla\\Module\\ArticlesNews\\Site\\Helper'));
 
-		$container->registerServiceProvider(new Module);
-	}
+        $container->registerServiceProvider(new Module());
+    }
 };

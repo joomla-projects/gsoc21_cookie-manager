@@ -13,6 +13,7 @@ export default {
   data() {
     return {
       hoverActive: false,
+      actionsActive: false,
     };
   },
   methods: {
@@ -85,6 +86,14 @@ export default {
      */
     isHoverActive() {
       return this.hoverActive;
+    },
+
+    /**
+     * Whether or not the item is currently active (on hover or via tab)
+     * @returns {boolean}
+     */
+    hasActions() {
+      return this.actionsActive;
     },
 
     /**
@@ -162,11 +171,11 @@ export default {
 
     /**
      * Handle the when an element is focused in the child to display the layover for a11y
-     * @param value
+     * @param active
      */
-    focused(value) {
+    toggleSettings(active) {
       // eslint-disable-next-line no-unused-expressions
-      value ? this.mouseover() : this.mouseleave();
+      active ? this.mouseover() : this.mouseleave();
     },
   },
   render() {
@@ -177,16 +186,16 @@ export default {
           'media-browser-item': true,
           selected: this.isSelected(),
           active: this.isHoverActive(),
+          actions: this.hasActions(),
         },
         onClick: this.handleClick,
         onMouseover: this.mouseover,
         onMouseleave: this.mouseleave,
-        onFocused: this.focused,
       },
       [
         h(this.itemType(), {
           item: this.item,
-          focused: this.focused,
+          onToggleSettings: this.toggleSettings,
         }),
       ],
     );
