@@ -86,12 +86,21 @@ class PlgSystemCookiemanager extends CMSPlugin
 			return;
 		}
 
-		HTMLHelper::_('bootstrap.collapse');
+		$wa = $this->app->getDocument()->getWebAssetManager();
+		$wa->registerAndUseScript(
+				'plg_system_cookiemanager.script',
+				'plg_system_cookiemanager/cookiemanager.min.js',
+				['dependencies' => ['cookieconsent']],
+			)
+			->registerAndUseStyle(
+				'plg_system_cookiemanager.style',
+				'plg_system_cookiemanager/cookiemanager.min.css',
+				['dependencies' => ['cookieconsent']],
+			);
 
 		ob_start();
 		ob_implicit_flush(false);
 
-		// Load cookiemanager component language file
 		$this->app->getLanguage()->load('com_cookiemanager', JPATH_ADMINISTRATOR);
 
 		$params = ComponentHelper::getParams('com_cookiemanager');
@@ -116,23 +125,6 @@ class PlgSystemCookiemanager extends CMSPlugin
 
 		$this->cookies = $db->setQuery($query)->loadObjectList();
 
-		if (!empty($this->cookies))
-		{
-			// Load required assets
-			$assets = $this->app->getDocument()->getWebAssetManager();
-			$assets->registerAndUseScript(
-				'plg_system_cookiemanager.script',
-				'plg_system_cookiemanager/cookiemanager.min.js',
-				[],
-				['defer' => true],
-				['core']
-			);
-			$assets->registerAndUseStyle(
-				'plg_system_cookiemanager.style',
-				'plg_system_cookiemanager/cookiemanager.min.css'
-			);
-		}
-
 		$query = $db->getQuery(true)
 			->select($db->quoteName(['id', 'title', 'alias', 'description']))
 			->from($db->quoteName('#__categories'))
@@ -145,6 +137,7 @@ class PlgSystemCookiemanager extends CMSPlugin
 			->order($db->quoteName('lft'));
 
 		$this->cookieCategories = $db->setQuery($query)->loadObjectList();
+		$this->app->getDocument()->addScriptOptions('plg_system_cookiemanager.categories', $this->cookieCategories);
 
 		$query = $db->getQuery(true)
 			->select($db->quoteName(['a.type', 'a.position', 'a.code', 'a.catid']))
@@ -156,6 +149,7 @@ class PlgSystemCookiemanager extends CMSPlugin
 			);
 
 		$this->cookieScripts = $db->setQuery($query)->loadObjectList();
+		$this->app->getDocument()->addScriptOptions('plg_system_cookiemanager.scripts', $this->cookieScripts);
 
 		$cookieCodes = [];
 

@@ -9,6 +9,9 @@
 	<authorUrl>www.joomla.org</authorUrl>
 	<version>__DEPLOY_VERSION__</version>
 	<description>PLG_SYSTEM_COOKIEMANAGER_XML_DESCRIPTION</description>
+	<media destination="plg_system_cookiemanager" folder="media">
+		<folder>js</folder>
+	</media>
     <files>
         <filename plugin="cookiemanager">cookiemanager.php</filename>
         <folder>tmpl</folder>

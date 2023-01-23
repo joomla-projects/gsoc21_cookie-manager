@@ -1,231 +1,129 @@
 /**
- * @copyright  (C) 2021 Open Source Matters, Inc. <https://www.joomla.org>
+ * @copyright  (C) 2023 Open Source Matters, Inc. <https://www.joomla.org>
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  */
 
 ((document) => {
   'use strict';
 
-  // Script Types
-  const TYPE_SCRIPT = 1;
-  const TYPE_EXTERNAL_SCRIPT = 2;
-  const TYPE_IFRAME = 3;
-  const TYPE_EMBED = 4;
-  const TYPE_OBJECT = 5;
-  const TYPE_IMG = 6;
-  const TYPE_LINK = 7;
+  /* global initCookieConsent */
 
-  // Positions
-  const POSITION_AFTER_BEGIN_HEAD = 1;
-  const POSITION_BEFORE_END_HEAD = 2;
-  const POSITION_AFTER_BEGIN_BODY = 3;
+  const cookiemanagerCategories = Joomla.getOptions('plg_system_cookiemanager.categories');
+  console.log({ cookiemanagerCategories });
 
-  const cookies = document.cookie.split('; ');
-  const config = Joomla.getOptions('config');
-  const code = Joomla.getOptions('code');
-  const parse = Range.prototype.createContextualFragment.bind(document.createRange());
+  const cookiemanagerScripts = Joomla.getOptions('plg_system_cookiemanager.scripts');
+  console.log({ cookiemanagerScripts });
+  // const config = Joomla.getOptions('config');
+  // const code = Joomla.getOptions('code');
 
-  // Array for consents
-  const consentsOptIn = [];
-  const consentsOptOut = [];
+  const cc = initCookieConsent();
 
-  // Calculate cookie expiration period
-  const getExpiration = () => {
-    const exp = config.expiration;
-    const d = new Date();
-    d.setTime(d.getTime() + (exp * 24 * 60 * 60 * 1000));
-    const expires = d.toUTCString();
-    return expires;
-  };
+  cc.run({
+    current_lang: 'en',
+    autoclear_cookies: true, // default: false
+    page_scripts: true, // default: false
+    // mode: 'opt-in'                          // default: 'opt-in'; value: 'opt-in' or 'opt-out'
+    // delay: 0,                               // default: 0
+    // auto_language: null                     // default: null; could also be 'browser' or 'document'
+    // autorun: true,                          // default: true
+    // force_consent: false,                   // default: false
+    // hide_from_bots: true,                   // default: true
+    // remove_cookie_tables: false             // default: false
+    // cookie_name: 'cc_cookie',               // default: 'cc_cookie'
+    // cookie_expiration: 182,                 // default: 182 (days)
+    // cookie_necessary_only_expiration: 182   // default: disabled
+    // cookie_domain: location.hostname,       // default: current domain
+    // cookie_path: '/',                       // default: root
+    // cookie_same_site: 'Lax',                // default: 'Lax'
+    // use_rfc_cookie: false,                  // default: false
+    // revision: 0,                            // default: 0
 
-  const displayConsentData = (ccuuid, date, optIn) => {
-    document.getElementById('ccuuid').innerText = ccuuid;
-    document.getElementById('consent-date').innerText = date;
-    document.getElementById('consent-opt-in').innerText = optIn;
-  };
-
-  const addScript = (position, script) => {
-    if (position === POSITION_AFTER_BEGIN_HEAD) {
-      document.head.prepend(parse(script));
-    }
-    if (position === POSITION_BEFORE_END_HEAD) {
-      document.head.append(parse(script));
-    }
-    if (position === POSITION_AFTER_BEGIN_BODY) {
-      document.body.prepend(parse(script));
-    } else {
-      document.body.append(parse(script));
-    }
-  };
-
-  const addNotScript = (type, script) => {
-    if (type === TYPE_OBJECT) {
-      const value = script.match(/data="([^\s]*)"\s/)[1];
-      const element = document.querySelector(`[data-src="${value}"]`);
-      if (element) {
-        element.setAttribute('data', value);
-        element.removeAttribute('data-src');
-      }
-    }
-    if (type === TYPE_LINK) {
-      const value = script.match(/href="(.+)"/)[1];
-      const element = document.querySelector(`[data-href="${value}"]`);
-      if (element) {
-        element.setAttribute('href', value);
-        element.removeAttribute('data-href');
-      }
-    }
-    if (type === TYPE_IFRAME || type === TYPE_EMBED || type === TYPE_IMG) {
-      const value = script.match(/src="([^\s]*)"\s/)[1];
-      const element = document.querySelector(`[data-src="${value}"]`);
-      if (element) {
-        element.setAttribute('src', value);
-        element.removeAttribute('data-src');
-      }
-    }
-  };
-
-  const acceptConsent = (value, categoryKey, exp) => {
-    Object.values(value).forEach((i) => {
-      if (i.type === TYPE_SCRIPT || i.type === TYPE_EXTERNAL_SCRIPT) {
-        addScript(i.position, i.code);
-      } else {
-        addNotScript(i.type, i.code);
-      }
-
-      document.cookie = `cookie_category_${categoryKey}=true; expires=${exp}; path=/; sameSite=strict;`;
-    });
-    consentsOptIn.push(categoryKey);
-  };
-
-  const denyConsent = (deniedConsent, exp) => {
-    document.cookie = `cookie_category_${deniedConsent}=false; expires=${exp}; path=/; sameSite=strict;`;
-    consentsOptOut.push(deniedConsent);
-  };
-
-  const storingConsents = () => {
-    const consentsIn = consentsOptIn.join(', ');
-    const consentsOut = consentsOptOut.join(', ');
-    const date = new Date();
-    const uuid = cookies.find((cookie) => cookie.startsWith('uuid='))?.split('=')[1];
-
-    document.cookie = 'consents_opt_in=[]; path=/; sameSite=strict;';
-    document.cookie = `consent_date=${date}; path=/; sameSite=strict;`;
-
-    const consentDetails = {
-      uuid,
-      url: window.location.href,
-      consent_opt_in: consentsIn,
-      consent_opt_out: consentsOut,
-    };
-    Joomla.request({
-      url: `index.php?option=com_ajax&plugin=cookiemanager&group=system&format=json&data=${JSON.stringify(consentDetails)}`,
-      method: 'POST',
-      onSuccess: (response) => {
-        const result = JSON.parse(response);
-        const ccuuid = result.data.length ? result.data[0] : '';
-
-        document.cookie = `ccuuid=${ccuuid}; path=/; sameSite=strict;`;
-        displayConsentData(ccuuid, date, consentsIn);
+    onFirstAction: (userPreferences, cookie) => {
+      // callback triggered only once
+      console.log('onFirstAction:', { userPreferences }, { cookie });
+    },
+    onAccept: (cookie) => {
+      console.log('onAccept: ', { cookie });
+    },
+    onChange: (cookie, changedPreferences) => {
+      console.log('onChange: ', { cookie }, { changedPreferences });
+    },
+    languages: {
+      en: {
+        consent_modal: {
+          title: 'We use cookies!',
+          description: 'Hi, this website uses essential cookies to ensure its proper operation and tracking cookies to understand how you interact with it. The latter will be set only after consent. <button type="button" data-cc="c-settings" class="cc-link">Let me choose</button>',
+          primary_btn: {
+            text: 'Accept all',
+            role: 'accept_all', // 'accept_selected' or 'accept_all'
+          },
+          secondary_btn: {
+            text: 'Reject all',
+            role: 'accept_necessary', // 'settings' or 'accept_necessary'
+          },
+        },
+        settings_modal: {
+          title: 'Cookie preferences',
+          save_settings_btn: 'Save settings',
+          accept_all_btn: 'Accept all',
+          reject_all_btn: 'Reject all',
+          close_btn_label: 'Close',
+          cookie_table_headers: [
+            { col1: 'Name' },
+            { col2: 'Domain' },
+            { col3: 'Expiration' },
+            { col4: 'Description' },
+          ],
+          blocks: [
+            {
+              title: 'Cookie usage 📢',
+              description: 'I use cookies to ensure the basic functionalities of the website and to enhance your online experience. You can choose for each category to opt-in/out whenever you want. For more details relative to cookies and other sensitive data, please read the full <a href="#" class="cc-link">privacy policy</a>.',
+            }, {
+              title: 'Strictly necessary cookies',
+              description: 'These cookies are essential for the proper functioning of my website. Without these cookies, the website would not work properly',
+              toggle: {
+                value: 'necessary',
+                enabled: true,
+                readonly: true, // cookie categories with readonly=true are all treated as "necessary cookies"
+              },
+            }, {
+              title: 'Performance and Analytics cookies',
+              description: 'These cookies allow the website to remember the choices you have made in the past',
+              toggle: {
+                value: 'analytics', // your cookie category
+                enabled: false,
+                readonly: false,
+              },
+              cookie_table: [ // list of all expected cookies
+                {
+                  col1: '^_ga', // match all cookies starting with "_ga"
+                  col2: 'google.com',
+                  col3: '2 years',
+                  col4: 'description ...',
+                  is_regex: true,
+                },
+                {
+                  col1: '_gid',
+                  col2: 'google.com',
+                  col3: '1 day',
+                  col4: 'description ...',
+                },
+              ],
+            }, {
+              title: 'Advertisement and Targeting cookies',
+              description: 'These cookies collect information about how you use the website, which pages you visited and which links you clicked on. All of the data is anonymized and cannot be used to identify you',
+              toggle: {
+                value: 'targeting',
+                enabled: false,
+                readonly: false,
+              },
+            }, {
+              title: 'More information',
+              description: 'For any queries in relation to our policy on cookies and your choices, please <a class="cc-link" href="#yourcontactpage">contact us</a>.',
+            },
+          ],
+        },
       },
-      onError(xhr) {
-        Joomla.renderMessages({ error: [xhr] }, '#system-message-container');
-      },
-    });
-  };
-
-  const saveChoice = (exp) => {
-    document.cookie = `cookieBanner=shown; expires=${exp}; path=/; sameSite=strict;`;
-    storingConsents();
-  };
-
-  const acceptChoice = () => {
-    const exp = getExpiration();
-    document.querySelectorAll('[data-cookiecategory]').forEach((item) => {
-      const categoryKey = item.getAttribute('data-cookiecategory');
-
-      if (item.checked) {
-        Object.entries(code).forEach(([key, value]) => {
-          if (key === categoryKey) {
-            acceptConsent(value, categoryKey, exp);
-          }
-        });
-      } else {
-        denyConsent(categoryKey, exp);
-      }
-    });
-    saveChoice(exp);
-  };
-
-  const acceptAllCookies = () => {
-    const exp = getExpiration();
-    Object.entries(code).forEach(([key, value]) => {
-      acceptConsent(value, key, exp);
-    });
-    saveChoice(exp);
-  };
-
-  document.addEventListener('DOMContentLoaded', () => {
-    document.querySelector('#consentBanner .modal-dialog').classList.add(config.position);
-    document.querySelector('#settingsBanner .modal-dialog').classList.add('modal-dialog-scrollable');
-
-    document.getElementById('confirmChoice').addEventListener('click', acceptChoice);
-    document.getElementById('confirmSettingsChoice').addEventListener('click', acceptChoice);
-    document.querySelectorAll('[data-button="acceptAllCookies"]').forEach((btn) => {
-      btn.addEventListener('click', acceptAllCookies);
-    });
-
-    // Show cookie consent banner
-    if (cookies.indexOf('cookieBanner=shown') === -1) {
-      const Banner = new bootstrap.Modal(document.querySelector('#consentBanner'));
-      Banner.show();
-    }
-
-    // Add consent details to the cookie settings banner
-    if (cookies.find((c) => c.startsWith('consents_opt_in='))) {
-      const consentOptIn = cookies.find((c) => c.startsWith('consents_opt_in=')).split('=')[1];
-      const consentDate = cookies.find((c) => c.startsWith('consent_date=')).split('=')[1];
-      const ccuuid = cookies.find((c) => c.startsWith('ccuuid=')).split('=')[1];
-
-      displayConsentData(ccuuid, consentDate, consentOptIn);
-    }
-
-    // Block cookie setting code on the users' first visit
-    document.querySelectorAll('[data-cookie-category]').forEach((item) => {
-      const category = item.getAttribute('data-cookie-category');
-
-      cookies.forEach((cookie) => {
-        if (cookie.search(`${category}=true`) > 0) {
-          item.checked = true;
-        } else {
-          Object.entries(code).forEach(([catAlias, categoryCookies]) => {
-            if (catAlias === category) {
-              Object.values(categoryCookies).forEach((categoryCookie) => {
-                addNotScript(categoryCookie.type, categoryCookie.code);
-              });
-            }
-          });
-        }
-      });
-    });
-
-    document.querySelectorAll('[data-cookiecategory]').forEach((item) => {
-      const category = item.getAttribute('data-cookiecategory');
-      cookies.forEach((cookie) => {
-        if (cookie.search(`${category}=true`) > 0) {
-          item.checked = true;
-        }
-      });
-    });
-
-    document.querySelectorAll('a[data-bs-toggle="collapse"]').forEach((item) => {
-      item.addEventListener('click', () => {
-        if (item.innerText === Joomla.Text._('COM_COOKIEMANAGER_PREFERENCES_MORE_BUTTON_TEXT')) {
-          item.innerText = Joomla.Text._('COM_COOKIEMANAGER_PREFERENCES_LESS_BUTTON_TEXT');
-        } else {
-          item.innerText = Joomla.Text._('COM_COOKIEMANAGER_PREFERENCES_MORE_BUTTON_TEXT');
-        }
-      });
-    });
+    },
   });
 })(document);
