@@ -24,6 +24,14 @@ use Joomla\CMS\Plugin\PluginHelper;
  */
 class PlgSystemCookiemanager extends CMSPlugin
 {
+    /**
+     * Load the language file on instantiation.
+     *
+     * @var    boolean
+     * @since  __DEPLOY_VERSION__
+     */
+    protected $autoloadLanguage = true;
+
 	/**
 	 * Application object.
 	 *
@@ -98,20 +106,28 @@ class PlgSystemCookiemanager extends CMSPlugin
 				['dependencies' => ['cookieconsent']],
 			);
 
-		ob_start();
-		ob_implicit_flush(false);
-
 		$this->app->getLanguage()->load('com_cookiemanager', JPATH_ADMINISTRATOR);
 
-		$params = ComponentHelper::getParams('com_cookiemanager');
+		Text::script('PLG_SYSTEM_COOKIEMANAGER_BANNER_TITLE');
+		Text::script('PLG_SYSTEM_COOKIEMANAGER_BANNER_DESC');
+		Text::script('PLG_SYSTEM_COOKIEMANAGER_BANNER_BTN_ACCEPT_ALL');
+		Text::script('PLG_SYSTEM_COOKIEMANAGER_BANNER_BTN_REJECT_ALL');
+		Text::script('PLG_SYSTEM_COOKIEMANAGER_SETTINGS_TITLE');
+		Text::script('PLG_SYSTEM_COOKIEMANAGER_SETTINGS_BTN_SAVE');
+		Text::script('PLG_SYSTEM_COOKIEMANAGER_SETTINGS_BTN_ACCEPT_ALL');
+		Text::script('PLG_SYSTEM_COOKIEMANAGER_SETTINGS_BTN_REJECT_ALL');
+		Text::script('PLG_SYSTEM_COOKIEMANAGER_SETTINGS_BTN_CLOSE');
+		Text::script('PLG_SYSTEM_COOKIEMANAGER_TABLE_HEADERS_COL1');
+		Text::script('PLG_SYSTEM_COOKIEMANAGER_TABLE_HEADERS_COL2');
+		Text::script('PLG_SYSTEM_COOKIEMANAGER_TABLE_HEADERS_COL3');
+		Text::script('PLG_SYSTEM_COOKIEMANAGER_TABLE_HEADERS_COL4');
 
-		Text::script('COM_COOKIEMANAGER_PREFERENCES_LESS_BUTTON_TEXT');
-		Text::script('COM_COOKIEMANAGER_PREFERENCES_MORE_BUTTON_TEXT');
+		$params = ComponentHelper::getParams('com_cookiemanager');
 
 		$cookieManagerConfig = [];
 		$cookieManagerConfig['expiration'] = $params->get('consent_expiration', 30);
 		$cookieManagerConfig['position'] = $params->get('modal_position', null);
-		$this->app->getDocument()->addScriptOptions('config', $cookieManagerConfig);
+		$this->app->getDocument()->addScriptOptions('plg_system_cookiemanager.config', $cookieManagerConfig);
 
 		$db    = $this->db;
 		$query = $db->getQuery(true)
@@ -124,6 +140,7 @@ class PlgSystemCookiemanager extends CMSPlugin
 			->order($db->quoteName('lft'));
 
 		$this->cookies = $db->setQuery($query)->loadObjectList();
+		$this->app->getDocument()->addScriptOptions('plg_system_cookiemanager.cookies', $this->cookies);
 
 		$query = $db->getQuery(true)
 			->select($db->quoteName(['id', 'title', 'alias', 'description']))
@@ -171,19 +188,9 @@ class PlgSystemCookiemanager extends CMSPlugin
 			}
 		}
 
-		$this->app->getDocument()->addScriptOptions('code', $cookieCodes);
+		$this->app->getDocument()->addScriptOptions('plg_system_cookiemanager.codes', $cookieCodes);
 
-		if (!$this->app->input->cookie->get('uuid'))
-		{
-			$uuid = bin2hex(random_bytes(16));
-			$cookieLifetime = $params->get('consent_expiration', 30) * 24 * 60 * 60;
-			$this->app->input->cookie->set('uuid', $uuid, time() + $cookieLifetime, '/');
-		}
-
-		ob_start();
 		include PluginHelper::getLayoutPath('system', 'cookiemanager');
-		$this->bannerContent = ob_get_clean();
-		echo $this->bannerContent;
 	}
 
 	/**

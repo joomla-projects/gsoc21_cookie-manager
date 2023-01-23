@@ -2,7 +2,7 @@
 <extension type="plugin" group="system" method="upgrade">
   <name>plg_system_cookiemanager</name>
 	<author>Joomla! Project</author>
-	<creationDate>June 2021</creationDate>
+	<creationDate>2021-06</creationDate>
 	<copyright>(C) 2021 Open Source Matters, Inc.</copyright>
 	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
 	<authorEmail>admin@joomla.org</authorEmail>
@@ -17,7 +17,7 @@
         <folder>tmpl</folder>
     </files>
     <languages>
-        <language tag="en-GB">en-GB.plg_system_cookiemanager.ini</language>
-        <language tag="en-GB">en-GB.plg_system_cookiemanager.sys.ini</language>
+        <language tag="en-GB">language/en-GB/plg_system_cookiemanager.ini</language>
+        <language tag="en-GB">language/en-GB/plg_system_cookiemanager.sys.ini</language>
     </languages>
 </extension>

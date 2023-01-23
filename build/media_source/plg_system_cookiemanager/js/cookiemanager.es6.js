@@ -6,22 +6,24 @@
 ((document) => {
   'use strict';
 
+  const cookieCategories = Joomla.getOptions('plg_system_cookiemanager.categories');
+  console.log({ cookieCategories });
+  const cookieScripts = Joomla.getOptions('plg_system_cookiemanager.scripts');
+  console.log({ cookieScripts });
+  const cookieCodes = Joomla.getOptions('plg_system_cookiemanager.codes');
+  console.log({ cookieCodes });
+  const cookieConfig = Joomla.getOptions('plg_system_cookiemanager.config');
+  console.log({ cookieConfig });
+
   /* global initCookieConsent */
-
-  const cookiemanagerCategories = Joomla.getOptions('plg_system_cookiemanager.categories');
-  console.log({ cookiemanagerCategories });
-
-  const cookiemanagerScripts = Joomla.getOptions('plg_system_cookiemanager.scripts');
-  console.log({ cookiemanagerScripts });
-  // const config = Joomla.getOptions('config');
-  // const code = Joomla.getOptions('code');
-
   const cc = initCookieConsent();
 
   cc.run({
     current_lang: 'en',
     autoclear_cookies: true, // default: false
     page_scripts: true, // default: false
+    cookie_expiration: cookieConfig.expiration, // default: 182 (days)
+    cookie_name: 'jcookie', // default: 'cc_cookie'
     // mode: 'opt-in'                          // default: 'opt-in'; value: 'opt-in' or 'opt-out'
     // delay: 0,                               // default: 0
     // auto_language: null                     // default: null; could also be 'browser' or 'document'
@@ -29,8 +31,6 @@
     // force_consent: false,                   // default: false
     // hide_from_bots: true,                   // default: true
     // remove_cookie_tables: false             // default: false
-    // cookie_name: 'cc_cookie',               // default: 'cc_cookie'
-    // cookie_expiration: 182,                 // default: 182 (days)
     // cookie_necessary_only_expiration: 182   // default: disabled
     // cookie_domain: location.hostname,       // default: current domain
     // cookie_path: '/',                       // default: root
@@ -47,7 +47,7 @@
       const consentDetails = {
         uuid: cookie.consent_uuid,
         url: window.location.href,
-        consent_opt_in: cookie.categories,
+        consent_opt_in: cc.getUserPreferences().accepted_categories,
         consent_opt_out: cookie.categories,
       };
       Joomla.request({
@@ -68,28 +68,28 @@
     languages: {
       en: {
         consent_modal: {
-          title: 'We use cookies!',
-          description: 'Hi, this website uses essential cookies to ensure its proper operation and tracking cookies to understand how you interact with it. The latter will be set only after consent. <button type="button" data-cc="c-settings" class="cc-link">Let me choose</button>',
+          title: Joomla.Text._('PLG_SYSTEM_COOKIEMANAGER_BANNER_TITLE'),
+          description: Joomla.Text._('PLG_SYSTEM_COOKIEMANAGER_BANNER_DESC'),
           primary_btn: {
-            text: 'Accept all',
+            text: Joomla.Text._('PLG_SYSTEM_COOKIEMANAGER_BANNER_BTN_ACCEPT_ALL'),
             role: 'accept_all', // 'accept_selected' or 'accept_all'
           },
           secondary_btn: {
-            text: 'Reject all',
+            text: Joomla.Text._('PLG_SYSTEM_COOKIEMANAGER_BANNER_BTN_REJECT_ALL'),
             role: 'accept_necessary', // 'settings' or 'accept_necessary'
           },
         },
         settings_modal: {
-          title: 'Cookie preferences',
-          save_settings_btn: 'Save settings',
-          accept_all_btn: 'Accept all',
-          reject_all_btn: 'Reject all',
-          close_btn_label: 'Close',
+          title: Joomla.Text._('PLG_SYSTEM_COOKIEMANAGER_SETTINGS_TITLE'),
+          save_settings_btn: Joomla.Text._('PLG_SYSTEM_COOKIEMANAGER_SETTINGS_BTN_SAVE'),
+          accept_all_btn: Joomla.Text._('PLG_SYSTEM_COOKIEMANAGER_SETTINGS_BTN_ACCEPT_ALL'),
+          reject_all_btn: Joomla.Text._('PLG_SYSTEM_COOKIEMANAGER_SETTINGS_BTN_REJECT_ALL'),
+          close_btn_label: Joomla.Text._('PLG_SYSTEM_COOKIEMANAGER_SETTINGS_BTN_CLOSE'),
           cookie_table_headers: [
-            { col1: 'Name' },
-            { col2: 'Domain' },
-            { col3: 'Expiration' },
-            { col4: 'Description' },
+            { col1: Joomla.Text._('PLG_SYSTEM_COOKIEMANAGER_TABLE_HEADERS_COL1') },
+            { col2: Joomla.Text._('PLG_SYSTEM_COOKIEMANAGER_TABLE_HEADERS_COL2') },
+            { col3: Joomla.Text._('PLG_SYSTEM_COOKIEMANAGER_TABLE_HEADERS_COL3') },
+            { col4: Joomla.Text._('PLG_SYSTEM_COOKIEMANAGER_TABLE_HEADERS_COL4') },
           ],
           blocks: [
             {
@@ -142,5 +142,15 @@
         },
       },
     },
+  });
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const openBannerButton = document.createElement('button');
+    openBannerButton.innerText = Joomla.Text._('COM_COOKIEMANAGER_PREVIEW_BUTTON_TEXT');
+    openBannerButton.id = 'open-consent-banner';
+    openBannerButton.dataset.cc = 'c-settings';
+    // openBannerButton.setAttribute('data-cc', 'c-settings');
+    openBannerButton.className = 'preview btn btn-info';
+    document.body.appendChild(openBannerButton);
   });
 })(document);
