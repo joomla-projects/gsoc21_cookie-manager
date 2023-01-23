@@ -44,6 +44,23 @@
     },
     onAccept: (cookie) => {
       console.log('onAccept: ', { cookie });
+      const consentDetails = {
+        uuid: cookie.consent_uuid,
+        url: window.location.href,
+        consent_opt_in: cookie.categories,
+        consent_opt_out: cookie.categories,
+      };
+      Joomla.request({
+        url: `index.php?option=com_ajax&plugin=cookiemanager&group=system&format=json&data=${JSON.stringify(consentDetails)}`,
+        method: 'POST',
+        onSuccess: (response) => {
+          const result = JSON.parse(response);
+          console.log({ result });
+        },
+        onError(xhr) {
+          Joomla.renderMessages({ error: [xhr] }, '#system-message-container');
+        },
+      });
     },
     onChange: (cookie, changedPreferences) => {
       console.log('onChange: ', { cookie }, { changedPreferences });
