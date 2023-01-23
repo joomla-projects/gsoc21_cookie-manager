@@ -16,6 +16,7 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Plugin\CMSPlugin;
 use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\CMS\Router\Route;
 
 /**
  * System plugin to manage cookies.
@@ -24,13 +25,13 @@ use Joomla\CMS\Plugin\PluginHelper;
  */
 class PlgSystemCookiemanager extends CMSPlugin
 {
-    /**
-     * Load the language file on instantiation.
-     *
-     * @var    boolean
-     * @since  __DEPLOY_VERSION__
-     */
-    protected $autoloadLanguage = true;
+	/**
+	 * Load the language file on instantiation.
+	 *
+	 * @var    boolean
+	 * @since  __DEPLOY_VERSION__
+	 */
+	protected $autoloadLanguage = true;
 
 	/**
 	 * Application object.
@@ -41,44 +42,12 @@ class PlgSystemCookiemanager extends CMSPlugin
 	protected $app;
 
 	/**
-	 * Template contents for cookie banners
-	 *
-	 * @var    string
-	 * @since  __DEPLOY_VERSION__
-	 */
-	protected $bannerContent;
-
-	/**
 	 * Database object
 	 *
 	 * @var    \Joomla\Database\DatabaseDriver
 	 * @since  __DEPLOY_VERSION__
 	 */
 	protected $db;
-
-	/**
-	 * Cookies
-	 *
-	 * @var    object
-	 * @since  __DEPLOY_VERSION__
-	 */
-	protected $cookies;
-
-	/**
-	 * Cookie settings scripts
-	 *
-	 * @var    object
-	 * @since  __DEPLOY_VERSION__
-	 */
-	protected $cookieScripts;
-
-	/**
-	 * Cookie categories
-	 *
-	 * @var    object
-	 * @since  __DEPLOY_VERSION__
-	 */
-	protected $cookieCategories;
 
 	/**
 	 * Add assets for the cookie banners.
@@ -121,12 +90,20 @@ class PlgSystemCookiemanager extends CMSPlugin
 		Text::script('PLG_SYSTEM_COOKIEMANAGER_TABLE_HEADERS_COL2');
 		Text::script('PLG_SYSTEM_COOKIEMANAGER_TABLE_HEADERS_COL3');
 		Text::script('PLG_SYSTEM_COOKIEMANAGER_TABLE_HEADERS_COL4');
+		Text::script('COM_COOKIEMANAGER_PREVIEW_BUTTON_TEXT');
+		Text::script('COM_COOKIEMANAGER_VIEW_COOKIE_POLICY');
 
 		$params = ComponentHelper::getParams('com_cookiemanager');
 
 		$cookieManagerConfig = [];
 		$cookieManagerConfig['expiration'] = $params->get('consent_expiration', 30);
 		$cookieManagerConfig['position'] = $params->get('modal_position', null);
+
+		$menuitem = $this->app->getMenu()->getItem($params->get('policylink', ''));
+		if ($menuitem) {
+			$cookieManagerConfig['policylink'] = HTMLHelper::_('link', Route::_($menuitem->link));
+		}
+
 		$this->app->getDocument()->addScriptOptions('plg_system_cookiemanager.config', $cookieManagerConfig);
 
 		$db    = $this->db;
@@ -139,8 +116,8 @@ class PlgSystemCookiemanager extends CMSPlugin
 			)
 			->order($db->quoteName('lft'));
 
-		$this->cookies = $db->setQuery($query)->loadObjectList();
-		$this->app->getDocument()->addScriptOptions('plg_system_cookiemanager.cookies', $this->cookies);
+		$cookies = $db->setQuery($query)->loadObjectList();
+		$this->app->getDocument()->addScriptOptions('plg_system_cookiemanager.cookies', $cookies);
 
 		$query = $db->getQuery(true)
 			->select($db->quoteName(['id', 'title', 'alias', 'description']))
@@ -153,8 +130,8 @@ class PlgSystemCookiemanager extends CMSPlugin
 			)
 			->order($db->quoteName('lft'));
 
-		$this->cookieCategories = $db->setQuery($query)->loadObjectList();
-		$this->app->getDocument()->addScriptOptions('plg_system_cookiemanager.categories', $this->cookieCategories);
+		$cookieCategories = $db->setQuery($query)->loadObjectList();
+		$this->app->getDocument()->addScriptOptions('plg_system_cookiemanager.categories', $cookieCategories);
 
 		$query = $db->getQuery(true)
 			->select($db->quoteName(['a.type', 'a.position', 'a.code', 'a.catid']))
@@ -165,12 +142,12 @@ class PlgSystemCookiemanager extends CMSPlugin
 				$db->quoteName('#__categories', 'c') . ' ON ' . $db->quoteName('c.id') . ' = ' . $db->quoteName('a.catid')
 			);
 
-		$this->cookieScripts = $db->setQuery($query)->loadObjectList();
-		$this->app->getDocument()->addScriptOptions('plg_system_cookiemanager.scripts', $this->cookieScripts);
+		$cookieScripts = $db->setQuery($query)->loadObjectList();
+		$this->app->getDocument()->addScriptOptions('plg_system_cookiemanager.scripts', $cookieScripts);
 
 		$cookieCodes = [];
 
-		foreach ($this->cookieCategories as $category)
+		foreach ($cookieCategories as $category)
 		{
 			$cookie = $this->app->input->cookie->get('cookie_category_' . $category->alias);
 
@@ -178,7 +155,7 @@ class PlgSystemCookiemanager extends CMSPlugin
 			{
 				$cookieCodes[$category->alias] = [];
 
-				foreach ($this->cookieScripts as $script)
+				foreach ($cookieScripts as $script)
 				{
 					if ($category->id == $script->catid)
 					{
@@ -191,99 +168,6 @@ class PlgSystemCookiemanager extends CMSPlugin
 		$this->app->getDocument()->addScriptOptions('plg_system_cookiemanager.codes', $cookieCodes);
 
 		include PluginHelper::getLayoutPath('system', 'cookiemanager');
-	}
-
-	/**
-	 * Echo the cookie banners, button and scripts.
-	 *
-	 * @return  void
-	 *
-	 * @since   __DEPLOY_VERSION__
-	 */
-	public function onAfterRespond()
-	{
-		if (!$this->app->isClient('site'))
-		{
-			return;
-		}
-
-		// Return early in case of AJAX request
-		if ($this->app->input->get('format') === 'json')
-		{
-			return;
-		}
-
-		// No need to load scripts when there are none
-		if (empty($this->cookieScripts))
-		{
-			return;
-		}
-
-		echo '<button class="preview btn btn-info" data-bs-toggle="modal" data-bs-target="#consentBanner">'
-			. Text::_('COM_COOKIEMANAGER_PREVIEW_BUTTON_TEXT')
-			. '</button>';
-
-		foreach ($this->cookieCategories as $category)
-		{
-			$cookie = $this->app->input->cookie->get('cookie_category_' . $category->alias);
-
-			if (isset($cookie) && $cookie === 'true')
-			{
-				foreach ($this->cookieScripts as $script)
-				{
-					if ($category->id == $script->catid)
-					{
-						if ($script->type == 1 || $script->type == 2)
-						{
-							if ($script->position == 1)
-							{
-								$html = ob_get_contents();
-
-								if ($html)
-								{
-									ob_end_clean();
-								}
-
-								echo str_replace('<head>', '<head>' . $script->code, $html);
-							}
-							elseif ($script->position == 2)
-							{
-								$html = ob_get_contents();
-
-								if ($html)
-								{
-									ob_end_clean();
-								}
-
-								echo str_replace('</head>', $script->code . '</head>', $html);
-							}
-							elseif ($script->position == 3)
-							{
-								$html = ob_get_contents();
-
-								if ($html)
-								{
-									ob_end_clean();
-								}
-
-								echo preg_replace('/<body[^>]+>\K/i', $script->code, $html);
-							}
-							else
-							{
-								$html = ob_get_contents();
-
-								if ($html)
-								{
-									ob_end_clean();
-								}
-
-								echo str_replace('</body>', $script->code . '</body>', $html);
-							}
-						}
-					}
-				}
-			}
-		}
 	}
 
 	/**

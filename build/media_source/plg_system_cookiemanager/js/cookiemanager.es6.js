@@ -148,6 +148,7 @@
     const openBannerButton = document.createElement('button');
     openBannerButton.innerText = Joomla.Text._('COM_COOKIEMANAGER_PREVIEW_BUTTON_TEXT');
     openBannerButton.id = 'open-consent-banner';
+    openBannerButton.type = 'button';
     openBannerButton.dataset.cc = 'c-settings';
     // openBannerButton.setAttribute('data-cc', 'c-settings');
     openBannerButton.className = 'preview btn btn-info';
