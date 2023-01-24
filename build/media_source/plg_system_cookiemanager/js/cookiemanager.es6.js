@@ -9,37 +9,72 @@
   const cookies = Joomla.getOptions('plg_system_cookiemanager.cookies', []);
   console.log({ cookies });
   const categories = Joomla.getOptions('plg_system_cookiemanager.categories', []);
-  console.log({ cookieCategories: categories });
+  console.log({ categories });
   const cookieScripts = Joomla.getOptions('plg_system_cookiemanager.scripts', []);
   console.log({ cookieScripts });
   const config = Joomla.getOptions('plg_system_cookiemanager.config');
-  console.log({ cookieConfig: config });
+  console.log({ config });
 
-  const blocks = [];
-  categories.forEach((category) => {
-    const block = {
-      title: category.title,
-      description: category.description,
-      toggle: {
-        value: category.alias,
-        enabled: false,
-        readonly: category.necessary || false,
-      },
-    };
-    const categoryCookies = cookies.filter((cookie) => cookie.alias === category.alias);
-    if (categoryCookies.length) {
-      block.cookie_table = [];
-      categoryCookies.forEach((cookie) => {
-        block.cookie_table.push({
-          col1: cookie.cookie_name,
-          col2: cookie.domain,
-          col3: cookie.exp_period,
-          col4: cookie.cookie_desc,
+  const getBlocks = () => {
+    const blocks = [];
+    categories.forEach((category) => {
+      const block = {
+        title: category.title,
+        description: category.description,
+        toggle: {
+          value: category.alias,
+          enabled: false,
+          readonly: category.necessary || false,
+        },
+      };
+      const categoryCookies = cookies.filter((cookie) => cookie.alias === category.alias);
+      if (categoryCookies.length) {
+        block.cookie_table = [];
+        categoryCookies.forEach((cookie) => {
+          block.cookie_table.push({
+            col1: cookie.cookie_name,
+            col2: cookie.domain,
+            col3: cookie.exp_period,
+            col4: cookie.cookie_desc,
+          });
         });
-      });
-    }
-    blocks.push(block);
-  });
+      }
+      blocks.push(block);
+    });
+
+    return blocks;
+  };
+
+  const saveConsent = (cookie, preferences) => {
+    const consentDetails = {
+      uuid: cookie.consent_uuid,
+      url: window.location.href,
+      consent_opt_in: preferences.accepted_categories,
+      consent_opt_out: cookie.categories,
+    };
+    Joomla.request({
+      url: `index.php?option=com_ajax&plugin=cookiemanager&group=system&format=json&data=${JSON.stringify(consentDetails)}`,
+      method: 'POST',
+      onSuccess: (response) => {
+        const result = JSON.parse(response);
+        console.log({ result });
+      },
+      onError(xhr) {
+        Joomla.renderMessages({ error: [xhr] }, '#system-message-container');
+      },
+    });
+  };
+
+  const showSettingButton = () => {
+    const openBannerButton = document.createElement('button');
+    openBannerButton.innerText = Joomla.Text._('COM_COOKIEMANAGER_PREVIEW_BUTTON_TEXT');
+    openBannerButton.id = 'open-consent-banner';
+    openBannerButton.type = 'button';
+    // openBannerButton.dataset.cc = 'c-settings';
+    openBannerButton.setAttribute('data-cc', 'c-settings');
+    openBannerButton.className = 'preview btn btn-info';
+    document.body.appendChild(openBannerButton);
+  };
 
   /* global initCookieConsent */
   const cc = initCookieConsent();
@@ -65,31 +100,19 @@
     // revision: 0,                            // default: 0
 
     onFirstAction: (userPreferences, cookie) => {
-      // callback triggered only once
+      // triggered only once after user gave first permission
       console.log('onFirstAction:', { userPreferences }, { cookie });
-    },
-    onAccept: (cookie) => {
-      console.log('onAccept: ', { cookie });
-      const consentDetails = {
-        uuid: cookie.consent_uuid,
-        url: window.location.href,
-        consent_opt_in: cc.getUserPreferences().accepted_categories,
-        consent_opt_out: cookie.categories,
-      };
-      Joomla.request({
-        url: `index.php?option=com_ajax&plugin=cookiemanager&group=system&format=json&data=${JSON.stringify(consentDetails)}`,
-        method: 'POST',
-        onSuccess: (response) => {
-          const result = JSON.parse(response);
-          console.log({ result });
-        },
-        onError(xhr) {
-          Joomla.renderMessages({ error: [xhr] }, '#system-message-container');
-        },
-      });
+      saveConsent(cookie, userPreferences);
     },
     onChange: (cookie, changedPreferences) => {
+      // triggered on every setting change
       console.log('onChange: ', { cookie }, { changedPreferences });
+      saveConsent(cookie, changedPreferences);
+    },
+    onAccept: (cookie) => {
+      // triggered on every page after user triggered 'firstAction' event
+      console.log('onAccept: ', { cookie });
+      showSettingButton();
     },
     languages: {
       en: {
@@ -118,7 +141,7 @@
             { col4: Joomla.Text._('PLG_SYSTEM_COOKIEMANAGER_TABLE_HEADERS_COL4') },
           ],
           blocks: [
-            ...blocks,
+            ...getBlocks(),
             {
               title: 'More information',
               description: 'For any queries in relation to our policy on cookies and your choices, please <a class="cc-link" href="#yourcontactpage">contact us</a>.',
@@ -127,16 +150,5 @@
         },
       },
     },
-  });
-
-  document.addEventListener('DOMContentLoaded', () => {
-    const openBannerButton = document.createElement('button');
-    openBannerButton.innerText = Joomla.Text._('COM_COOKIEMANAGER_PREVIEW_BUTTON_TEXT');
-    openBannerButton.id = 'open-consent-banner';
-    openBannerButton.type = 'button';
-    openBannerButton.dataset.cc = 'c-settings';
-    // openBannerButton.setAttribute('data-cc', 'c-settings');
-    openBannerButton.className = 'preview btn btn-info';
-    document.body.appendChild(openBannerButton);
   });
 })(document);
