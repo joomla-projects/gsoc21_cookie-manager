@@ -6,6 +6,9 @@
 ((document) => {
   'use strict';
 
+  /* global initCookieConsent */
+  const cc = initCookieConsent();
+
   const cookies = Joomla.getOptions('plg_system_cookiemanager.cookies', []);
   console.log({ cookies });
   const categories = Joomla.getOptions('plg_system_cookiemanager.categories', []);
@@ -66,18 +69,17 @@
   };
 
   const showSettingButton = () => {
-    const openBannerButton = document.createElement('button');
-    openBannerButton.innerText = Joomla.Text._('COM_COOKIEMANAGER_PREVIEW_BUTTON_TEXT');
-    openBannerButton.id = 'open-consent-banner';
-    openBannerButton.type = 'button';
-    // openBannerButton.dataset.cc = 'c-settings';
-    openBannerButton.setAttribute('data-cc', 'c-settings');
-    openBannerButton.className = 'preview btn btn-info';
-    document.body.appendChild(openBannerButton);
+    const openSettingsButton = document.createElement('button');
+    openSettingsButton.innerText = Joomla.Text._('COM_COOKIEMANAGER_PREVIEW_BUTTON_TEXT');
+    openSettingsButton.id = 'open-consent-banner';
+    openSettingsButton.type = 'button';
+    // openBannerButton.dataset.cc = 'c-settings'; // Not working
+    openSettingsButton.onclick = () => {
+      cc.showSettings();
+    };
+    openSettingsButton.className = 'preview btn btn-info';
+    document.body.appendChild(openSettingsButton);
   };
-
-  /* global initCookieConsent */
-  const cc = initCookieConsent();
 
   cc.run({
     current_lang: 'en',
