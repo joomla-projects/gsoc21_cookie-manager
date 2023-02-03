@@ -71,11 +71,13 @@ class Cookiemanager extends CMSPlugin implements SubscriberInterface
         if (Factory::getApplication()->isClient('site')) {
             return [
                 'onBeforeCompileHead'    => 'initialize',
+                'onBeforeRender'         => 'markScripts',
                 'onLoadCookies'          => 'addCookies',
                 'onLoadCookieCategories' => 'addCategories',
                 'onLoadCookieScripts'    => 'addScripts',
             ];
         }
+        return [];
     }
 
     /**
@@ -131,6 +133,62 @@ class Cookiemanager extends CMSPlugin implements SubscriberInterface
     }
 
     /**
+     * Additional scripts in the document header are marked with data-cookiecategory="their category" and type="text/plain"
+     * Necessary to block them first until user accepted their category usage.
+     * Scripts from /media/system and /media/templates are marked with category "mandatory"
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public function markScripts()
+    {
+        $wa     = $this->getApplication()->getDocument()->getWebAssetManager();
+        $assets = $wa->getAssets('script');
+
+        if (count($assets) === 0) {
+            return;
+        }
+
+        $scripts = $this->getCookiemanagerScripts();
+
+        foreach($assets as $asset) {
+            $uri         = $asset->getUri();
+            $startOfName = strrpos($uri, '/');
+            $assetName   = $startOfName === false ? $uri : substr($uri, $startOfName + 1);
+            $category    = array_key_exists($assetName, $scripts) === false ? 'unknown' : $scripts[$assetName];
+
+            $asset->setAttribute('data-cookiecategory', $category);
+            $asset->setOption('type', 'text/plain');
+
+            if (str_contains($uri, '/media/system/') || str_contains($uri, '/media/templates/')) {
+                $asset->setAttribute('data-cookiecategory', 'mandatory');
+            }
+        }
+    }
+
+    /**
+     * Loads all cookiemanager scripts with title and catid
+     *
+     * @return  array
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function getCookiemanagerScripts()
+    {
+        $db = $this->db;
+
+        $query = $db->getQuery(true)
+            ->select($db->quoteName(['s.title', 's.catid', 'c.alias']))
+            ->from($db->quoteName('#__cookiemanager_scripts', 's'))
+            ->join(
+                'LEFT',
+                $db->quoteName('#__categories', 'c') . ' ON ' . $db->quoteName('c.id') . ' = ' . $db->quoteName('s.catid')
+            );
+        return $db->setQuery($query)->loadAssocList('title', 'alias');
+    }
+
+    /**
      * Set texts in the current language for javascript
      *
      * @return  void
@@ -172,11 +230,13 @@ class Cookiemanager extends CMSPlugin implements SubscriberInterface
             'plg_system_cookiemanager.script',
             'plg_system_cookiemanager/cookiemanager.min.js',
             ['dependencies' => ['cookieconsent']],
+            ['defer' => true],
         );
         $wa->registerAndUseStyle(
             'plg_system_cookiemanager.style',
             'plg_system_cookiemanager/cookiemanager.min.css',
             ['dependencies' => ['cookieconsent']],
+            ['defer' => true],
         );
     }
 
