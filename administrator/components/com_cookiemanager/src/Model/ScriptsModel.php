@@ -137,8 +137,7 @@ class ScriptsModel extends ListModel
             $categoryTable = Table::getInstance('Category', 'JTable');
             $subCatItemsWhere = array();
 
-            foreach ($categoryId as $filter_catid)
-            {
+            foreach ($categoryId as $filter_catid) {
                 $categoryTable->load($filter_catid);
                 $subCatItemsWhere[] = '(' .
                     'c.lft >= ' . (int) $categoryTable->lft . ' AND ' .

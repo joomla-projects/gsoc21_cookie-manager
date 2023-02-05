@@ -98,7 +98,7 @@ $types = array (
                             $canEdit    = $user->authorise('core.edit', 'com_cookiemanager.category.' . $item->catid);
                             $canEditOwn = $user->authorise('core.edit.own', 'com_cookiemanager.category.' . $item->catid);
                             $canChange  = $user->authorise('core.edit.state', 'com_cookiemanager.category.' . $item->catid);
-                        ?>
+                            ?>
                             <tr class="row<?php echo $i % 2; ?>">
                                 <td class="text-center">
                                     <?php echo HTMLHelper::_('grid.id', $i, $item->id, false, 'cid', 'cb', $item->title); ?>

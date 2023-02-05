@@ -158,8 +158,7 @@ class CookiesModel extends ListModel
         if (is_numeric($published)) {
             $query->where($db->quoteName('a.published') . ' = :published');
             $query->bind(':published', $published, ParameterType::INTEGER);
-        }
-        elseif ($published === '') {
+        } elseif ($published === '') {
             $query->where('(' . $db->quoteName('a.published') . ' = 0 OR ' . $db->quoteName('a.published') . ' = 1)');
         }
 
