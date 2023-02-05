@@ -20,6 +20,7 @@ use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Router\Route;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Event\Event;
+use Joomla\Event\Priority;
 use Joomla\Event\SubscriberInterface;
 
 // phpcs:disable PSR1.Files.SideEffects
@@ -70,8 +71,8 @@ class Cookiemanager extends CMSPlugin implements SubscriberInterface
     {
         if (Factory::getApplication()->isClient('site')) {
             return [
-                'onBeforeCompileHead'    => 'initialize',
-                'onBeforeRender'         => 'markScripts',
+                'onBeforeCompileHead'    => ['initialize', Priority::LOW],
+                'onBeforeRender'         => ['markScripts', Priority::LOW],
                 'onLoadCookies'          => 'addCookies',
                 'onLoadCookieCategories' => 'addCategories',
                 'onLoadCookieScripts'    => 'addScripts',
@@ -155,14 +156,14 @@ class Cookiemanager extends CMSPlugin implements SubscriberInterface
             $uri           = $asset->getUri();
             $startOfName   = strrpos($uri, '/');
             $assetName     = $startOfName === false ? $uri : substr($uri, $startOfName + 1);
+            $isMandatory   = str_contains($uri, '/media/system/') || str_contains($uri, '/media/templates/');
             $uncategorized = array_key_exists($assetName, $scripts) === false;
             $category      = $uncategorized ? 'unknown' : $scripts[$assetName];
 
-            $asset->setAttribute('data-cookiecategory', $category);
-            $asset->setOption('type', 'text/plain');
+            $asset->setAttribute('data-cookiecategory', $isMandatory ? 'mandatory' : $category);
 
-            if ($uncategorized && (str_contains($uri, '/media/system/') || str_contains($uri, '/media/templates/'))) {
-                $asset->setAttribute('data-cookiecategory', 'mandatory');
+            if (!$isMandatory) {
+                $asset->setOption('type', 'text/plain');
             }
         }
     }
