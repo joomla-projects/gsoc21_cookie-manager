@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package     Joomla.Administrator
  * @subpackage  com_cookiemanager
@@ -7,7 +8,9 @@
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
-defined('_JEXEC') or die;
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
 
 use Joomla\CMS\Dispatcher\ComponentDispatcherFactoryInterface;
 use Joomla\CMS\Extension\ComponentInterface;
@@ -27,32 +30,32 @@ use Joomla\DI\ServiceProviderInterface;
  */
 return new class implements ServiceProviderInterface
 {
-	/**
-	 * Registers the service provider with a DI container.
-	 *
-	 * @param   Container  $container  The DI container.
-	 *
-	 * @return  void
-	 *
-	 * @since   __DEPLOY_VERSION__
-	 */
-	public function register(Container $container)
-	{
-		$container->registerServiceProvider(new CategoryFactory('\\Joomla\\Component\\Cookiemanager'));
-		$container->registerServiceProvider(new MVCFactory('\\Joomla\\Component\\Cookiemanager'));
-		$container->registerServiceProvider(new ComponentDispatcherFactory('\\Joomla\\Component\\Cookiemanager'));
-		$container->registerServiceProvider(new RouterFactory('\\Joomla\\Component\\Cookiemanager'));
+    /**
+     * Registers the service provider with a DI container.
+     *
+     * @param   Container  $container  The DI container.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public function register(Container $container)
+    {
+        $container->registerServiceProvider(new CategoryFactory('\\Joomla\\Component\\Cookiemanager'));
+        $container->registerServiceProvider(new MVCFactory('\\Joomla\\Component\\Cookiemanager'));
+        $container->registerServiceProvider(new ComponentDispatcherFactory('\\Joomla\\Component\\Cookiemanager'));
+        $container->registerServiceProvider(new RouterFactory('\\Joomla\\Component\\Cookiemanager'));
 
-		$container->set(
-			ComponentInterface::class,
-			function (Container $container)
-			{
-				$component = new MVCComponent($container->get(ComponentDispatcherFactoryInterface::class));
+        $container->set(
+            ComponentInterface::class,
+            function (Container $container)
+            {
+                $component = new MVCComponent($container->get(ComponentDispatcherFactoryInterface::class));
 
-				$component->setMVCFactory($container->get(MVCFactoryInterface::class));
+                $component->setMVCFactory($container->get(MVCFactoryInterface::class));
 
-				return $component;
-			}
-		);
-	}
+                return $component;
+            }
+        );
+    }
 };

@@ -89,8 +89,7 @@ class Cookiemanager extends CMSPlugin implements SubscriberInterface
      */
     public function initialize()
     {
-        if (!$this->getApplication()->isClient('site'))
-        {
+        if (!$this->getApplication()->isClient('site')) {
             return;
         }
 
@@ -152,16 +151,17 @@ class Cookiemanager extends CMSPlugin implements SubscriberInterface
 
         $scripts = $this->getCookiemanagerScripts();
 
-        foreach($assets as $asset) {
-            $uri         = $asset->getUri();
-            $startOfName = strrpos($uri, '/');
-            $assetName   = $startOfName === false ? $uri : substr($uri, $startOfName + 1);
-            $category    = array_key_exists($assetName, $scripts) === false ? 'unknown' : $scripts[$assetName];
+        foreach ($assets as $asset) {
+            $uri           = $asset->getUri();
+            $startOfName   = strrpos($uri, '/');
+            $assetName     = $startOfName === false ? $uri : substr($uri, $startOfName + 1);
+            $uncategorized = array_key_exists($assetName, $scripts) === false;
+            $category      = $uncategorized ? 'unknown' : $scripts[$assetName];
 
             $asset->setAttribute('data-cookiecategory', $category);
             $asset->setOption('type', 'text/plain');
 
-            if (str_contains($uri, '/media/system/') || str_contains($uri, '/media/templates/')) {
+            if ($uncategorized && (str_contains($uri, '/media/system/') || str_contains($uri, '/media/templates/'))) {
                 $asset->setAttribute('data-cookiecategory', 'mandatory');
             }
         }
