@@ -94,9 +94,9 @@ $types = array (
                         <?php
                         $n = count($this->items);
                         foreach ($this->items as $i => $item) :
-                            $canCreate  = $user->authorise('core.create',     'com_cookiemanager.category.' . $item->catid);
-                            $canEdit    = $user->authorise('core.edit',       'com_cookiemanager.category.' . $item->catid);
-                            $canEditOwn = $user->authorise('core.edit.own',   'com_cookiemanager.category.' . $item->catid);
+                            $canCreate  = $user->authorise('core.create', 'com_cookiemanager.category.' . $item->catid);
+                            $canEdit    = $user->authorise('core.edit', 'com_cookiemanager.category.' . $item->catid);
+                            $canEditOwn = $user->authorise('core.edit.own', 'com_cookiemanager.category.' . $item->catid);
                             $canChange  = $user->authorise('core.edit.state', 'com_cookiemanager.category.' . $item->catid);
                         ?>
                             <tr class="row<?php echo $i % 2; ?>">

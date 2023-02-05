@@ -70,7 +70,7 @@ $saveOrder = ($listOrder == 'a.id' && strtolower($listDirn) == 'desc');
                                 $canEdit    = $user->authorise('core.edit');
                                 $canEditOwn = $user->authorise('core.edit.own');
                                 $canChange  = $user->authorise('core.edit.state');
-                            ?>
+                                ?>
                                 <tr class="row<?php echo $i % 2; ?>">
                                     <td class="text-center">
                                         <?php echo HTMLHelper::_('grid.id', $i, $item->id, false, 'cid', 'cb', $item->uuid); ?>

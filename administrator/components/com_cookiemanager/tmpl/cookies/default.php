@@ -72,11 +72,11 @@ $saveOrder = ($listOrder == 'a.ordering' && strtolower($listDirn) == 'asc');
                         <?php
                         $n = count($this->items);
                         foreach ($this->items as $i => $item) :
-                            $canCreate  = $user->authorise('core.create',     'com_cookiemanager.category.' . $item->catid);
-                            $canEdit    = $user->authorise('core.edit',       'com_cookiemanager.category.' . $item->catid);
-                            $canEditOwn = $user->authorise('core.edit.own',   'com_cookiemanager.category.' . $item->catid) && $item->created_by == $userId;
+                            $canCreate  = $user->authorise('core.create', 'com_cookiemanager.category.' . $item->catid);
+                            $canEdit    = $user->authorise('core.edit', 'com_cookiemanager.category.' . $item->catid);
+                            $canEditOwn = $user->authorise('core.edit.own', 'com_cookiemanager.category.' . $item->catid) && $item->created_by == $userId;
                             $canChange  = $user->authorise('core.edit.state', 'com_cookiemanager.category.' . $item->catid);
-                        ?>
+                            ?>
                             <tr class="row<?php echo $i % 2; ?>">
                                 <td class="text-center">
                                     <?php echo HTMLHelper::_('grid.id', $i, $item->id, false, 'cid', 'cb', $item->title); ?>
@@ -84,12 +84,9 @@ $saveOrder = ($listOrder == 'a.ordering' && strtolower($listDirn) == 'asc');
                                 <td class="text-center d-none d-md-table-cell">
                                     <?php
                                     $iconClass = '';
-                                    if (!$canChange)
-                                    {
+                                    if (!$canChange) {
                                         $iconClass = ' inactive';
-                                    }
-                                    elseif (!$saveOrder)
-                                    {
+                                    } elseif (!$saveOrder) {
                                         $iconClass = ' inactive" title="' . Text::_('JORDERINGDISABLED');
                                     }
                                     ?>
