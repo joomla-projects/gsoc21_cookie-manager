@@ -71,8 +71,7 @@ class Cookiemanager extends CMSPlugin implements SubscriberInterface
     {
         if (Factory::getApplication()->isClient('site')) {
             return [
-                'onBeforeCompileHead'    => ['initialize', Priority::LOW],
-                'onBeforeRender'         => ['markScripts', Priority::LOW],
+                'onBeforeCompileHead'    => ['markScripts', Priority::LOW],
                 'onLoadCookies'          => 'addCookies',
                 'onLoadCookieCategories' => 'addCategories',
                 'onLoadCookieScripts'    => 'addScripts',
@@ -133,7 +132,7 @@ class Cookiemanager extends CMSPlugin implements SubscriberInterface
     }
 
     /**
-     * Additional scripts in the document header are marked with data-cookiecategory="their category" and type="text/plain"
+     * Additional scripts in the document header are marked with data-cookiecategory="<category>" and type="text/plain"
      * Necessary to block them first until user accepted their category usage.
      * Scripts from /media/system and /media/templates are marked with category "mandatory"
      *
@@ -159,17 +158,26 @@ class Cookiemanager extends CMSPlugin implements SubscriberInterface
             $isMandatory   = str_contains($uri, '/media/system/') || str_contains($uri, '/media/templates/');
             $uncategorized = array_key_exists($assetName, $scripts) === false;
             $category      = $uncategorized ? 'unknown' : $scripts[$assetName];
+            $type          = $asset->getAttribute('type');
 
             $asset->setAttribute('data-cookiecategory', $isMandatory ? 'mandatory' : $category);
 
             if (!$isMandatory) {
-                $asset->setOption('type', 'text/plain');
+                if (!empty($type)) {
+                    $asset->setAttribute('data-cookiemanager-old-type', $type);
+                }
+                if (!str_contains($type, 'json')) {
+                    $asset->setAttribute('type', 'text/plain');
+                }
             }
         }
+
+        // Finally load assets and options for the cookiemanager
+        $this->initialize();
     }
 
     /**
-     * Loads all cookiemanager scripts with title and catid
+     * Loads all cookiemanager scripts with title and category alias
      *
      * @return  array
      *
