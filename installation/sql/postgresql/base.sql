@@ -118,10 +118,14 @@ INSERT INTO "#__assets" ("id", "parent_id", "lft", "rgt", "level", "name", "titl
 (92, 1, 167, 168, 1, 'com_categories', 'com_categories', '{}'),
 (93, 1, 169, 170, 1, 'com_fields', 'com_fields', '{}'),
 (94, 1, 171, 172, 1, 'com_workflow', 'com_workflow', '{}'),
-(95, 1, 165, 166, 1, 'com_cookiemanager', 'com_cookiemanager', '{}'),
-(96, 95, 167, 168, 2, 'com_cookiemanager.category.8', 'Uncategorised', '{}');
+(95, 1, 165, 166, 1, 'com_cookiemanager', 'com_cookiemanager', '{}');
 
-SELECT setval('#__assets_id_seq', 95, false);
+-- Component: Cookiemanager
+INSERT INTO `#__assets` (`id`, `parent_id`, `lft`, `rgt`, `level`, `name`, `title`, `params`) VALUES
+(96, 95, 167, 168, 2, 'com_cookiemanager.category.8', 'Uncategorised', '{mandatory: "0"}'),
+(97, 95, 167, 168, 2, 'com_cookiemanager.category.9', 'Mandatory', '{mandatory: "1"}');
+
+SELECT setval('#__assets_id_seq', 98, false);
 
 --
 -- Table structure for table `#__extensions`

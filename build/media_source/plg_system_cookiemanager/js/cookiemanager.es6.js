@@ -24,13 +24,15 @@
   const getBlocks = () => {
     const blocks = [];
     categories.forEach((category) => {
+      const params = JSON.parse(category.params);
+      const mandatory = params.mandatory && params.mandatory === '1';
       const block = {
         title: category.title,
         description: category.description,
         toggle: {
           value: category.alias,
-          enabled: false,
-          readonly: category.necessary || false,
+          enabled: mandatory,
+          readonly: mandatory,
         },
       };
       const categoryCookies = cookies.filter((cookie) => cookie.alias === category.alias);

@@ -321,7 +321,7 @@ class Cookiemanager extends CMSPlugin implements SubscriberInterface
         $db = $this->db;
 
         $query = $db->getQuery(true)
-            ->select($db->quoteName(['id', 'title', 'alias', 'description']))
+            ->select($db->quoteName(['id', 'title', 'alias', 'description', 'params']))
             ->from($db->quoteName('#__categories'))
             ->where(
                 [

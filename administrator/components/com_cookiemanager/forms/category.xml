@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+	<help key="Cookiemanager:_New_or_Edit_Category" />
+	<listhelp key="Cookiemanager:_Categories" />
+	<fields name="params" addfieldprefix="Joomla\Component\Cookiemanager\Administrator\Field">
+		<fieldset name="cookies" label="COM_COOKIEMANAGER_CATEGORY_COOKIES">
+			<field
+				name="mandatory"
+				type="list"
+				label="COM_COOKIEMANAGER_CATEGORY_FIELD_MANDATORY_LABEL"
+				description="COM_COOKIEMANAGER_CATEGORY_FIELD_MANDATORY_DESC"
+				class="form-select"
+				default="0"
+				>
+				<option value="0">COM_COOKIEMANAGER_CATEGORY_OPTIONAL</option>
+				<option value="1">COM_COOKIEMANAGER_CATEGORY_MANDATORY</option>
+			</field>
+		</fieldset>
+	</fields>
+</form>
