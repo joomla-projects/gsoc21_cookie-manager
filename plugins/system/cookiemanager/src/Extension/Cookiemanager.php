@@ -211,7 +211,9 @@ class Cookiemanager extends CMSPlugin implements SubscriberInterface
         Text::script('PLG_SYSTEM_COOKIEMANAGER_BANNER_TITLE');
         Text::script('PLG_SYSTEM_COOKIEMANAGER_BANNER_DESC');
         Text::script('PLG_SYSTEM_COOKIEMANAGER_BANNER_BTN_ACCEPT_ALL');
+        Text::script('PLG_SYSTEM_COOKIEMANAGER_BANNER_BTN_ACCEPT_SELECTED');
         Text::script('PLG_SYSTEM_COOKIEMANAGER_BANNER_BTN_REJECT_ALL');
+        Text::script('PLG_SYSTEM_COOKIEMANAGER_BANNER_BTN_SETTINGS');
         Text::script('PLG_SYSTEM_COOKIEMANAGER_SETTINGS_TITLE');
         Text::script('PLG_SYSTEM_COOKIEMANAGER_SETTINGS_BTN_SAVE');
         Text::script('PLG_SYSTEM_COOKIEMANAGER_SETTINGS_BTN_ACCEPT_ALL');
@@ -260,9 +262,29 @@ class Cookiemanager extends CMSPlugin implements SubscriberInterface
     {
         $params = ComponentHelper::getParams('com_cookiemanager');
 
-        $cookieManagerConfig = [];
+        $cookieManagerConfig = [
+            'consent_modal' => [
+                'position_x' =>  $params->get('consent_modal_position_x', 'center'),
+                'position_y' =>  $params->get('consent_modal_position_y', 'bottom'),
+                'transition' =>  $params->get('consent_modal_transition', 'zoom'),
+                'layout' =>  $params->get('consent_modal_layout', 'box'),
+                'swap_buttons' =>  $params->get('consent_modal_swap_buttons', '0'),
+                'primary_button_role' =>  $params->get('consent_modal_primary_button_role', 'accept_all'),
+                'secondary_button_role' =>  $params->get('consent_modal_secondary_button_role', 'accept_necessary'),
+            ],
+            'settings_modal' => [
+                'position' =>  $params->get('settings_modal_position', 'left'),
+                'transition' =>  $params->get('settings_modal_transition', 'slide'),
+                'layout' =>  $params->get('settings_modal_layout', 'box'),
+            ],
+        ];
         $cookieManagerConfig['expiration'] = $params->get('consent_expiration', 30);
-        $cookieManagerConfig['position'] = $params->get('modal_position', null);
+        $cookieManagerConfig['delay'] = $params->get('delay', 0);
+        $cookieManagerConfig['force_consent'] = $params->get('force_consent', 0);
+        $cookieManagerConfig['mode'] = $params->get('mode', 'opt-in');
+        $cookieManagerConfig['hide_from_bots'] = $params->get('hide_from_bots', 1);
+        $cookieManagerConfig['remove_cookie_tables'] = $params->get('remove_cookie_tables', 0);
+        $cookieManagerConfig['cookie_same_site'] = $params->get('cookie_same_site', 'Lax');
 
         $menuitem = $this->getApplication()->getMenu()->getItem($params->get('policylink', ''));
         if ($menuitem) {

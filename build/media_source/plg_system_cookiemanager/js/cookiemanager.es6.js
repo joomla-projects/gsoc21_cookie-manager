@@ -21,6 +21,13 @@
   const scripts = Joomla.getOptions('plg_system_cookiemanager.scripts');
   console.log({ scripts });
 
+  const primaryButtonLabel = config.consent_modal.primary_button_role === 'accept_all'
+    ? Joomla.Text._('PLG_SYSTEM_COOKIEMANAGER_BANNER_BTN_ACCEPT_ALL')
+    : Joomla.Text._('PLG_SYSTEM_COOKIEMANAGER_BANNER_BTN_ACCEPT_SELECTED');
+  const secondaryButtonLabel = config.consent_modal.secondary_button_role === 'accept_necessary'
+    ? Joomla.Text._('PLG_SYSTEM_COOKIEMANAGER_BANNER_BTN_REJECT_ALL')
+    : Joomla.Text._('PLG_SYSTEM_COOKIEMANAGER_BANNER_BTN_SETTINGS');
+
   const getBlocks = () => {
     const blocks = [];
     categories.forEach((category) => {
@@ -89,24 +96,29 @@
   document.addEventListener('DOMContentLoaded', () => {
     cc.run({
       current_lang: 'en',
-      autoclear_cookies: true, // default: false
-      page_scripts: true, // default: false
-      cookie_expiration: config.expiration, // default: 182 (days)
-      cookie_name: 'jcookie', // default: 'cc_cookie'
-      // mode: 'opt-in'                          // default: 'opt-in'; value: 'opt-in' or 'opt-out'
-      // delay: 0,                               // default: 0
-      // auto_language: null                     // default: null; could also be 'browser' or 'document'
-      // autorun: true,                          // default: true
-      // force_consent: false,                   // default: false
-      // hide_from_bots: true,                   // default: true
-      // remove_cookie_tables: false             // default: false
-      // cookie_necessary_only_expiration: 182   // default: disabled
-      // cookie_domain: location.hostname,       // default: current domain
-      // cookie_path: '/',                       // default: root
-      // cookie_same_site: 'Lax',                // default: 'Lax'
-      // use_rfc_cookie: false,                  // default: false
-      // revision: 0,                            // default: 0
-
+      autoclear_cookies: true,
+      page_scripts: true,
+      cookie_expiration: config.expiration,
+      cookie_name: 'jcookie',
+      mode: config.mode,
+      delay: config.delay,
+      force_consent: config.force_consent === '1',
+      hide_from_bots: config.hide_from_bots === '1',
+      remove_cookie_tables: config.remove_cookie_tables === '1',
+      cookie_same_site: config.cookie_same_site,
+      gui_options: {
+        consent_modal: {
+          layout: config.consent_modal.layout,
+          position: `${config.consent_modal.position_y} ${config.consent_modal.position_x}`,
+          transition: config.consent_modal.transition,
+          swap_buttons: config.consent_modal.swap_buttons === '1',
+        },
+        settings_modal: {
+          layout: config.settings_modal.layout,
+          position: config.settings_modal.position,
+          transition: config.settings_modal.transition,
+        },
+      },
       onFirstAction: (userPreferences, cookie) => {
         // triggered only once after user gave first permission
         console.log('onFirstAction:', { userPreferences }, { cookie });
@@ -128,12 +140,12 @@
             title: Joomla.Text._('PLG_SYSTEM_COOKIEMANAGER_BANNER_TITLE'),
             description: Joomla.Text._('PLG_SYSTEM_COOKIEMANAGER_BANNER_DESC'),
             primary_btn: {
-              text: Joomla.Text._('PLG_SYSTEM_COOKIEMANAGER_BANNER_BTN_ACCEPT_ALL'),
-              role: 'accept_all', // 'accept_selected' or 'accept_all'
+              text: primaryButtonLabel,
+              role: config.consent_modal.primary_button_role,
             },
             secondary_btn: {
-              text: Joomla.Text._('PLG_SYSTEM_COOKIEMANAGER_BANNER_BTN_REJECT_ALL'),
-              role: 'accept_necessary', // 'settings' or 'accept_necessary'
+              text: secondaryButtonLabel,
+              role: config.consent_modal.secondary_button_role,
             },
           },
           settings_modal: {
