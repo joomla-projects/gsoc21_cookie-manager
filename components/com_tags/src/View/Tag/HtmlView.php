@@ -190,7 +190,7 @@ class HtmlView extends BaseHtmlView
             $itemElement->event = new \stdClass();
 
             // For some plugins.
-            $itemElement->text = !empty($itemElement->core_body) ? $itemElement->core_body : null;
+            $itemElement->text = !empty($itemElement->core_body) ? $itemElement->core_body : '';
 
             $itemElement->core_params = new Registry($itemElement->core_params);
 
@@ -223,8 +223,8 @@ class HtmlView extends BaseHtmlView
             if ($itemElement->type_alias === 'com_content.category') {
                 $itemElement->core_images = json_encode(
                     [
-                        'image_intro' => $itemElement->core_params->get('image', ''),
-                        'image_intro_alt' => $itemElement->core_params->get('image_alt', '')
+                        'image_intro'     => $itemElement->core_params->get('image', ''),
+                        'image_intro_alt' => $itemElement->core_params->get('image_alt', ''),
                     ]
                 );
             }
@@ -299,9 +299,9 @@ class HtmlView extends BaseHtmlView
 
         if ($this->params->get('show_feed_link', 1) == 1) {
             $link    = '&format=feed&limitstart=';
-            $attribs = ['type' => 'application/rss+xml', 'title' => 'RSS 2.0'];
+            $attribs = ['type' => 'application/rss+xml', 'title' => htmlspecialchars($this->document->getTitle())];
             $this->document->addHeadLink(Route::_($link . '&type=rss'), 'alternate', 'rel', $attribs);
-            $attribs = ['type' => 'application/atom+xml', 'title' => 'Atom 1.0'];
+            $attribs = ['type' => 'application/atom+xml', 'title' => htmlspecialchars($this->document->getTitle())];
             $this->document->addHeadLink(Route::_($link . '&type=atom'), 'alternate', 'rel', $attribs);
         }
     }

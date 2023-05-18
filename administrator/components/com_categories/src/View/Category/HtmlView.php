@@ -86,10 +86,10 @@ class HtmlView extends BaseHtmlView
      */
     public function display($tpl = null)
     {
-        $this->form = $this->get('Form');
-        $this->item = $this->get('Item');
+        $this->form  = $this->get('Form');
+        $this->item  = $this->get('Item');
         $this->state = $this->get('State');
-        $section = $this->state->get('category.section') ? $this->state->get('category.section') . '.' : '';
+        $section     = $this->state->get('category.section') ? $this->state->get('category.section') . '.' : '';
         $this->canDo = ContentHelper::getActions($this->state->get('category.component'), $section . 'category', $this->item->id);
         $this->assoc = $this->get('Assoc');
 
@@ -137,7 +137,7 @@ class HtmlView extends BaseHtmlView
         $userId    = $user->id;
         $toolbar   = Toolbar::getInstance();
 
-        $isNew = ($this->item->id == 0);
+        $isNew      = ($this->item->id == 0);
         $checkedOut = !(is_null($this->item->checked_out) || $this->item->checked_out == $userId);
 
         // Avoid nonsense situation.
@@ -146,15 +146,15 @@ class HtmlView extends BaseHtmlView
         }
 
         // The extension can be in the form com_foo.section
-        $parts = explode('.', $extension);
-        $component = $parts[0];
-        $section = (count($parts) > 1) ? $parts[1] : null;
+        $parts           = explode('.', $extension);
+        $component       = $parts[0];
+        $section         = (count($parts) > 1) ? $parts[1] : null;
         $componentParams = ComponentHelper::getParams($component);
 
         // Need to load the menu language file as mod_menu hasn't been loaded yet.
         $lang = Factory::getLanguage();
         $lang->load($component, JPATH_BASE)
-        || $lang->load($component, JPATH_ADMINISTRATOR . '/components/' . $component);
+            || $lang->load($component, JPATH_ADMINISTRATOR . '/components/' . $component);
 
         // Get the results for each action.
         $canDo = $this->canDo;
@@ -189,15 +189,14 @@ class HtmlView extends BaseHtmlView
                 . ' ' . substr($component, 4) . ($section ? "-$section" : '') . '-category-' . ($isNew ? 'add' : 'edit')
         );
 
-        // For new records, check the create permission.
-        if ($isNew && (count($user->getAuthorisedCategories($component, 'core.create')) > 0)) {
+        if ($isNew) {
             $toolbar->apply('category.apply');
             $saveGroup = $toolbar->dropdownButton('save-group');
 
             $saveGroup->configure(
                 function (Toolbar $childBar) {
                     $childBar->save('category.save');
-                    $childBar->save('category.save2new');
+                    $childBar->save2new('category.save2new');
                 }
             );
 
@@ -285,7 +284,7 @@ class HtmlView extends BaseHtmlView
         if (!$url) {
             if ($lang->hasKey($lang_help_url = strtoupper($component) . '_HELP_URL')) {
                 $debug = $lang->setDebug(false);
-                $url = Text::_($lang_help_url);
+                $url   = Text::_($lang_help_url);
                 $lang->setDebug($debug);
             }
         }
