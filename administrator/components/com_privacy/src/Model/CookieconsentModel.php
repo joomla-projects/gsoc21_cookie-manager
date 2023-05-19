@@ -25,7 +25,7 @@ use Joomla\CMS\Table\Table;
  * @since   __DEPLOY_VERSION__
  */
 
-class ConsentModel extends AdminModel
+class CookieconsentModel extends AdminModel
 {
     /**
      * The prefix to use with controller messages.

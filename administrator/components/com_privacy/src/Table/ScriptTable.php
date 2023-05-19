@@ -44,7 +44,7 @@ class ScriptTable extends Table
      */
     public function __construct(DatabaseDriver $db)
     {
-        parent::__construct('#__cookiemanager_scripts', 'id', $db);
+        parent::__construct('#__privacy_scripts', 'id', $db);
     }
 
     /**

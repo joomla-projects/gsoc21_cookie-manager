@@ -121,7 +121,7 @@ class CookiesModel extends ListModel
                     'a.exp_value, a.catid, a.published, a.ordering, a.created, a.created_by'
             )
         );
-        $query->from($db->quoteName('#__cookiemanager_cookies', 'a'));
+        $query->from($db->quoteName('#__privacy_cookies', 'a'));
 
         // Join over the categories.
         $query->select($db->quoteName('c.title', 'category_title'))

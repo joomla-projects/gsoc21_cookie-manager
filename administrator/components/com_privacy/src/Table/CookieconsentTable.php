@@ -41,7 +41,7 @@ class ConsentTable extends Table
      */
     public function __construct(DatabaseDriver $db)
     {
-        parent::__construct('#__cookiemanager_consents', 'id', $db);
+        parent::__construct('#__privacy_cookie_consents', 'id', $db);
     }
 
     /**

@@ -21,7 +21,7 @@ use Joomla\CMS\MVC\Model\ListModel;
  *
  * @since   __DEPLOY_VERSION__
  */
-class ConsentsModel extends ListModel
+class CookieconsentsModel extends ListModel
 {
     /**
      * Constructor.
@@ -109,7 +109,7 @@ class ConsentsModel extends ListModel
                 'a.id, a.uuid, a.ccuuid, a.consent_opt_in, a.consent_opt_out, a.consent_date, a.user_agent, a.url'
             )
         );
-        $query->from($db->quoteName('#__cookiemanager_consents', 'a'));
+        $query->from($db->quoteName('#__privacy_cookie_consents', 'a'));
 
         // Filter by search in ccuuid.
         $search = $this->getState('filter.search');

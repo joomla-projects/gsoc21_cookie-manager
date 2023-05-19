@@ -160,7 +160,7 @@ class CookieModel extends AdminModel
                 $db    = $this->getDatabase();
                 $query = $db->getQuery(true)
                     ->select('MAX(ordering)')
-                    ->from($db->quoteName('#__cookiemanager_cookies'));
+                    ->from($db->quoteName('#__privacy_cookies'));
                 $db->setQuery($query);
                 $max = $db->loadResult();
 

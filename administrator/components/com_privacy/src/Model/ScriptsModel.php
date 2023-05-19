@@ -116,7 +116,7 @@ class ScriptsModel extends ListModel
                     'a.catid, a.published, a.ordering'
             )
         );
-        $query->from($db->quoteName('#__cookiemanager_scripts', 'a'));
+        $query->from($db->quoteName('#__privacy_scripts', 'a'));
 
         // Join over the categories.
         $query->select($db->quoteName('c.title', 'category_title'))
