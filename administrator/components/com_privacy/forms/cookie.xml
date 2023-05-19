@@ -13,7 +13,7 @@
 		<field
 			name="title"
 			type="text"
-			label="COM_COOKIEMANAGER_FIELD_TITLE_LABEL"
+			label="COM_PRIVACY_FIELD_TITLE_LABEL"
 			size="40"
 			required="true"
 		/>
@@ -44,7 +44,7 @@
 			name="catid"
 			type="categoryedit"
 			label="JCATEGORY"
-			extension="com_cookiemanager"
+			extension="com_privacy"
 			addfieldprefix="Joomla\Component\Categories\Administrator\Field"
 			required="true"
 			default=""
@@ -54,52 +54,52 @@
 			name="ordering"
 			type="ordering"
 			label="JFIELD_ORDERING_LABEL"
-			content_type="com_cookiemanager.cookie"
+			content_type="com_privacy.cookie"
 		/>
 
 		<field
 			name="cookie_name"
 			type="text"
-			label="COM_COOKIEMANAGER_COOKIE_NAME_LABEL"
+			label="COM_PRIVACY_COOKIE_NAME_LABEL"
 			required="true"
-			hint="COM_COOKIEMANAGER_COOKIE_NAME_HINT"
+			hint="COM_PRIVACY_COOKIE_NAME_HINT"
 		/>
 
 		<field
 			name="cookie_desc"
 			type="textarea"
-			label="COM_COOKIEMANAGER_COOKIE_DESC_LABEL"
+			label="COM_PRIVACY_COOKIE_DESC_LABEL"
 			required="true"
-			hint="COM_COOKIEMANAGER_COOKIE_DESC_HINT"
+			hint="COM_PRIVACY_COOKIE_DESC_HINT"
 		/>
 
 		<field
 			name="exp_period"
 			type="list"
-			label="COM_COOKIEMANAGER_COOKIE_EXP_PERIOD_LABEL"
+			label="COM_PRIVACY_COOKIE_EXP_PERIOD_LABEL"
 			required="true"
 			>
-			<option value="-1">COM_COOKIEMANAGER_COOKIE_EXP_PERIOD_FOREVER</option>
-			<option value="0">COM_COOKIEMANAGER_COOKIE_EXP_PERIOD_SESSION</option>
-			<option value="seconds">COM_COOKIEMANAGER_COOKIE_EXP_PERIOD_SECONDS</option>
-			<option value="minutes">COM_COOKIEMANAGER_COOKIE_EXP_PERIOD_MINUTES</option>
-			<option value="hours">COM_COOKIEMANAGER_COOKIE_EXP_PERIOD_HOURS</option>
-			<option value="days">COM_COOKIEMANAGER_COOKIE_EXP_PERIOD_DAYS</option>
-			<option value="weeks">COM_COOKIEMANAGER_COOKIE_EXP_PERIOD_WEEKS</option>
-			<option value="months">COM_COOKIEMANAGER_COOKIE_EXP_PERIOD_MONTHS</option>
-			<option value="years">COM_COOKIEMANAGER_COOKIE_EXP_PERIOD_YEARS</option>
+			<option value="-1">COM_PRIVACY_COOKIE_EXP_PERIOD_FOREVER</option>
+			<option value="0">COM_PRIVACY_COOKIE_EXP_PERIOD_SESSION</option>
+			<option value="seconds">COM_PRIVACY_COOKIE_EXP_PERIOD_SECONDS</option>
+			<option value="minutes">COM_PRIVACY_COOKIE_EXP_PERIOD_MINUTES</option>
+			<option value="hours">COM_PRIVACY_COOKIE_EXP_PERIOD_HOURS</option>
+			<option value="days">COM_PRIVACY_COOKIE_EXP_PERIOD_DAYS</option>
+			<option value="weeks">COM_PRIVACY_COOKIE_EXP_PERIOD_WEEKS</option>
+			<option value="months">COM_PRIVACY_COOKIE_EXP_PERIOD_MONTHS</option>
+			<option value="years">COM_PRIVACY_COOKIE_EXP_PERIOD_YEARS</option>
 		</field>
 
 		<field
 			name="exp_value"
 			type="text"
-			label="COM_COOKIEMANAGER_COOKIE_EXP_VALUE_LABEL"
+			label="COM_PRIVACY_COOKIE_EXP_VALUE_LABEL"
 			required="true"
 			filter="integer"
 			showon="exp_period!:-1,0"
 			default="0"
 		/>
-		
+
 		<field
 			name="created_by"
 			type="user"
@@ -110,7 +110,7 @@
 		<field
 			name="created"
 			type="calendar"
-			label="COM_COOKIEMANAGER_FIELD_CREATED_LABEL"
+			label="COM_PRIVACY_FIELD_CREATED_LABEL"
 			size="22"
 			translateformat="true"
 			showtime="true"

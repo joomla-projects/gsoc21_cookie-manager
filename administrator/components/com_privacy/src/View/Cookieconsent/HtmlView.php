@@ -2,13 +2,13 @@
 
 /**
  * @package     Joomla.Administrator
- * @subpackage  com_cookiemanager
+ * @subpackage  com_privacy
  *
  * @copyright   (C) 2021 Open Source Matters, Inc. <https://www.joomla.org>
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
-namespace Joomla\Component\Cookiemanager\Administrator\View\Consent;
+namespace Joomla\Component\Privacy\Administrator\View\Consent;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
@@ -99,10 +99,10 @@ class HtmlView extends BaseHtmlView
         // Get the toolbar object instance
         $toolbar = Toolbar::getInstance();
 
-        ToolbarHelper::title(Text::_('COM_COOKIEMANAGER_REVIEW_CONSENT'), 'lock');
+        ToolbarHelper::title(Text::_('COM_PRIVACY_REVIEW_COOKIECONSENT'), 'lock');
 
         $toolbar->cancel('consent.cancel');
 
-        ToolbarHelper::help('JHELP_COMPONENTS_COOKIEMANAGER_CONSENTS_EDIT');
+        ToolbarHelper::help('JHELP_COMPONENTS_PRIVACY_COOKIECONSENTS_EDIT');
     }
 }

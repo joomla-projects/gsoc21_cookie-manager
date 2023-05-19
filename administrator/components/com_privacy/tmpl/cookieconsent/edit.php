@@ -2,7 +2,7 @@
 
 /**
  * @package     Joomla.Administrator
- * @subpackage  com_cookiemanager
+ * @subpackage  com_privacy
  *
  * @copyright   (C) 2021 Open Source Matters, Inc. <https://www.joomla.org>
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
@@ -16,12 +16,12 @@ use Joomla\CMS\Router\Route;
 
 ?>
 
-<form action="<?php echo Route::_('index.php?option=com_cookiemanager&layout=edit&id=' . (int) $this->item->id); ?>" method="post"
-    name="adminForm" id="consent-form" aria-label="<?php echo Text::_('COM_COOKIEMANAGER_FORM_TITLE_REVIEW_CONSENT'); ?>" class="form-validate">
+<form action="<?php echo Route::_('index.php?option=com_privacy&layout=edit&id=' . (int) $this->item->id); ?>" method="post"
+    name="adminForm" id="consent-form" aria-label="<?php echo Text::_('COM_PRIVACY_FORM_TITLE_REVIEW_CONSENT'); ?>" class="form-validate">
     <div class="main-card">
         <?php echo HTMLHelper::_('uitab.startTabSet', 'myTab', ['active' => 'details']); ?>
 
-        <?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'details', Text::_('COM_COOKIEMANAGER_CONSENTS')); ?>
+        <?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'details', Text::_('COM_PRIVACY_CONSENTS')); ?>
         <div class="row">
             <div class="col-lg-9">
                 <?php echo $this->form->renderField('uuid'); ?>

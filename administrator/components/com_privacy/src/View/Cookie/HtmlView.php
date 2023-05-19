@@ -2,13 +2,13 @@
 
 /**
  * @package     Joomla.Administrator
- * @subpackage  com_cookiemanager
+ * @subpackage  com_privacy
  *
  * @copyright   (C) 2021 Open Source Matters, Inc. <https://www.joomla.org>
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
-namespace Joomla\Component\Cookiemanager\Administrator\View\Cookie;
+namespace Joomla\Component\Privacy\Administrator\View\Cookie;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
@@ -97,13 +97,13 @@ class HtmlView extends BaseHtmlView
     {
         Factory::getApplication()->input->set('hidemainmenu', true);
 
-        $canDo = ContentHelper::getActions('com_cookiemanager');
+        $canDo = ContentHelper::getActions('com_privacy');
         $isNew = ($this->item->id == 0);
 
         // Get the toolbar object instance
         $toolbar = Toolbar::getInstance();
 
-        ToolbarHelper::title($isNew ? Text::_('COM_COOKIEMANAGER_COOKIE_NEW') : Text::_('COM_COOKIEMANAGER_COOKIE_EDIT'), 'cookie-bite');
+        ToolbarHelper::title($isNew ? Text::_('COM_PRIVACY_COOKIE_NEW') : Text::_('COM_PRIVACY_COOKIE_EDIT'), 'cookie-bite');
 
         if ($canDo->get('core.create')) {
             $toolbar->apply('cookie.apply');

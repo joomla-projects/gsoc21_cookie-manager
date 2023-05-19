@@ -2,7 +2,7 @@
 
 /**
  * @package     Joomla.Administrator
- * @subpackage  com_cookiemanager
+ * @subpackage  com_privacy
  *
  * @copyright   (C) 2021 Open Source Matters, Inc. <https://www.joomla.org>
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
@@ -26,7 +26,7 @@ $saveOrder = ($listOrder == 'a.id' && strtolower($listDirn) == 'desc');
 
 ?>
 
-<form action="<?php echo Route::_('index.php?option=com_cookiemanager&view=consents'); ?>" method="post" name="adminForm" id="adminForm">
+<form action="<?php echo Route::_('index.php?option=com_privacy&view=consents'); ?>" method="post" name="adminForm" id="adminForm">
     <div class="row">
         <div class="col-md-12">
             <div id="j-main-container" class="j-main-container">
@@ -40,7 +40,7 @@ $saveOrder = ($listOrder == 'a.id' && strtolower($listDirn) == 'desc');
                 <?php else : ?>
                     <table class="table" id="cookieList">
                         <caption class="visually-hidden">
-                            <?php echo Text::_('COM_COOKIEMANAGER_TABLE_CAPTION'); ?>,
+                            <?php echo Text::_('COM_PRIVACY_TABLE_CAPTION'); ?>,
                             <span id="orderedBy"><?php echo Text::_('JGLOBAL_SORTED_BY'); ?> </span>,
                             <span id="filteredBy"><?php echo Text::_('JGLOBAL_FILTERED_BY'); ?></span>
                         </caption>
@@ -50,10 +50,10 @@ $saveOrder = ($listOrder == 'a.id' && strtolower($listDirn) == 'desc');
                                     <?php echo HTMLHelper::_('grid.checkall'); ?>
                                 </td>
                                 <th scope="col">
-                                    <?php echo Text::_('COM_COOKIEMANAGER_FIELD_CCUUID_LABEL'); ?>
+                                    <?php echo Text::_('COM_PRIVACY_FIELD_CCUUID_LABEL'); ?>
                                 </th>
                                 <th scope="col" class="text-center d-none d-md-table-cell">
-                                    <?php echo Text::_('COM_COOKIEMANAGER_FIELD_CONSENT_DATE_LABEL'); ?>
+                                    <?php echo Text::_('COM_PRIVACY_FIELD_CONSENT_DATE_LABEL'); ?>
                                 </th>
                                 <th scope="col" class="w-5 text-center">
                                     <?php echo HTMLHelper::_('searchtools.sort', 'JGRID_HEADING_ID', 'a.id', $listDirn, $listOrder); ?>
@@ -76,7 +76,7 @@ $saveOrder = ($listOrder == 'a.id' && strtolower($listDirn) == 'desc');
                                     <th scope="row" class="has-context w-20">
                                         <div>
                                             <?php if ($canEdit || $canEditOwn) : ?>
-                                                <a href="<?php echo Route::_('index.php?option=com_cookiemanager&task=consent.edit&id=' . (int) $item->id); ?>"
+                                                <a href="<?php echo Route::_('index.php?option=com_privacy&task=consent.edit&id=' . (int) $item->id); ?>"
                                                     title="<?php echo Text::_('JACTION_EDIT'); ?> <?php echo $this->escape($item->ccuuid); ?>">
                                                     <?php echo $item->ccuuid; ?>
                                                 </a>
@@ -84,7 +84,7 @@ $saveOrder = ($listOrder == 'a.id' && strtolower($listDirn) == 'desc');
                                                 <?php echo $item->ccuuid; ?>
                                             <?php endif; ?>
                                         </div>
-                                        <?php echo Text::_('COM_COOKIEMANAGER_FIELD_UUID_LABEL') . ': ' . $item->uuid; ?>
+                                        <?php echo Text::_('COM_PRIVACY_FIELD_UUID_LABEL') . ': ' . $item->uuid; ?>
                                     </th>
                                     <td class="text-center d-none d-md-table-cell">
                                         <?php echo HTMLHelper::_('date', $item->consent_date, Text::_('DATE_FORMAT_LC4')); ?>

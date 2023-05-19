@@ -13,7 +13,7 @@
 		<field
 			name="title"
 			type="text"
-			label="COM_COOKIEMANAGER_FIELD_TITLE_LABEL"
+			label="COM_PRIVACY_FIELD_TITLE_LABEL"
 			size="40"
 			required="true"
 		/>
@@ -29,36 +29,36 @@
 		<field
 			name="position"
 			type="list"
-			label="COM_COOKIEMANAGER_FIELD_POSITION_LABEL"
+			label="COM_PRIVACY_FIELD_POSITION_LABEL"
 			required="true"
 			default="4"
 			>
-			<option value="1">COM_COOKIEMANAGER_SCRIPT_POSITION_AFTER_BEGIN_HEAD</option>
-			<option value="2">COM_COOKIEMANAGER_SCRIPT_POSITION_BEFORE_END_HEAD</option>
-			<option value="3">COM_COOKIEMANAGER_SCRIPT_POSITION_AFTER_BEGIN_BODY</option>
-			<option value="4">COM_COOKIEMANAGER_SCRIPT_POSITION_BEFORE_END_BODY</option>
+			<option value="1">COM_PRIVACY_SCRIPT_POSITION_AFTER_BEGIN_HEAD</option>
+			<option value="2">COM_PRIVACY_SCRIPT_POSITION_BEFORE_END_HEAD</option>
+			<option value="3">COM_PRIVACY_SCRIPT_POSITION_AFTER_BEGIN_BODY</option>
+			<option value="4">COM_PRIVACY_SCRIPT_POSITION_BEFORE_END_BODY</option>
 		</field>
 
 		<field
 			name="type"
 			type="list"
-			label="COM_COOKIEMANAGER_FIELD_TYPE_LABEL"
+			label="COM_PRIVACY_FIELD_TYPE_LABEL"
 			required="true"
 			default="1"
 			>
-			<option value="1">COM_COOKIEMANAGER_SCRIPT_TYPE_SCRIPT</option>
-			<option value="2">COM_COOKIEMANAGER_SCRIPT_TYPE_EXTERNAL_SCRIPT</option>
-			<option value="3">COM_COOKIEMANAGER_SCRIPT_TYPE_IFRAME</option>
-			<option value="4">COM_COOKIEMANAGER_SCRIPT_TYPE_EMBED</option>
-			<option value="5">COM_COOKIEMANAGER_SCRIPT_TYPE_OBJECT</option>
-			<option value="6">COM_COOKIEMANAGER_SCRIPT_TYPE_IMG</option>
-			<option value="7">COM_COOKIEMANAGER_SCRIPT_TYPE_LINK</option>
+			<option value="1">COM_PRIVACY_SCRIPT_TYPE_SCRIPT</option>
+			<option value="2">COM_PRIVACY_SCRIPT_TYPE_EXTERNAL_SCRIPT</option>
+			<option value="3">COM_PRIVACY_SCRIPT_TYPE_IFRAME</option>
+			<option value="4">COM_PRIVACY_SCRIPT_TYPE_EMBED</option>
+			<option value="5">COM_PRIVACY_SCRIPT_TYPE_OBJECT</option>
+			<option value="6">COM_PRIVACY_SCRIPT_TYPE_IMG</option>
+			<option value="7">COM_PRIVACY_SCRIPT_TYPE_LINK</option>
 		</field>
 
 		<field
 			name="code"
 			type="textarea"
-			label="COM_COOKIEMANAGER_FIELD_CODE_LABEL"
+			label="COM_PRIVACY_FIELD_CODE_LABEL"
 			rows="4"
 			required="true"
 			filter="JComponentHelper::filterText"
@@ -82,7 +82,7 @@
 			name="catid"
 			type="categoryedit"
 			label="JCATEGORY"
-			extension="com_cookiemanager"
+			extension="com_privacy"
 			addfieldprefix="Joomla\Component\Categories\Administrator\Field"
 			required="true"
 			default=""
@@ -92,7 +92,7 @@
 			name="ordering"
 			type="ordering"
 			label="JFIELD_ORDERING_LABEL"
-			content_type="com_cookiemanager.script"
+			content_type="com_privacy.script"
 		/>
 	</fieldset>
 </form>

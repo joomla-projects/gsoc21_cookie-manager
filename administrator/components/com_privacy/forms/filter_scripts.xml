@@ -4,8 +4,8 @@
 		<field
   			name="search"
   			type="text"
-  			label="COM_COOKIEMANAGER_FILTER_SEARCH_SCRIPTS_LABEL"
-  			description="COM_COOKIEMANAGER_FILTER_SEARCH_SCRIPTS_DESC"
+  			label="COM_PRIVACY_FILTER_SEARCH_SCRIPTS_LABEL"
+  			description="COM_PRIVACY_FILTER_SEARCH_SCRIPTS_DESC"
   			hint="JSEARCH_FILTER"
 		/>
 
@@ -23,7 +23,7 @@
 			type="category"
 			label="JCATEGORY"
 			multiple="true"
-			extension="com_cookiemanager"
+			extension="com_privacy"
 			layout="joomla.form.field.list-fancy-select"
 			hint="JOPTION_SELECT_CATEGORY"
 			onchange="this.form.submit();"
@@ -47,10 +47,10 @@
       		<option value="a.published DESC">JSTATUS_DESC</option>
       		<option value="a.title ASC">JGLOBAL_TITLE_ASC</option>
       		<option value="a.title DESC">JGLOBAL_TITLE_DESC</option>
-			<option value="a.position ASC">COM_COOKIEMANAGER_POSITION_ASC</option>
-			<option value="a.position DESC">COM_COOKIEMANAGER_POSITION_DESC</option>
-			<option value="a.type ASC">COM_COOKIEMANAGER_TYPE_ASC</option>
-			<option value="a.type DESC">COM_COOKIEMANAGER_TYPE_DESC</option>
+			<option value="a.position ASC">COM_PRIVACY_POSITION_ASC</option>
+			<option value="a.position DESC">COM_PRIVACY_POSITION_DESC</option>
+			<option value="a.type ASC">COM_PRIVACY_TYPE_ASC</option>
+			<option value="a.type DESC">COM_PRIVACY_TYPE_DESC</option>
       		<option value="category_title ASC">JCATEGORY_ASC</option>
 			<option value="category_title DESC">JCATEGORY_DESC</option>
 			<option value="a.id ASC">JGRID_HEADING_ID_ASC</option>

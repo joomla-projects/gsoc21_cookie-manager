@@ -2,13 +2,13 @@
 
 /**
  * @package     Joomla.Administrator
- * @subpackage  com_cookiemanager
+ * @subpackage  com_privacy
  *
  * @copyright   (C) 2021 Open Source Matters, Inc. <https://www.joomla.org>
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
-namespace Joomla\Component\Cookiemanager\Administrator\Model;
+namespace Joomla\Component\Privacy\Administrator\Model;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
@@ -33,7 +33,7 @@ class CookieModel extends AdminModel
      * @var    string
      * @since  __DEPLOY_VERSION__
      */
-    protected $text_prefix = 'COM_COOKIEMANAGER';
+    protected $text_prefix = 'COM_PRIVACY';
 
     /**
      * Method to get a table object, load it if necessary.
@@ -72,7 +72,7 @@ class CookieModel extends AdminModel
      */
     public function getForm($data = [], $loadData = true)
     {
-        $form = $this->loadForm('com_cookiemanager.cookie', 'cookie', ['control' => 'jform', 'load_data' => $loadData]);
+        $form = $this->loadForm('com_privacy.cookie', 'cookie', ['control' => 'jform', 'load_data' => $loadData]);
 
         if (empty($form)) {
             return false;
@@ -109,13 +109,13 @@ class CookieModel extends AdminModel
     {
         // Check the session for previously entered form data.
         $app  = Factory::getApplication();
-        $data = $app->getUserState('com_cookiemanager.edit.cookie.data', []);
+        $data = $app->getUserState('com_privacy.edit.cookie.data', []);
 
         if (empty($data)) {
             $data = $this->getItem();
         }
 
-        $this->preprocessData('com_cookiemanager.cookie', $data);
+        $this->preprocessData('com_privacy.cookie', $data);
 
         return $data;
     }

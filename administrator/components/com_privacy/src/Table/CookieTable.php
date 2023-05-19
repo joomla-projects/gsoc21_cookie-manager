@@ -2,13 +2,13 @@
 
 /**
  * @package     Joomla.Administrator
- * @subpackage  com_cookiemanager
+ * @subpackage  com_privacy
  *
  * @copyright   (C) 2021 Open Source Matters, Inc. <https://www.joomla.org>
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
-namespace Joomla\Component\Cookiemanager\Administrator\Table;
+namespace Joomla\Component\Privacy\Administrator\Table;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
@@ -115,7 +115,7 @@ class CookieTable extends Table
 
         // Check for valid title
         if (trim($this->title) == '') {
-            $this->setError(Text::_('COM_COOKIEMANAGER_WARNING_PROVIDE_VALID_TITLE'));
+            $this->setError(Text::_('COM_PRIVACY_WARNING_PROVIDE_VALID_TITLE'));
 
             return false;
         }

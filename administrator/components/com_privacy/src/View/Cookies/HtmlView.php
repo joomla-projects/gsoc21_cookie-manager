@@ -2,13 +2,13 @@
 
 /**
  * @package     Joomla.Administrator
- * @subpackage  com_cookiemanager
+ * @subpackage  com_privacy
  *
  * @copyright   (C) 2021 Open Source Matters, Inc. <https://www.joomla.org>
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
-namespace Joomla\Component\Cookiemanager\Administrator\View\Cookies;
+namespace Joomla\Component\Privacy\Administrator\View\Cookies;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
@@ -116,11 +116,11 @@ class HtmlView extends BaseHtmlView
     protected function addToolbar()
     {
         $user  = Factory::getApplication()->getIdentity();
-        $canDo = ContentHelper::getActions('com_cookiemanager', 'category', $this->state->get('filter.category_id'));
+        $canDo = ContentHelper::getActions('com_privacy', 'category', $this->state->get('filter.category_id'));
         // Get the toolbar object instance
         $toolbar = Toolbar::getInstance();
-        ToolbarHelper::title(Text::_('COM_COOKIEMANAGER_COOKIES'), 'cookie');
-        if ($canDo->get('core.create') || \count($user->getAuthorisedCategories('com_cookiemanager', 'core.create')) > 0) {
+        ToolbarHelper::title(Text::_('COM_PRIVACY_COOKIES'), 'cookie');
+        if ($canDo->get('core.create') || \count($user->getAuthorisedCategories('com_privacy', 'core.create')) > 0) {
             $toolbar->addNew('cookie.add');
         }
 
@@ -147,8 +147,8 @@ class HtmlView extends BaseHtmlView
                 ->listCheck(true);
         }
 
-        if ($user->authorise('core.admin', 'com_cookiemanager')) {
-            $toolbar->preferences('com_cookiemanager');
+        if ($user->authorise('core.admin', 'com_privacy')) {
+            $toolbar->preferences('com_privacy');
         }
 
         $toolbar->help('JHELP_COMPONENTS_COOKIEMANAGER_COOKIES');

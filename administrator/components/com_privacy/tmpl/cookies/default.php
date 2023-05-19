@@ -2,7 +2,7 @@
 
 /**
  * @package     Joomla.Administrator
- * @subpackage  com_cookiemanager
+ * @subpackage  com_privacy
  *
  * @copyright   (C) 2021 Open Source Matters, Inc. <https://www.joomla.org>
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
@@ -26,7 +26,7 @@ $saveOrder = ($listOrder == 'a.ordering' && strtolower($listDirn) == 'asc');
 
 ?>
 
-<form action="<?php echo Route::_('index.php?option=com_cookiemanager&view=cookies'); ?>" method="post" name="adminForm" id="adminForm">
+<form action="<?php echo Route::_('index.php?option=com_privacy&view=cookies'); ?>" method="post" name="adminForm" id="adminForm">
     <div class="row">
         <div class="col-md-12">
             <div id="j-main-container" class="j-main-container">
@@ -40,7 +40,7 @@ $saveOrder = ($listOrder == 'a.ordering' && strtolower($listDirn) == 'asc');
                 <?php else : ?>
                     <table class="table" id="cookieList">
                         <caption class="visually-hidden">
-                            <?php echo Text::_('COM_COOKIEMANAGER_TABLE_CAPTION'); ?>,
+                            <?php echo Text::_('COM_PRIVACY_TABLE_CAPTION'); ?>,
                             <span id="orderedBy"><?php echo Text::_('JGLOBAL_SORTED_BY'); ?> </span>,
                             <span id="filteredBy"><?php echo Text::_('JGLOBAL_FILTERED_BY'); ?></span>
                         </caption>
@@ -70,10 +70,10 @@ $saveOrder = ($listOrder == 'a.ordering' && strtolower($listDirn) == 'asc');
                         <?php
                         $n = count($this->items);
                         foreach ($this->items as $i => $item) :
-                            $canCreate  = $user->authorise('core.create', 'com_cookiemanager.category.' . $item->catid);
-                            $canEdit    = $user->authorise('core.edit', 'com_cookiemanager.category.' . $item->catid);
-                            $canEditOwn = $user->authorise('core.edit.own', 'com_cookiemanager.category.' . $item->catid) && $item->created_by == $userId;
-                            $canChange  = $user->authorise('core.edit.state', 'com_cookiemanager.category.' . $item->catid);
+                            $canCreate  = $user->authorise('core.create', 'com_privacy.category.' . $item->catid);
+                            $canEdit    = $user->authorise('core.edit', 'com_privacy.category.' . $item->catid);
+                            $canEditOwn = $user->authorise('core.edit.own', 'com_privacy.category.' . $item->catid) && $item->created_by == $userId;
+                            $canChange  = $user->authorise('core.edit.state', 'com_privacy.category.' . $item->catid);
                             ?>
                             <tr class="row<?php echo $i % 2; ?>">
                                 <td class="text-center">
@@ -98,7 +98,7 @@ $saveOrder = ($listOrder == 'a.ordering' && strtolower($listDirn) == 'asc');
                                 <th scope="row" class="has-context">
                                     <div>
                                         <?php if ($canEdit || $canEditOwn) : ?>
-                                            <a href="<?php echo Route::_('index.php?option=com_cookiemanager&task=cookie.edit&id=' . (int) $item->id); ?>"
+                                            <a href="<?php echo Route::_('index.php?option=com_privacy&task=cookie.edit&id=' . (int) $item->id); ?>"
                                                 title="<?php echo Text::_('JACTION_EDIT'); ?> <?php echo $this->escape($item->title); ?>">
                                                 <?php echo $this->escape($item->title); ?>
                                             </a>

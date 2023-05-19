@@ -2,13 +2,13 @@
 
 /**
  * @package     Joomla.Administrator
- * @subpackage  com_cookiemanager
+ * @subpackage  com_privacy
  *
  * @copyright   (C) 2021 Open Source Matters, Inc. <https://www.joomla.org>
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
-namespace Joomla\Component\Cookiemanager\Administrator\Model;
+namespace Joomla\Component\Privacy\Administrator\Model;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
@@ -35,7 +35,7 @@ class ScriptModel extends AdminModel
      * @var    string
      * @since  __DEPLOY_VERSION__
      */
-    protected $text_prefix = 'COM_COOKIEMANAGER';
+    protected $text_prefix = 'COM_PRIVACY';
 
     /**
      * Method to get a table object, load it if necessary.
@@ -75,7 +75,7 @@ class ScriptModel extends AdminModel
     public function getForm($data = [], $loadData = true)
     {
         // Get the form.
-        $form = $this->loadForm('com_cookiemanager.script', 'script', ['control' => 'jform', 'load_data' => $loadData]);
+        $form = $this->loadForm('com_privacy.script', 'script', ['control' => 'jform', 'load_data' => $loadData]);
 
         if (empty($form)) {
             return false;
@@ -107,13 +107,13 @@ class ScriptModel extends AdminModel
     {
         // Check the session for previously entered form data.
         $app  = Factory::getApplication();
-        $data = $app->getUserState('com_cookiemanager.edit.script.data', []);
+        $data = $app->getUserState('com_privacy.edit.script.data', []);
 
         if (empty($data)) {
             $data = $this->getItem();
         }
 
-        $this->preprocessData('com_cookiemanager.script', $data);
+        $this->preprocessData('com_privacy.script', $data);
 
         return $data;
     }
@@ -182,7 +182,7 @@ class ScriptModel extends AdminModel
 
         // If category ID is provided, check if it's valid.
         if (is_numeric($data['catid']) && $data['catid']) {
-            $createCategory = !CategoriesHelper::validateCategoryId($data['catid'], 'com_cookiemanager');
+            $createCategory = !CategoriesHelper::validateCategoryId($data['catid'], 'com_privacy');
         }
 
         // Save New Category
@@ -191,7 +191,7 @@ class ScriptModel extends AdminModel
                 // Remove #new# prefix, if exists.
                 'title'     => strpos($data['catid'], '#new#') === 0 ? substr($data['catid'], 5) : $data['catid'],
                 'parent_id' => 1,
-                'extension' => 'com_cookiemanager',
+                'extension' => 'com_privacy',
                 'language'  => $data['language'],
                 'published' => 1,
             ];
@@ -223,6 +223,6 @@ class ScriptModel extends AdminModel
      */
     private function canCreateCategory()
     {
-        return Factory::getUser()->authorise('core.create', 'com_cookiemanager');
+        return Factory::getUser()->authorise('core.create', 'com_privacy');
     }
 }
