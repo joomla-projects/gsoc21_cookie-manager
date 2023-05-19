@@ -72,7 +72,7 @@ INSERT INTO "#__categories" ("id", "asset_id", "parent_id", "lft", "rgt", "level
 (4, 29, 1, 5, 6, 1, 'uncategorised', 'com_contact', 'Uncategorised', 'uncategorised', '', '', 1, 1, '{"category_layout":"","image":""}', '', '', '{"author":"","robots":""}', 42, CURRENT_TIMESTAMP, 42, CURRENT_TIMESTAMP, 0, '*', 1),
 (5, 30, 1, 7, 8, 1, 'uncategorised', 'com_newsfeeds', 'Uncategorised', 'uncategorised', '', '', 1, 1, '{"category_layout":"","image":""}', '', '', '{"author":"","robots":""}', 42, CURRENT_TIMESTAMP, 42, CURRENT_TIMESTAMP, 0, '*', 1),
 (7, 32, 1, 9, 10, 1, 'uncategorised', 'com_users', 'Uncategorised', 'uncategorised', '', '', 1, 1, '{"category_layout":"","image":""}', '', '', '{"author":"","robots":""}', 42, CURRENT_TIMESTAMP, 42, CURRENT_TIMESTAMP, 0, '*', 1),
-(8, 92, 1, 11, 12, 1, 'uncategorised', 'com_cookiemanager', 'Uncategorised', 'uncategorised', '', '', 1, 1, '{"category_layout":"","image":""}', '', '', '{"author":"","robots":""}', 42, CURRENT_TIMESTAMP, 42, CURRENT_TIMESTAMP, 0, '*', 1);
+(8, 92, 1, 11, 12, 1, 'uncategorised', 'com_privacy', 'Uncategorised', 'uncategorised', '', '', 1, 1, '{"category_layout":"","image":""}', '', '', '{"author":"","robots":""}', 42, CURRENT_TIMESTAMP, 42, CURRENT_TIMESTAMP, 0, '*', 1);
 
 SELECT setval('#__categories_id_seq', 9, false);
 
