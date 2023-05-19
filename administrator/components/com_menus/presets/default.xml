@@ -298,7 +298,7 @@
 					title="MOD_MENU_COM_PRIVACY_CATEGORIES"
 					type="component"
 					element="com_privacy"
-					link="option=com_categories&amp;extension=com_privacy"
+					link="index.php?option=com_categories&amp;extension=com_privacy"
 			/>
 
 			<menuitem
