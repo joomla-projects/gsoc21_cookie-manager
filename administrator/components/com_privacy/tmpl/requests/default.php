@@ -118,7 +118,7 @@ $urgentRequestDate->sub(new DateInterval('P' . $this->urgentRequestAge . 'D'));
                 </tbody>
             </table>
 
-            <?php // load the pagination. ?>
+            <?php // load the pagination.?>
             <?php echo $this->pagination->getListFooter(); ?>
 
         <?php endif; ?>
