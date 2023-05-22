@@ -538,7 +538,7 @@ abstract class JLoader
      *
      * @param   string  $class  The fully qualified class name to autoload.
      *
-     * @return  boolean  True on success, false otherwise.
+     * @return  void
      *
      * @since   3.2
      */
@@ -699,12 +699,12 @@ if (!function_exists('jexit')) {
      *
      * @param   mixed  $message  Exit code or string. Defaults to zero.
      *
-     * @return  void
+     * @return  never
      *
      * @codeCoverageIgnore
      * @since   1.7.0
      */
-    function jexit($message = 0)
+    function jexit($message = 0): never
     {
         exit($message);
     }
