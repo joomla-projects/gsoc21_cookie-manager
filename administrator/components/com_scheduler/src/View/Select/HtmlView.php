@@ -55,14 +55,6 @@ class HtmlView extends BaseHtmlView
     protected $items;
 
     /**
-     * A suffix for links for modal use [?]
-     *
-     * @var  string
-     * @since  4.1.0
-     */
-    protected $modalLink;
-
-    /**
      * HtmlView constructor.
      *
      * @param   array  $config  A named configuration array for object construction.
@@ -97,7 +89,6 @@ class HtmlView extends BaseHtmlView
     {
         $this->state     = $this->get('State');
         $this->items     = $this->get('Items');
-        $this->modalLink = '';
 
         // Check for errors.
         if (\count($errors = $this->get('Errors'))) {
@@ -126,6 +117,6 @@ class HtmlView extends BaseHtmlView
             ->url('index.php?option=com_scheduler')
             ->buttonClass('btn btn-danger')
             ->icon('icon-times')
-            ->text(Text::_('JCANCEL'));
+            ->text('JCANCEL');
     }
 }

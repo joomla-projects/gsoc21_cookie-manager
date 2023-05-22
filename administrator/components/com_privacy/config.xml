@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <config>
 	<help key="Privacy:_Options"/>
 	<inlinehelp button="show"/>
@@ -20,5 +20,59 @@
 			validate="number"
 		/>
 
+	</fieldset>
+	<fieldset
+		name="cookie_scripts"
+		label="COM_PRIVACY_FIELDSET_CONFIG_COOKIE_SCRIPTS_OPTIONS_LABEL"
+		>
+		<field
+			name="policylink"
+			type="menuitem"
+			label="COM_PRIVACY_POLICY_LINK_LABEL"
+			default=""
+			>
+			<option value="">COM_PRIVACY_POLICY_LINK_NONE</option>
+		</field>
+
+		<field
+			name="modal_position"
+			type="list"
+			label="COM_PRIVACY_POSITION_FIELD_LABEL"
+			default=""
+			>
+			<option value="">COM_PRIVACY_POSITION_FIELD_TOP</option>
+			<option value="modal-dialog-left">COM_PRIVACY_POSITION_FIELD_LEFT</option>
+			<option value="modal-dialog-right">COM_PRIVACY_POSITION_FIELD_RIGHT</option>
+			<option value="modal-dialog-bottom">COM_PRIVACY_POSITION_FIELD_BOTTOM</option>
+			<option value="modal-dialog-centered">COM_PRIVACY_POSITION_FIELD_CENTER</option>
+			<option value="modal-dialog-top-left">COM_PRIVACY_POSITION_FIELD_TOP_LEFT</option>
+			<option value="modal-dialog-top-right">COM_PRIVACY_POSITION_FIELD_TOP_RIGHT</option>
+			<option value="modal-dialog-bottom-left">COM_PRIVACY_POSITION_FIELD_BOTTOM_LEFT</option>
+			<option value="modal-dialog-bottom-right">COM_PRIVACY_POSITION_FIELD_BOTTOM_RIGHT</option>
+		</field>
+
+		<field
+			name="consent_expiration"
+			type="number"
+			label="COM_PRIVACY_COOKIECONSENT_EXPIRATION_LABEL"
+			default="30"
+		/>
+
+	</fieldset>
+
+	<fieldset
+		name="permissions"
+		label="JCONFIG_PERMISSIONS_LABEL"
+		description="JCONFIG_PERMISSIONS_DESC"
+		>
+		<field
+			name="rules"
+			type="rules"
+			label="JCONFIG_PERMISSIONS_LABEL"
+			validate="rules"
+			filter="rules"
+			component="com_privacy"
+			section="component"
+		/>
 	</fieldset>
 </config>
