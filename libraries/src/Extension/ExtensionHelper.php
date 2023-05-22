@@ -63,7 +63,6 @@ class ExtensionHelper
         ['component', 'com_contact', '', 1],
         ['component', 'com_content', '', 1],
         ['component', 'com_contenthistory', '', 1],
-        ['component', 'com_cookiemanager', '', 1],
         ['component', 'com_cpanel', '', 1],
         ['component', 'com_fields', '', 1],
         ['component', 'com_finder', '', 1],
