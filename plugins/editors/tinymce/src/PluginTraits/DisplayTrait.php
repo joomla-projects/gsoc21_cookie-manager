@@ -146,7 +146,7 @@ trait DisplayTrait
 
         // Get configuration depend from User group
         foreach ($extraOptionsAll as $set => $val) {
-            $val = (object) $val;
+            $val         = (object) $val;
             $val->access = empty($val->access) ? [] : $val->access;
 
             // Check whether User in one of allowed group
@@ -380,7 +380,7 @@ trait DisplayTrait
         }
 
         // Convert pt to px in dropdown
-        $scriptOptions['fontsize_formats'] = '8px 10px 12px 14px 18px 24px 36px';
+        $scriptOptions['font_size_formats'] = '8px 10px 12px 14px 18px 24px 36px';
 
         // select the languages for the "language of parts" menu
         if (isset($extraOptions->content_languages) && $extraOptions->content_languages) {
@@ -390,7 +390,9 @@ trait DisplayTrait
                     $ctemp[] = ['title' => $content_language['content_language_name'], 'code' => $content_language['content_language_code']];
                 }
             }
-            $scriptOptions['content_langs'] = array_merge($ctemp);
+            if (isset($ctemp)) {
+                $scriptOptions['content_langs'] = array_merge($ctemp);
+            }
         }
 
         // User custom plugins and buttons
@@ -400,6 +402,11 @@ trait DisplayTrait
         if ($custom_plugin) {
             $plugins   = array_merge($plugins, explode(strpos($custom_plugin, ',') !== false ? ',' : ' ', $custom_plugin));
         }
+
+        // Version 6 unload removed plugins
+        $plugins = array_filter($plugins, function ($plugin) {
+            return !in_array($plugin, ['hr', 'paste', 'print']);
+        });
 
         if ($custom_button) {
             $toolbar1  = array_merge($toolbar1, explode(strpos($custom_button, ',') !== false ? ',' : ' ', $custom_button));
@@ -412,24 +419,23 @@ trait DisplayTrait
         $scriptOptions   = array_merge(
             $scriptOptions,
             [
-                'deprecation_warnings' => JDEBUG ? true : false,
-                'suffix'   => JDEBUG ? '' : '.min',
-                'baseURL'  => Uri::root(true) . '/media/vendor/tinymce',
-                'directionality' => $language->isRtl() ? 'rtl' : 'ltr',
-                'language' => $langPrefix,
+                'suffix'                      => JDEBUG ? '' : '.min',
+                'baseURL'                     => Uri::root(true) . '/media/vendor/tinymce',
+                'directionality'              => $language->isRtl() ? 'rtl' : 'ltr',
+                'language'                    => $langPrefix,
                 'autosave_restore_when_empty' => false,
-                'skin'     => $skin,
-                'theme'    => $theme,
-                'schema'   => 'html5',
+                'skin'                        => $skin,
+                'theme'                       => $theme,
+                'schema'                      => 'html5',
 
                 // Prevent cursor from getting stuck in blocks when nested or at end of document.
                 'end_container_on_empty_block' => true,
 
                 // Toolbars
-                'menubar'  => empty($menubar)  ? false : implode(' ', array_unique($menubar)),
-                'toolbar' => empty($toolbar) ? null  : 'jxtdbuttons ' . implode(' ', $toolbar),
+                'menubar' => empty($menubar) ? false : implode(' ', array_unique($menubar)),
+                'toolbar' => empty($toolbar) ? null : 'jxtdbuttons ' . implode(' ', $toolbar),
 
-                'plugins'  => implode(',', array_unique($plugins)),
+                'plugins' => implode(',', array_unique($plugins)),
 
                 // Quickbars
                 'quickbars_image_toolbar'     => false,
@@ -451,22 +457,22 @@ trait DisplayTrait
                 'remove_script_host' => false,
 
                 // Drag and drop Images always FALSE, reverting this allows for inlining the images
-                'paste_data_images'  => false,
+                'paste_data_images' => false,
 
                 // Layout
-                'content_css'        => $content_css,
-                'document_base_url'  => Uri::root(true) . '/',
-                'image_caption'      => true,
-                'importcss_append'   => true,
-                'height'             => $this->params->get('html_height', '550px'),
-                'width'              => $this->params->get('html_width', ''),
-                'elementpath'        => (bool) $levelParams->get('element_path', true),
-                'resize'             => $resizing,
-                'templates'          => $templates,
-                'external_plugins'   => empty($externalPlugins) ? null  : $externalPlugins,
-                'contextmenu'        => (bool) $levelParams->get('contextmenu', true) ? null : false,
-                'toolbar_sticky'     => true,
-                'toolbar_mode'       => $levelParams->get('toolbar_mode', 'sliding'),
+                'content_css'       => $content_css,
+                'document_base_url' => Uri::root(true) . '/',
+                'image_caption'     => true,
+                'importcss_append'  => true,
+                'height'            => $this->params->get('html_height', '550px'),
+                'width'             => $this->params->get('html_width', ''),
+                'elementpath'       => (bool) $levelParams->get('element_path', true),
+                'resize'            => $resizing,
+                'templates'         => $templates,
+                'external_plugins'  => empty($externalPlugins) ? null : $externalPlugins,
+                'contextmenu'       => (bool) $levelParams->get('contextmenu', true) ? null : false,
+                'toolbar_sticky'    => true,
+                'toolbar_mode'      => $levelParams->get('toolbar_mode', 'sliding'),
 
                 // Image plugin options
                 'a11y_advanced_options' => true,
@@ -477,7 +483,11 @@ trait DisplayTrait
                 'dndEnabled' => $dragdrop,
 
                 // Disable TinyMCE Branding
-                'branding'   => false,
+                'branding'  => false,
+                'promotion' => false,
+
+                // Specify the atributes to be used when previewing a style. This prevents white text on a white background making the preview invisible.
+                'preview_styles' => 'font-family font-size font-weight font-style text-decoration text-transform background-color border border-radius outline text-shadow',
             ]
         );
 

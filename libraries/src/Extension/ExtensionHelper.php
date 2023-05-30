@@ -20,8 +20,6 @@ use Joomla\Database\ParameterType;
  * Extension Helper class.
  *
  * @since       3.7.4
- *
- * @deprecated  4.0  Replace class with a non static methods for better testing
  */
 class ExtensionHelper
 {
@@ -65,10 +63,10 @@ class ExtensionHelper
         ['component', 'com_contact', '', 1],
         ['component', 'com_content', '', 1],
         ['component', 'com_contenthistory', '', 1],
-        ['component', 'com_cookiemanager', '', 1],
         ['component', 'com_cpanel', '', 1],
         ['component', 'com_fields', '', 1],
         ['component', 'com_finder', '', 1],
+        ['component', 'com_guidedtours', '', 1],
         ['component', 'com_installer', '', 1],
         ['component', 'com_joomlaupdate', '', 1],
         ['component', 'com_languages', '', 1],
@@ -110,6 +108,7 @@ class ExtensionHelper
         ['module', 'mod_custom', '', 1],
         ['module', 'mod_feed', '', 1],
         ['module', 'mod_frontend', '', 1],
+        ['module', 'mod_guidedtours', '', 1],
         ['module', 'mod_latest', '', 1],
         ['module', 'mod_latestactions', '', 1],
         ['module', 'mod_logged', '', 1],
@@ -286,6 +285,7 @@ class ExtensionHelper
         ['plugin', 'cookiemanager', 'system', 0],
         ['plugin', 'debug', 'system', 0],
         ['plugin', 'fields', 'system', 0],
+        ['plugin', 'guidedtours', 'system', 0],
         ['plugin', 'highlight', 'system', 0],
         ['plugin', 'httpheaders', 'system', 0],
         ['plugin', 'jooa11y', 'system', 0],
@@ -452,7 +452,7 @@ class ExtensionHelper
         $key = $element . '.' . $type . '.' . $clientId . '.' . $folder;
 
         if (!\array_key_exists($key, self::$loadedExtensions)) {
-            $db = Factory::getDbo();
+            $db    = Factory::getDbo();
             $query = $db->getQuery(true)
                 ->select('*')
                 ->from($db->quoteName('#__extensions'))
