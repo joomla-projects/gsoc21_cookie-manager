@@ -9,15 +9,6 @@
   			hint="JSEARCH_FILTER"
 		/>
 
-  		<field
-  			name="published"
-  			type="status"
-  			label="JSTATUS"
-  			onchange="this.form.submit();"
-  			>
-  			<option value="">JOPTION_SELECT_PUBLISHED</option>
-  		</field>
-
 		<field
 			name="category_id"
 			type="category"
@@ -41,8 +32,6 @@
       		<option value="">JGLOBAL_SORT_BY</option>
       		<option value="a.ordering ASC">JGRID_HEADING_ORDERING_ASC</option>
       		<option value="a.ordering DESC">JGRID_HEADING_ORDERING_DESC</option>
-      		<option value="a.published ASC">JSTATUS_ASC</option>
-      		<option value="a.published DESC">JSTATUS_DESC</option>
       		<option value="a.title ASC">JGLOBAL_TITLE_ASC</option>
       		<option value="a.title DESC">JGLOBAL_TITLE_DESC</option>
       		<option value="category_title ASC">JCATEGORY_ASC</option>

@@ -54,9 +54,6 @@ $saveOrder = ($listOrder == 'a.ordering' && strtolower($listDirn) == 'asc');
                                 <th scope="col" class="w-1 text-center d-none d-md-table-cell">
                                     <?php echo HTMLHelper::_('searchtools.sort', '', 'a.ordering', $listDirn, $listOrder, null, 'asc', 'JGRID_HEADING_ORDERING', 'icon-sort'); ?>
                                 </th>
-                                <th scope="col" class="w-1 text-center">
-                                    <?php echo HTMLHelper::_('searchtools.sort', 'JSTATUS', 'a.published', $listDirn, $listOrder); ?>
-                                </th>
                                 <th scope="col">
                                     <?php echo HTMLHelper::_('searchtools.sort', 'JGLOBAL_TITLE', 'a.title', $listDirn, $listOrder); ?>
                                 </th>
@@ -72,7 +69,6 @@ $saveOrder = ($listOrder == 'a.ordering' && strtolower($listDirn) == 'asc');
                         <?php
                         $n = count($this->items);
                         foreach ($this->items as $i => $item) :
-                            $canCreate  = $user->authorise('core.create', 'com_cookiemanager.category.' . $item->catid);
                             $canEdit    = $user->authorise('core.edit', 'com_cookiemanager.category.' . $item->catid);
                             $canEditOwn = $user->authorise('core.edit.own', 'com_cookiemanager.category.' . $item->catid) && $item->created_by == $userId;
                             $canChange  = $user->authorise('core.edit.state', 'com_cookiemanager.category.' . $item->catid);
@@ -93,9 +89,6 @@ $saveOrder = ($listOrder == 'a.ordering' && strtolower($listDirn) == 'asc');
                                     <span class="sortable-handler<?php echo $iconClass; ?>">
                                         <span class="icon-ellipsis-v" aria-hidden="true"></span>
                                     </span>
-                                </td>
-                                <td class="text-center">
-                                    <?php echo HTMLHelper::_('jgrid.published', $item->published, $i, 'cookies.', $canChange, 'cb'); ?>
                                 </td>
                                 <th scope="row" class="has-context">
                                     <div>

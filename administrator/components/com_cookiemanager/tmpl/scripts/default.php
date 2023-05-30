@@ -26,22 +26,6 @@ $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn  = $this->escape($this->state->get('list.direction'));
 $saveOrder = ($listOrder == 'a.ordering' && strtolower($listDirn) == 'asc');
 
-$positions = array (
-        '1' => Text::_('COM_COOKIEMANAGER_SCRIPT_POSITION_AFTER_BEGIN_HEAD'),
-        '2' => Text::_('COM_COOKIEMANAGER_SCRIPT_POSITION_BEFORE_END_HEAD'),
-        '3' => Text::_('COM_COOKIEMANAGER_SCRIPT_POSITION_AFTER_BEGIN_BODY'),
-        '4' => Text::_('COM_COOKIEMANAGER_SCRIPT_POSITION_BEFORE_END_BODY')
-);
-
-$types = array (
-        '1' => Text::_('COM_COOKIEMANAGER_SCRIPT_TYPE_SCRIPT'),
-        '2' => Text::_('COM_COOKIEMANAGER_SCRIPT_TYPE_EXTERNAL_SCRIPT'),
-        '3' => Text::_('COM_COOKIEMANAGER_SCRIPT_TYPE_IFRAME'),
-        '4' => Text::_('COM_COOKIEMANAGER_SCRIPT_TYPE_EMBED'),
-        '5' => Text::_('COM_COOKIEMANAGER_SCRIPT_TYPE_OBJECT'),
-        '6' => Text::_('COM_COOKIEMANAGER_SCRIPT_TYPE_IMG'),
-        '7' => Text::_('COM_COOKIEMANAGER_SCRIPT_TYPE_LINK')
-);
 ?>
 
 <form action="<?php echo Route::_('index.php?option=com_cookiemanager&view=scripts'); ?>" method="post" name="adminForm" id="adminForm">
@@ -70,17 +54,8 @@ $types = array (
                                 <th scope="col" class="w-1 text-center d-none d-md-table-cell">
                                     <?php echo HTMLHelper::_('searchtools.sort', '', 'a.ordering', $listDirn, $listOrder, null, 'asc', 'JGRID_HEADING_ORDERING', 'icon-sort'); ?>
                                 </th>
-                                <th scope="col" class="w-1 text-center">
-                                    <?php echo HTMLHelper::_('searchtools.sort', 'JSTATUS', 'a.published', $listDirn, $listOrder); ?>
-                                </th>
                                 <th scope="col">
                                     <?php echo HTMLHelper::_('searchtools.sort', 'JGLOBAL_TITLE', 'a.title', $listDirn, $listOrder); ?>
-                                </th>
-                                <th scope="col" class="text-center">
-                                    <?php echo HTMLHelper::_('searchtools.sort', 'COM_COOKIEMANAGER_FIELD_POSITION_LABEL', 'a.position', $listDirn, $listOrder); ?>
-                                </th>
-                                <th scope="col" class="text-center">
-                                    <?php echo HTMLHelper::_('searchtools.sort', 'COM_COOKIEMANAGER_FIELD_TYPE_LABEL', 'a.type', $listDirn, $listOrder); ?>
                                 </th>
                                 <th scope="col" class="text-center">
                                     <?php echo HTMLHelper::_('searchtools.sort', 'JCATEGORY', 'a.category_title', $listDirn, $listOrder); ?>
@@ -116,9 +91,6 @@ $types = array (
                                         <span class="icon-ellipsis-v" aria-hidden="true"></span>
                                     </span>
                                 </td>
-                                <td class="text-center">
-                                    <?php echo HTMLHelper::_('jgrid.published', $item->published, $i, 'scripts.', $canChange, 'cb'); ?>
-                                </td>
                                 <th scope="row" class="has-context">
                                     <div>
                                         <?php if ($canEdit || $canEditOwn) : ?>
@@ -129,17 +101,8 @@ $types = array (
                                         <?php else : ?>
                                             <?php echo $this->escape($item->title); ?>
                                         <?php endif; ?>
-                                        <span class="small">
-                                            <?php echo Text::sprintf('JGLOBAL_LIST_ALIAS', $this->escape($item->alias)); ?>
-                                        </span>
                                     </div>
                                 </th>
-                                <td class="text-center">
-                                    <?php echo $positions[$item->position]; ?>
-                                </td>
-                                <td class="text-center">
-                                    <?php echo $types[$item->type]; ?>
-                                </td>
                                 <td class="text-center">
                                     <?php echo $item->category_title; ?>
                                 </td>

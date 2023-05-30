@@ -27,20 +27,6 @@
 		/>
 
 		<field
-			name="published"
-			type="list"
-			label="JSTATUS"
-			default="1"
-			class="form-select-color-state"
-			validate="options"
-			>
-			<option value="1">JPUBLISHED</option>
-			<option value="0">JUNPUBLISHED</option>
-			<option value="2">JARCHIVED</option>
-			<option value="-2">JTRASHED</option>
-		</field>
-
-		<field
 			name="catid"
 			type="categoryedit"
 			label="JCATEGORY"

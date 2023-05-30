@@ -32,11 +32,6 @@ HTMLHelper::_('behavior.keepalive');
 
         <?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'details', Text::_('COM_COOKIEMANAGER_SCRIPTS')); ?>
         <div class="row">
-            <div class="col-lg-9">
-                <?php echo $this->form->renderField('position'); ?>
-                <?php echo $this->form->renderField('type'); ?>
-                <?php echo $this->form->renderField('code'); ?>
-            </div>
             <div class="col-lg-3">
                 <?php echo LayoutHelper::render('joomla.edit.global', $this); ?>
             </div>
