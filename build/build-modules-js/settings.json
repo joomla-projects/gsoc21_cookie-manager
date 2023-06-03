@@ -779,6 +779,28 @@
             ]
           }
         ]
+      },
+      "vanilla-cookieconsent": {
+        "name": "cookieconsent",
+        "licenseFilename": "LICENSE",
+        "js" : {
+          "dist/cookieconsent.js": "js/cookieconsent.js"
+        },
+        "css": {
+          "dist/cookieconsent.css": "css/cookieconsent.css"
+        },
+        "provideAssets": [
+          {
+            "name": "cookieconsent",
+            "type": "script",
+            "uri": "cookieconsent.js"
+          },
+          {
+            "name": "cookieconsent",
+            "type": "style",
+            "uri": "cookieconsent.css"
+          }
+        ]
       }
     },
     "errorPages": {
