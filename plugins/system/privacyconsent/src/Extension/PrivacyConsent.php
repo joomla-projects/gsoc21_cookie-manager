@@ -77,7 +77,7 @@ final class PrivacyConsent extends CMSPlugin implements SubscriberInterface
                 'onLoadCookies'          => 'onLoadCookies',
                 'onLoadCookieCategories' => 'onLoadCookieCategories',
                 'onLoadCookieScripts'    => 'onLoadCookieScripts',
-                'onAjaxPrivacyconsent'   => 'onAjaxPrivacyconsent'
+                'onAjaxPrivacyconsent'   => 'onAjaxPrivacyconsent',
             ];
         }
         return [];

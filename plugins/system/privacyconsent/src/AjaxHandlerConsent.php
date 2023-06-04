@@ -34,11 +34,11 @@ trait AjaxHandlerConsent
     {
         $cookieConsentsData = $this->getApplication()->input->get('data', '', 'STRING');
 
-        $cookieConsentsData = json_decode($cookieConsentsData);
-        $ccuuid = bin2hex(random_bytes(32));
-        $cookieConsentsData->ccuuid = $ccuuid;
+        $cookieConsentsData               = json_decode($cookieConsentsData);
+        $ccuuid                           = bin2hex(random_bytes(32));
+        $cookieConsentsData->ccuuid       = $ccuuid;
         $cookieConsentsData->consent_date = Factory::getDate()->toSql();
-        $cookieConsentsData->user_agent = $_SERVER['HTTP_USER_AGENT'];
+        $cookieConsentsData->user_agent   = $_SERVER['HTTP_USER_AGENT'];
 
         $this->getDatabase()->insertObject('#__privacy_consents', $cookieConsentsData);
 

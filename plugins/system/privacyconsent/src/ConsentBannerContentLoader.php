@@ -123,13 +123,13 @@ trait ConsentBannerContentLoader
             'plg_system_privacyconsent.script',
             'plg_system_privacyconsent/privacyconsent.min.js',
             ['dependencies' => ['cookieconsent']],
-            ['defer' => true],
+            ['defer'        => true],
         );
         $wa->registerAndUseStyle(
             'plg_system_privacyconsent.style',
             'plg_system_privacyconsent/privacyconsent.min.css',
             ['dependencies' => ['cookieconsent']],
-            ['defer' => true],
+            ['defer'        => true],
         );
     }
 
@@ -176,27 +176,27 @@ trait ConsentBannerContentLoader
 
         $cookieManagerConfig = [
             'consent_modal' => [
-                'position_x' =>  $params->get('consent_modal_position_x', 'center'),
-                'position_y' =>  $params->get('consent_modal_position_y', 'bottom'),
-                'transition' =>  $params->get('consent_modal_transition', 'zoom'),
-                'layout' =>  $params->get('consent_modal_layout', 'box'),
-                'swap_buttons' =>  $params->get('consent_modal_swap_buttons', '0'),
-                'primary_button_role' =>  $params->get('consent_modal_primary_button_role', 'accept_all'),
-                'secondary_button_role' =>  $params->get('consent_modal_secondary_button_role', 'accept_necessary'),
+                'position_x'            => $params->get('consent_modal_position_x', 'center'),
+                'position_y'            => $params->get('consent_modal_position_y', 'bottom'),
+                'transition'            => $params->get('consent_modal_transition', 'zoom'),
+                'layout'                => $params->get('consent_modal_layout', 'box'),
+                'swap_buttons'          => $params->get('consent_modal_swap_buttons', '0'),
+                'primary_button_role'   => $params->get('consent_modal_primary_button_role', 'accept_all'),
+                'secondary_button_role' => $params->get('consent_modal_secondary_button_role', 'accept_necessary'),
             ],
             'settings_modal' => [
-                'position' =>  $params->get('settings_modal_position', 'left'),
-                'transition' =>  $params->get('settings_modal_transition', 'slide'),
-                'layout' =>  $params->get('settings_modal_layout', 'box'),
+                'position'   => $params->get('settings_modal_position', 'left'),
+                'transition' => $params->get('settings_modal_transition', 'slide'),
+                'layout'     => $params->get('settings_modal_layout', 'box'),
             ],
         ];
-        $cookieManagerConfig['expiration'] = $params->get('consent_expiration', 30);
-        $cookieManagerConfig['delay'] = $params->get('delay', 0);
-        $cookieManagerConfig['force_consent'] = $params->get('force_consent', 0);
-        $cookieManagerConfig['mode'] = $params->get('mode', 'opt-in');
-        $cookieManagerConfig['hide_from_bots'] = $params->get('hide_from_bots', 1);
+        $cookieManagerConfig['expiration']           = $params->get('consent_expiration', 30);
+        $cookieManagerConfig['delay']                = $params->get('delay', 0);
+        $cookieManagerConfig['force_consent']        = $params->get('force_consent', 0);
+        $cookieManagerConfig['mode']                 = $params->get('mode', 'opt-in');
+        $cookieManagerConfig['hide_from_bots']       = $params->get('hide_from_bots', 1);
         $cookieManagerConfig['remove_cookie_tables'] = $params->get('remove_cookie_tables', 0);
-        $cookieManagerConfig['cookie_same_site'] = $params->get('cookie_same_site', 'Lax');
+        $cookieManagerConfig['cookie_same_site']     = $params->get('cookie_same_site', 'Lax');
 
         $menuitem = $this->getApplication()->getMenu()->getItem($params->get('policylink', ''));
         if ($menuitem) {
