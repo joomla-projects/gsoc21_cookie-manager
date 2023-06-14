@@ -113,7 +113,9 @@ INSERT INTO `#__assets` (`id`, `parent_id`, `lft`, `rgt`, `level`, `name`, `titl
 (93, 1, 171, 172, 1, 'com_fields', 'com_fields', '{}'),
 (94, 1, 173, 174, 1, 'com_workflow', 'com_workflow', '{}'),
 (95, 1, 175, 176, 1, 'com_guidedtours', 'com_guidedtours', '{}'),
-(96, 18, 130, 131, 2, 'com_modules.module.109', 'Guided Tours', '{}');
+(96, 18, 130, 131, 2, 'com_modules.module.109', 'Guided Tours', '{}'),
+(97, 65, 132, 133, 2, 'com_privacy.category.8', 'Uncategorised', '{}'),
+(98, 65, 134, 135, 2, 'com_privacy.category.9', 'Mandatory', '{mandatory: "1"}');
 
 -- --------------------------------------------------------
 
@@ -333,7 +335,6 @@ INSERT INTO `#__extensions` (`package_id`, `name`, `type`, `element`, `folder`, 
 (0, 'plg_system_accessibility', 'plugin', 'accessibility', 'system', 0, 0, 1, 0, 1, '', '{}', '', 1, 0),
 (0, 'plg_system_actionlogs', 'plugin', 'actionlogs', 'system', 0, 1, 1, 0, 1, '', '{}', '', 2, 0),
 (0, 'plg_system_cache', 'plugin', 'cache', 'system', 0, 0, 1, 0, 1, '', '{"browsercache":"0","cachetime":"15"}', '', 3, 0),
-(0, 'plg_system_cookiemanager', 'plugin', 'cookiemanager', 'system', 0, 1, 1, 0, 1, '', '{}', '', 0, 0),
 (0, 'plg_system_debug', 'plugin', 'debug', 'system', 0, 1, 1, 0, 1, '', '{"profile":"1","queries":"1","memory":"1","language_files":"1","language_strings":"1","strip-first":"1","strip-prefix":"","strip-suffix":""}', '', 4, 0),
 (0, 'plg_system_fields', 'plugin', 'fields', 'system', 0, 1, 1, 0, 1, '', '', '', 5, 0),
 (0, 'plg_system_highlight', 'plugin', 'highlight', 'system', 0, 1, 1, 0, 1, '', '', '', 6, 0),

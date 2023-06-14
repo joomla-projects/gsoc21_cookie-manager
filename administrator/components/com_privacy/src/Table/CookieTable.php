@@ -87,7 +87,7 @@ class CookieTable extends Table
         $table = Table::getInstance('CookieTable', __NAMESPACE__ . '\\', ['dbo' => $this->getDbo()]);
 
         if ($table->load(['alias' => $this->alias, 'catid' => $this->catid]) && ($table->id != $this->id || $this->id == 0)) {
-            $this->setError(Text::_('COM_COOOKIEMANAGER_ERROR_UNIQUE_ALIAS'));
+            $this->setError(Text::_('COM_PRIVACY_ERROR_UNIQUE_ALIAS'));
 
             return false;
         }
