@@ -10,8 +10,6 @@
 
 namespace Joomla\Plugin\System\PrivacyConsent\Extension;
 
-use Exception;
-use InvalidArgumentException;
 use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Cache\Cache;
 use Joomla\CMS\Factory;
@@ -24,6 +22,7 @@ use Joomla\CMS\Mail\MailTemplate;
 use Joomla\CMS\Plugin\CMSPlugin;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\User\UserFactoryAwareTrait;
 use Joomla\CMS\User\UserHelper;
 use Joomla\Component\Actionlogs\Administrator\Model\ActionlogModel;
 use Joomla\Component\Messages\Administrator\Model\MessageModel;
@@ -36,7 +35,6 @@ use Joomla\Plugin\System\PrivacyConsent\AjaxHandlerConsent;
 use Joomla\Plugin\System\PrivacyConsent\ConsentBannerContentLoader;
 use Joomla\Utilities\ArrayHelper;
 use PHPMailer\PHPMailer\Exception as phpmailerException;
-use RuntimeException;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
@@ -50,6 +48,7 @@ use RuntimeException;
 final class PrivacyConsent extends CMSPlugin implements SubscriberInterface
 {
     use DatabaseAwareTrait;
+    use UserFactoryAwareTrait;
 
     use AjaxHandlerConsent;
     use ConsentBannerContentLoader;
@@ -135,7 +134,7 @@ final class PrivacyConsent extends CMSPlugin implements SubscriberInterface
      * @return  boolean
      *
      * @since   3.9.0
-     * @throws  InvalidArgumentException on missing required data.
+     * @throws  \InvalidArgumentException on missing required data.
      */
     public function onUserBeforeSave($user, $isNew, $data)
     {
@@ -161,7 +160,7 @@ final class PrivacyConsent extends CMSPlugin implements SubscriberInterface
             $option == 'com_users' && in_array($task, ['registration.register', 'profile.save'])
             && empty($form['privacyconsent']['privacy'])
         ) {
-            throw new InvalidArgumentException($this->getApplication()->getLanguage()->_('PLG_SYSTEM_PRIVACYCONSENT_FIELD_ERROR'));
+            throw new \InvalidArgumentException($this->getApplication()->getLanguage()->_('PLG_SYSTEM_PRIVACYCONSENT_FIELD_ERROR'));
         }
 
         return true;
@@ -222,7 +221,7 @@ final class PrivacyConsent extends CMSPlugin implements SubscriberInterface
 
             try {
                 $this->getDatabase()->insertObject('#__privacy_consents', $userNote);
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 // Do nothing if the save fails
             }
 
@@ -517,7 +516,7 @@ final class PrivacyConsent extends CMSPlugin implements SubscriberInterface
         try {
             // Lock the tables to prevent multiple plugin executions causing a race condition
             $db->lockTable('#__extensions');
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             // If we can't lock the tables it's too risky to continue execution
             return;
         }
@@ -526,7 +525,7 @@ final class PrivacyConsent extends CMSPlugin implements SubscriberInterface
             // Update the plugin parameters
             $result = $db->setQuery($query)->execute();
             $this->clearCacheGroups(['com_plugins'], [0, 1]);
-        } catch (Exception $exc) {
+        } catch (\Exception $exc) {
             // If we failed to execute
             $db->unlockTables();
             $result = false;
@@ -535,12 +534,12 @@ final class PrivacyConsent extends CMSPlugin implements SubscriberInterface
         try {
             // Unlock the tables after writing
             $db->unlockTables();
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             // If we can't lock the tables assume we have somehow failed
             $result = false;
         }
 
-        // Abort on failure
+        // Stop on failure
         if (!$result) {
             return;
         }
@@ -623,7 +622,7 @@ final class PrivacyConsent extends CMSPlugin implements SubscriberInterface
 
                 try {
                     $db->execute();
-                } catch (RuntimeException $e) {
+                } catch (\RuntimeException $e) {
                     return false;
                 }
             } catch (MailDisabledException | phpmailerException $exception) {
@@ -658,7 +657,7 @@ final class PrivacyConsent extends CMSPlugin implements SubscriberInterface
 
         try {
             $users = $db->loadObjectList();
-        } catch (RuntimeException $e) {
+        } catch (\RuntimeException $e) {
             return false;
         }
 
@@ -682,13 +681,13 @@ final class PrivacyConsent extends CMSPlugin implements SubscriberInterface
 
             try {
                 $db->execute();
-            } catch (RuntimeException $e) {
+            } catch (\RuntimeException $e) {
                 return false;
             }
 
             $messageModel->notifySuperUsers(
                 $this->getApplication()->getLanguage()->_('PLG_SYSTEM_PRIVACYCONSENT_NOTIFICATION_USER_PRIVACY_EXPIRED_SUBJECT'),
-                Text::sprintf('PLG_SYSTEM_PRIVACYCONSENT_NOTIFICATION_USER_PRIVACY_EXPIRED_MESSAGE', Factory::getUser($user->user_id)->username)
+                Text::sprintf('PLG_SYSTEM_PRIVACYCONSENT_NOTIFICATION_USER_PRIVACY_EXPIRED_MESSAGE', $this->getUserFactory()->loadUserById($user->user_id)->username)
             );
         }
 
@@ -718,7 +717,7 @@ final class PrivacyConsent extends CMSPlugin implements SubscriberInterface
 
                     $cache = Cache::getInstance('callback', $options);
                     $cache->clean();
-                } catch (Exception $e) {
+                } catch (\Exception $e) {
                     // Ignore it
                 }
             }
