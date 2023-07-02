@@ -21,4 +21,189 @@
 		/>
 
 	</fieldset>
+	<fieldset
+		name="general"
+		label="COM_PRIVACY_CONFIG_FIELDSET_GENERAL_LABEL"
+		>
+		<field
+			name="policylink"
+			type="menuitem"
+			label="COM_PRIVACY_CONFIG_POLICY_LINK_LABEL"
+			default=""
+			>
+			<option value="">COM_PRIVACY_POLICY_LINK_NONE</option>
+		</field>
+		<field
+			name="consent_expiration"
+			type="number"
+			label="COM_PRIVACY_CONFIG_CONSENT_EXPIRATION_LABEL"
+			default="182"
+		/>
+		<field
+			name="delay"
+			type="number"
+			label="COM_PRIVACY_CONFIG_DELAY_LABEL"
+			default="0"
+		/>
+		<field
+			name="force_consent"
+			type="list"
+			label="COM_PRIVACY_CONFIG_FORCE_CONSENT_LABEL"
+			default="0">
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+		<field
+			name="mode"
+			type="list"
+			label="COM_PRIVACY_CONFIG_MODE_LABEL"
+			default="opt_in">
+			<option value="opt_in">COM_PRIVACY_OPT_IN</option>
+			<option value="opt_out">COM_PRIVACY_OPT_OUT</option>
+		</field>
+		<field
+			name="hide_from_bots"
+			type="list"
+			label="COM_PRIVACY_CONFIG_HIDE_FROM_BOTS_LABEL"
+			default="1">
+			<option value="1">JYES</option>
+			<option value="0">JNO</option>
+		</field>
+		<field
+			name="remove_cookie_tables"
+			type="list"
+			label="COM_PRIVACY_CONFIG_REMOVE_COOKIE_TABLES_LABEL"
+			default="0">
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+		<field
+			name="cookie_same_site"
+			type="list"
+			label="COM_PRIVACY_CONFIG_COOKIE_SAME_SITE_LABEL"
+			default="0">
+			<option value="Lax">COM_PRIVACY_CONFIG_COOKIE_SAME_SITE_LAX</option>
+			<option value="Strict">COM_PRIVACY_CONFIG_COOKIE_SAME_SITE_STRICT</option>
+			<option value="None">COM_PRIVACY_CONFIG_COOKIE_SAME_SITE_NONE</option>
+		</field>
+	</fieldset>
+	<fieldset
+		name="consent_modal"
+		label="COM_PRIVACY_CONFIG_FIELDSET_CONSENT_MODAL_LABEL"
+		>
+		<field
+			name="consent_modal_position_y"
+			type="list"
+			label="COM_PRIVACY_CONFIG_CONSENT_MODAL_POSITION_Y_FIELD_LABEL"
+			default="bottom"
+			>
+			<option value="bottom">COM_PRIVACY_CONFIG_POSITION_BOTTOM</option>
+			<option value="middle">COM_PRIVACY_CONFIG_POSITION_MIDDLE</option>
+			<option value="top">COM_PRIVACY_CONFIG_POSITION_TOP</option>
+		</field>
+		<field
+			name="consent_modal_position_x"
+			type="list"
+			label="COM_PRIVACY_CONFIG_CONSENT_MODAL_POSITION_X_FIELD_LABEL"
+			default="center"
+			>
+			<option value="center">COM_PRIVACY_CONFIG_POSITION_CENTER</option>
+			<option value="left">COM_PRIVACY_CONFIG_POSITION_LEFT</option>
+			<option value="right">COM_PRIVACY_CONFIG_POSITION_RIGHT</option>
+		</field>
+		<field
+			name="consent_modal_transition"
+			type="list"
+			label="COM_PRIVACY_CONFIG_CONSENT_MODAL_TRANSITION_FIELD_LABEL"
+			default="zoom"
+			>
+			<option value="slide">COM_PRIVACY_CONFIG_TRANSITION_SLIDE</option>
+			<option value="zoom">COM_PRIVACY_CONFIG_TRANSITION_ZOOM</option>
+		</field>
+		<field
+			name="consent_modal_layout"
+			type="list"
+			label="COM_PRIVACY_CONFIG_CONSENT_MODAL_LAYOUT_FIELD_LABEL"
+			default="box"
+			>
+			<option value="box">COM_PRIVACY_CONFIG_LAYOUT_BOX</option>
+			<option value="bar">COM_PRIVACY_CONFIG_LAYOUT_BAR</option>
+			<option value="cloud">COM_PRIVACY_CONFIG_LAYOUT_CLOUD</option>
+		</field>
+		<field
+			name="consent_modal_swap_buttons"
+			type="list"
+			label="COM_PRIVACY_CONFIG_CONSENT_MODAL_SWAP_BUTTONS_FIELD_LABEL"
+			default="0"
+			>
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+		<field
+			name="consent_modal_primary_button_role"
+			type="list"
+			label="COM_PRIVACY_CONFIG_CONSENT_MODAL_PRIMARY_BUTTON_ROLE_FIELD_LABEL"
+			default="accept_all"
+			>
+			<option value="accept_all">COM_PRIVACY_CONFIG_BUTTON_ROLE_ACCEPT_ALL</option>
+			<option value="accept_selected">COM_PRIVACY_CONFIG_BUTTON_ROLE_ACCEPT_SELECTED</option>
+		</field>
+		<field
+			name="consent_modal_secondary_button_role"
+			type="list"
+			label="COM_PRIVACY_CONFIG_CONSENT_MODAL_SECONDARY_BUTTON_ROLE_FIELD_LABEL"
+			default="accept_necessary"
+			>
+			<option value="accept_necessary">COM_PRIVACY_CONFIG_BUTTON_ROLE_ACCEPT_NECESSARY</option>
+			<option value="settings">COM_PRIVACY_CONFIG_BUTTON_ROLE_SETTINGS</option>
+		</field>
+	</fieldset>
+	<fieldset
+		name="settings_modal"
+		label="COM_PRIVACY_CONFIG_FIELDSET_SETTINGS_MODAL_LABEL"
+		>
+		<field
+			name="settings_modal_layout"
+			type="list"
+			label="COM_PRIVACY_CONFIG_SETTINGS_MODAL_LAYOUT_FIELD_LABEL"
+			default="box"
+			>
+			<option value="box">COM_PRIVACY_CONFIG_LAYOUT_BOX</option>
+			<option value="bar">COM_PRIVACY_CONFIG_LAYOUT_BAR</option>
+		</field>
+		<field
+			name="settings_modal_position"
+			type="list"
+			label="COM_PRIVACY_CONFIG_SETTINGS_MODAL_POSITION_FIELD_LABEL"
+			default="left"
+			>
+			<option value="left">COM_PRIVACY_CONFIG_POSITION_LEFT</option>
+			<option value="right">COM_PRIVACY_CONFIG_POSITION_RIGHT</option>
+		</field>
+		<field
+			name="settings_modal_transition"
+			type="list"
+			label="COM_PRIVACY_CONFIG_SETTINGS_MODAL_TRANSITION_FIELD_LABEL"
+			default="slide"
+			>
+			<option value="slide">COM_PRIVACY_CONFIG_TRANSITION_SLIDE</option>
+			<option value="zoom">COM_PRIVACY_CONFIG_TRANSITION_ZOOM</option>
+		</field>
+	</fieldset>
+
+	<fieldset
+		name="permissions"
+		label="JCONFIG_PERMISSIONS_LABEL"
+		description="JCONFIG_PERMISSIONS_DESC"
+		>
+		<field
+			name="rules"
+			type="rules"
+			label="JCONFIG_PERMISSIONS_LABEL"
+			validate="rules"
+			filter="rules"
+			component="com_privacy"
+			section="component"
+		/>
+	</fieldset>
 </config>

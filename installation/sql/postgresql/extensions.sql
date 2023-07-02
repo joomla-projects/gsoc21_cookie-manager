@@ -718,6 +718,66 @@ CREATE TABLE "#__privacy_consents" (
 CREATE INDEX "#__privacy_consents_idx_user_id" ON "#__privacy_consents" ("user_id");
 
 --
+-- Table structure for table "#__privacy_cookies"
+--
+
+CREATE TABLE IF NOT EXISTS "#__privacy_cookies" (
+  "id" serial NOT NULL,
+  "title" varchar(255) NOT NULL,
+  "alias" varchar(400) NOT NULL,
+  "cookie_name" varchar(255) NOT NULL,
+  "cookie_desc" varchar(255) NOT NULL,
+  "exp_period" varchar(20) NOT NULL,
+  "exp_value" integer DEFAULT 0 NOT NULL,
+  "catid" integer DEFAULT 0 NOT NULL,
+  "published" smallint DEFAULT 1 NOT NULL,
+  "ordering" integer DEFAULT 0 NOT NULL,
+  "created" timestamp without time zone NOT NULL,
+  "created_by" integer DEFAULT 0 NOT NULL,
+  "modified" timestamp without time zone NOT NULL,
+  "modified_by" integer DEFAULT 0 NOT NULL,
+  PRIMARY KEY ("id")
+);
+CREATE INDEX "#__privacy_cookies_idx_state" on "#__privacy_cookies" ("published");
+CREATE INDEX "#__privacy_cookies_idx_catid" on "#__privacy_cookies" ("catid");
+CREATE INDEX "#__privacy_cookies_idx_createdby" on "#__privacy_cookies" ("created_by");
+
+--
+-- Table structure for table "#__privacy_scripts"
+--
+
+CREATE TABLE IF NOT EXISTS "#__privacy_scripts" (
+  "id" serial NOT NULL,
+  "title" varchar(255) NOT NULL,
+  "alias" varchar(400) NOT NULL,
+  "position" integer DEFAULT 4 NOT NULL,
+  "type" integer DEFAULT 1 NOT NULL,
+  "code" text NOT NULL,
+  "catid" integer DEFAULT 0 NOT NULL,
+  "published" smallint DEFAULT 1 NOT NULL,
+  "ordering" integer DEFAULT 0 NOT NULL,
+  PRIMARY KEY ("id")
+);
+CREATE INDEX "#__privacy_scripts_idx_state" on "#__privacy_scripts" ("published");
+CREATE INDEX "#__privacy_scripts_idx_catid" on "#__privacy_scripts" ("catid");
+
+--
+-- Table structure for table "#__privacy_cookie_consents"
+--
+
+CREATE TABLE IF NOT EXISTS "#__privacy_cookie_consents" (
+  "id" serial NOT NULL,
+  "uuid" varchar(32) NOT NULL,
+  "ccuuid" varchar(64) NOT NULL,
+  "consent_opt_in" varchar(255) NOT NULL,
+  "consent_opt_out" varchar(255) NOT NULL,
+  "consent_date" timestamp without time zone NOT NULL,
+  "user_agent" varchar(150) NOT NULL,
+  "url" varchar(100) NOT NULL,
+  PRIMARY KEY ("id")
+);
+
+--
 -- Table structure for table `#__redirect_links`
 --
 
@@ -788,7 +848,8 @@ INSERT INTO "#__action_logs_extensions" ("id", "extension") VALUES
 (16, 'com_templates'),
 (17, 'com_users'),
 (18, 'com_checkin'),
-(19, 'com_scheduler');
+(19, 'com_scheduler'),
+(20, 'com_privacy');
 
 SELECT setval('#__action_logs_extensions_id_seq', 20, false);
 -- --------------------------------------------------------
@@ -830,7 +891,8 @@ INSERT INTO "#__action_log_config" ("id", "type_title", "type_alias", "id_holder
 (17, 'access_level', 'com_users.level', 'id' , 'title', '#__viewlevels', 'PLG_ACTIONLOG_JOOMLA'),
 (18, 'banner_client', 'com_banners.client', 'id', 'name', '#__banner_clients', 'PLG_ACTIONLOG_JOOMLA'),
 (19, 'application_config', 'com_config.application', '', 'name', '', 'PLG_ACTIONLOG_JOOMLA'),
-(20, 'task', 'com_scheduler.task', 'id', 'title', '#__scheduler_tasks', 'PLG_ACTIONLOG_JOOMLA');
+(20, 'task', 'com_scheduler.task', 'id', 'title', '#__scheduler_tasks', 'PLG_ACTIONLOG_JOOMLA'),
+(21, 'privacy_cookie', 'com_privacy.cookie', 'id', 'name', '#__privacy_cookies', 'PLG_ACTIONLOG_JOOMLA');
 
 
 SELECT setval('#__action_log_config_id_seq', 21, false);

@@ -29,6 +29,10 @@ use Joomla\Component\Messages\Administrator\Model\MessageModel;
 use Joomla\Database\DatabaseAwareTrait;
 use Joomla\Database\Exception\ExecutionFailureException;
 use Joomla\Database\ParameterType;
+use Joomla\Event\Priority;
+use Joomla\Event\SubscriberInterface;
+use Joomla\Plugin\System\PrivacyConsent\AjaxHandlerConsent;
+use Joomla\Plugin\System\PrivacyConsent\ConsentBannerContentLoader;
 use Joomla\Utilities\ArrayHelper;
 use PHPMailer\PHPMailer\Exception as phpmailerException;
 
@@ -41,10 +45,13 @@ use PHPMailer\PHPMailer\Exception as phpmailerException;
  *
  * @since  3.9.0
  */
-final class PrivacyConsent extends CMSPlugin
+final class PrivacyConsent extends CMSPlugin implements SubscriberInterface
 {
     use DatabaseAwareTrait;
     use UserFactoryAwareTrait;
+
+    use AjaxHandlerConsent;
+    use ConsentBannerContentLoader;
 
     /**
      * Load the language file on instantiation.
@@ -53,6 +60,27 @@ final class PrivacyConsent extends CMSPlugin
      * @since  3.9.0
      */
     protected $autoloadLanguage = true;
+
+    /**
+     * Returns an array of events this subscriber will listen to.
+     *
+     * @return  array
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function getSubscribedEvents(): array
+    {
+        if (Factory::getApplication()->isClient('site')) {
+            return [
+                'onBeforeCompileHead'    => ['onBeforeCompileHead', Priority::LOW],
+                'onLoadCookies'          => 'onLoadCookies',
+                'onLoadCookieCategories' => 'onLoadCookieCategories',
+                'onLoadCookieScripts'    => 'onLoadCookieScripts',
+                'onAjaxPrivacyconsent'   => 'onAjaxPrivacyconsent',
+            ];
+        }
+        return [];
+    }
 
     /**
      * Adds additional fields to the user editing form
@@ -665,6 +693,7 @@ final class PrivacyConsent extends CMSPlugin
 
         return true;
     }
+
     /**
      * Clears cache groups. We use it to clear the plugins cache after we update the last run timestamp.
      *

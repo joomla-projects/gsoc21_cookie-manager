@@ -68,6 +68,7 @@
     "short-and-sweet": "^1.0.4",
     "skipto": "^4.1.7",
     "tinymce": "^6.5.1",
+    "vanilla-cookieconsent": "^2.9.1",
     "vue": "3.2.45",
     "vue-focus-lock": "^2.0.5",
     "vuex": "^4.1.0",

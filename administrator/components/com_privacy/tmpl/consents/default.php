@@ -31,8 +31,8 @@ $now        = Factory::getDate();
 $stateIcons = [-1 => 'delete', 0 => 'archive', 1 => 'publish'];
 $stateMsgs  = [
     -1 => Text::_('COM_PRIVACY_CONSENTS_STATE_INVALIDATED'),
-    0 => Text::_('COM_PRIVACY_CONSENTS_STATE_OBSOLETE'),
-    1 => Text::_('COM_PRIVACY_CONSENTS_STATE_VALID')
+    0  => Text::_('COM_PRIVACY_CONSENTS_STATE_OBSOLETE'),
+    1  => Text::_('COM_PRIVACY_CONSENTS_STATE_VALID'),
 ];
 
 ?>

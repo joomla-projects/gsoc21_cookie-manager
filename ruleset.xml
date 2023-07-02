@@ -48,7 +48,10 @@
         <exclude-pattern type="relative">administrator/components/com_menus/src/Model/MenuModel\.php</exclude-pattern>
         <exclude-pattern type="relative">administrator/components/com_newsfeeds/src/Table/NewsfeedTable\.php</exclude-pattern>
         <exclude-pattern type="relative">administrator/components/com_plugins/src/Model/PluginModel\.php</exclude-pattern>
+        <exclude-pattern type="relative">administrator/components/com_privacy/src/Table/CookieconsentTable\.php</exclude-pattern>
+        <exclude-pattern type="relative">administrator/components/com_privacy/src/Table/CookieTable\.php</exclude-pattern>
         <exclude-pattern type="relative">administrator/components/com_privacy/src/Table/RequestTable\.php</exclude-pattern>
+        <exclude-pattern type="relative">administrator/components/com_privacy/src/Table/ScriptTable\.php</exclude-pattern>
         <exclude-pattern type="relative">administrator/components/com_scheduler/src/Table/TaskTable\.php</exclude-pattern>
         <exclude-pattern type="relative">administrator/components/com_tags/src/Table/TagTable\.php</exclude-pattern>
         <exclude-pattern type="relative">administrator/components/com_templates/src/Model/StyleModel\.php</exclude-pattern>

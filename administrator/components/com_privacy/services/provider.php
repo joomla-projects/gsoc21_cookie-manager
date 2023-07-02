@@ -13,6 +13,7 @@ defined('_JEXEC') or die;
 use Joomla\CMS\Component\Router\RouterFactoryInterface;
 use Joomla\CMS\Dispatcher\ComponentDispatcherFactoryInterface;
 use Joomla\CMS\Extension\ComponentInterface;
+use Joomla\CMS\Extension\Service\Provider\CategoryFactory;
 use Joomla\CMS\Extension\Service\Provider\ComponentDispatcherFactory;
 use Joomla\CMS\Extension\Service\Provider\MVCFactory;
 use Joomla\CMS\Extension\Service\Provider\RouterFactory;
@@ -39,6 +40,7 @@ return new class () implements ServiceProviderInterface {
      */
     public function register(Container $container)
     {
+        $container->registerServiceProvider(new CategoryFactory('\\Joomla\\Component\\Privacy'));
         $container->registerServiceProvider(new MVCFactory('\\Joomla\\Component\\Privacy'));
         $container->registerServiceProvider(new ComponentDispatcherFactory('\\Joomla\\Component\\Privacy'));
         $container->registerServiceProvider(new RouterFactory('\\Joomla\\Component\\Privacy'));
